@@ -1,21 +1,23 @@
 # Cafe au Life
 
-Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular automata written in [CoffeeScript][cs] and transpiled to [JavaScript][js]. Cafe au Life runs on [Node.js][node], it is not designed to run as an interactive program in a browser window.
+**Achtung**! This is a work-in-progress. You're welcome to read along as I complete it, but please don't post the repository to sites like Hacker News or Proggit, at least not until there is actual working code. Thanks!
 
-[life]:
-[cs]:
-[js]:
-[node]:
+## What
+
+Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular automata written in [CoffeeScript][cs]. Cafe au Life runs on [Node.js][node], it is not designed to run as an interactive program in a browser window.
+
+[life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
+[cs]: http://jashkenas.github.com/coffee-script/
+[node]: http://nodejs.org
 
 ## Why
 
-Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm.
+Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm. HashLife is usually implemented in C and optimized to run very long simulations with very large 'boards' stinking fast. [Golly][golly] is a fast Life simulator that contains, amongst other things, an implementation of HashLife written for raw speed.
 
-HashLife is usually implemented in C and optimized to run very long simulations with very large 'boards' stinking fast. [Golly][golly] is a fast Life simulator that contains, amongst other things, an implementation of HashLife written for raw speed.
+[hl]: http://en.wikipedia.org/wiki/Hashlife
+[golly]: http://golly.sourceforge.net/
 
-[golly]:
-
-Broadly speaking, HashLife has two major components. The first is a high level algorithm that is implementation independant. This algorithm exploits repetition and redundancy, aggressively 'caching' previously computed results for regions of the board. The second component is the cache itself, which is normally implemented cleverly in C to exploit memory and CPU efficiency in looking up precomputed results.
+Broadly speaking, HashLife has two major components. The first is a high level algorithm that is implementation independent. This algorithm exploits repetition and redundancy, aggressively 'caching' previously computed results for regions of the board. The second component is the cache itself, which is normally implemented cleverly in C to exploit memory and CPU efficiency in looking up precomputed results.
 
 Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the performance of the cache itself in a JavaScript application will not be anything to write home about.
 
@@ -25,9 +27,8 @@ HashLife is, in a word, a beautiful design, one that is "in the book." To read i
 
 My understanding of HashLife was gleaned from the writings of:
 
-* [Tony Finch](http://fanf.livejournal.com/83709.html)
-* 
-* 
+* [Tony Finch explains HashLife](http://fanf.livejournal.com/83709.html)
+* [An Algorithm for Compressing Space and Time](http://drdobbs.com/jvm/184406478)
 
 ## How
 
@@ -90,15 +91,15 @@ In addition to initializing `Alive` and `Dead`, Cafe au Life pre-initializes the
         se: squares_0[(n&2)>>1]
         sw: squares_0[n&1]
 
-For example, a square of size thirty-two (`2^5) consisting of entirely dead cells would have its `nw`, `ne`, `se`, and `sw` properties all containing the same square of size sixteen (`2^4`). That square would have its four properties containing the same square of size eight (`2^3`), which would have its four properties containing the same square of size four, which in turn would have all four if its properties containing the same square of size two, and that square would have four properites all containg `Dead`.
+For example, a square of size thirty-two (`2^5`) consisting of entirely dead cells would have its `nw`, `ne`, `se`, and `sw` properties all containing the same square of size sixteen (`2^4`). That square would have its four properties containing the same square of size eight (`2^3`), which would have its four properties containing the same square of size four, which in turn would have all four if its properties containing the same square of size two, and that square would have four properties, all containing the size zero value `Dead`.
 
-Thus, a board containing 1,024 cells could be represented by as few as six objects when there is maximal redundancy. This saves more than space: As we'll see HashLife is able to cache the result of iterating forward in time with each square. HashLife thus trades a huge amount of calculation for cache lookups.
+Thus, a board containing 1,024 cells could be represented by as few as six objects when there is maximal redundancy. This saves more than space: HashLife is able to cache the result of iterating forward in time with each square. HashLife thus trades a huge amount of calculation for cache lookups.
 
 ### The Speed of Light
 
 In Life, the "Speed of Light" or "*c*" is one cell vertically, horizontally, or diagonally in any direction. Meaning, that cause and effect cannot travel faster than *c*.
 
-One consequnce of this fundamental limit is that given a square of size `2^n | n > 1` at time `t`, HashLife has all the information it needs to calculate the alive and dead cells for the inner square of size `2^n - 2` at time `t+1`. For example, if HashLife has this square at time `t`:
+One consequence of this fundamental limit is that given a square of size `2^n | n > 1` at time `t`, HashLife has all the information it needs to calculate the alive and dead cells for the inner square of size `2^n - 2` at time `t+1`. For example, if HashLife has this square at time `t`:
 
     nw        ne  
       +--++--+
@@ -153,13 +154,13 @@ And this square at time `t+3`:
 
 This is because no matter what is in the cells surrounding our square, their effects cannot propagate faster than the speed of light, one row inward from the edge every step in time.
 
-Hashlife takes advantage of this by storing enough information to quickly look up the shrinking 'future' for every square of size `2^n | n > 1`. The information is called a square's *result*.
+HashLife takes advantage of this by storing enough information to quickly look up the shrinking 'future' for every square of size `2^n | n > 1`. The information is called a square's *result*.
 
 ### Computing the result for squares
 
 Let's revisit the obvious: Squares of size one and two do not have results, because at time `t+1`, cells outside of the square will affect every cell in the square.
 
-The smallest square that computes a result is of size four (`2^2`). Its result is a square of size two (`2^`) representing the state of those cells at time `t+1`:
+The smallest square that computes a result is of size four (`2^2`). Its result is a square of size two (`2^1`) representing the state of those cells at time `t+1`:
 
     ....
     .++.
@@ -191,11 +192,11 @@ Cafe au Life initializes the results for squares of size four with a seed array 
 
 ### Recursion: See 'Recursion'
 
-Now let's consider a square of size eight. First, we are going to assume that we can look up any `Divisible` square from the cache withthe following method:
+Now let's consider a square of size eight. First, we are going to assume that we can look up any `Divisible` square from the cache with the following method:
 
     Square.find({ nw: ..., ne: ..., se: ..., sw: ...})
 
-Given four component squares, this looks up a square in the cache. For the moment, we can ignore the question of what happens when a square is not in the cache, because when dealing with squares of siz eeight, we only ever need to look up squares of size four, and they are all seeded in the cache.
+Given four component squares, this looks up a square in the cache. For the moment, we can ignore the question of what happens when a square is not in the cache, because when dealing with squares of size eight, we only ever need to look up squares of size four, and they are all seeded in the cache.
 
 Once we have established how to construct the result for a square of size eight, including its result and velocity, we will be able to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses' by constructing a new square, so let's do that.
 
@@ -299,6 +300,8 @@ We add this into our code:
             .result
             
           # ...
+
+
     
 We use a similar method to derive a center square:
 
@@ -339,6 +342,12 @@ And we extract its result square accordingly:
 
 We have now derived nine squares of size `2^(n-1)`: Four component squares and five we have derived from second-order components. The results we have extracted have all been cached, so we are performing lookups rather than computations.
 
+### Digression: Code readability
+
+The code given above *works*, but it's not particularly interesting.
+
+### Continuing to derive the result for a square of size eight
+
 These squares fit together to make a larger intermediate square, one that does not neatly fit into our world of `2^n` quanta:
 
     nw        ne
@@ -371,7 +380,7 @@ To make our algorithm scale recursively, we can't use a square that has a differ
        
     sw        se
     
-This involves digging inside of our results and recombining their peices. If we're going to do that, we might as well get something in return. So instead of trimming the square to get a smaller square with the same velocity, we're going to take another step forward in time:
+This involves digging inside of our results and recombining their pieces. If we're going to do that, we might as well get something in return. So instead of trimming the square to get a smaller square with the same velocity, we're going to take another step forward in time:
 
 ### a step in time
 
