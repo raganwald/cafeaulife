@@ -233,7 +233,8 @@ As we go along, we'll complete this bit of code:
     class Square3 extends Square
       constructor: ({nw, ne, se, sw}) ->
         super({nw: nw, ne:ne, se:se, sw:sw})
-        intermediate =
+        
+        this_to_intermediate_components = ->
           nw: @nw.result
           ne: @ne.result
           se: @se.result
@@ -301,8 +302,6 @@ We add this into our code:
             
           # ...
 
-
-    
 We use a similar method to derive a center square:
 
     nw        ne
@@ -342,12 +341,6 @@ And we extract its result square accordingly:
 
 We have now derived nine squares of size `2^(n-1)`: Four component squares and five we have derived from second-order components. The results we have extracted have all been cached, so we are performing lookups rather than computations.
 
-### Digression: Code readability
-
-The code given above *works*, but it's not particularly interesting.
-
-### Continuing to derive the result for a square of size eight
-
 These squares fit together to make a larger intermediate square, one that does not neatly fit into our world of `2^n` quanta:
 
     nw        ne
@@ -360,12 +353,6 @@ These squares fit together to make a larger intermediate square, one that does n
        swssse
        
     sw        se
-    
-For a square of size eight, these intermediate results results are all at time `t+1`. But for the sake of generalization, let's grab the velocity from any one of our sub-squares:
-
-          # ...
-          
-          velocity: @nw.velocity
 
 To make our algorithm scale recursively, we can't use a square that has a different geometric relationship for squares of size eight than squares of size four. We need a square of size `2^(n-1)`. The simplest solution would be to simply trim what we have:
 
@@ -384,7 +371,7 @@ This involves digging inside of our results and recombining their pieces. If we'
 
 ### a step in time
 
-Let's revist our intermediate result:
+Let's revisit our intermediate result:
 
     nw        ne
     
@@ -422,12 +409,98 @@ From this, we can make four *overlapping* squares of size `2^(n-1)`:
     sw        se  sw        se
     
 Note that these overlapping squares can all be built out of our intermediate results. So let's do that:
-
-    # TODO: Write something which can translate maps to functions so we can feed an intermediate result in. Make sure it composes properly so the result is that we can get a chain from the original.
     
-    overlaps =
-      nw: Square.find
-        nw: intermediate.nw
-        ne: intermediate.nn
-        se: intermediate.cc
-        sw: intermediate.ww
+    square_to_overlaps = ->
+      nw: Square
+        .find
+          nw: @nw
+          ne: @nn
+          se: @cc
+          sw: @ww
+      ne: Square
+          .find
+          nw: @nn
+          ne: @ne
+          se: @ee
+          sw: @cc
+      se: Square
+        .find
+          nw: @cc
+          ne: @ee
+          se: @se
+          sw: @ss
+      sw: Square
+        .find
+          nw: @ww
+          ne: @cc
+          se: @ss
+          sw: @sw
+        
+What do we do with our four overlaps? Why, we get *their* results, of course. Let's revise our snippet:
+    
+    intermediate_components_to_result_components = ->
+      nw: Square
+        .find
+          nw: @nw
+          ne: @nn
+          se: @cc
+          sw: @ww
+        .result
+      ne: Square
+          .find
+          nw: @nn
+          ne: @ne
+          se: @ee
+          sw: @cc
+        .result
+      se: Square
+        .find
+          nw: @cc
+          ne: @ee
+          se: @se
+          sw: @ss
+        .result
+      sw: Square
+        .find
+          nw: @ww
+          ne: @cc
+          se: @ss
+          sw: @sw
+        .result
+
+This produces:
+
+    nw        ne
+    
+       ......
+       .nwne.
+       .nwne.
+       .swse.
+       .swse.
+       ......
+       
+    sw        se
+
+And when we place it within our original square of size eight, we reveal we have a square of size four, `2^(n=-1)` as we wanted
+
+    nw        ne
+      ........
+      ........
+      ..nwne..
+      ..nwne..
+      ..swse..
+      ..swse..
+      ........
+      ........
+    sw        se
+
+Obviously, we can make a square out of that:
+
+    intermediate_square_components = this_to_intermediate_components.call(this)
+    result_square_components = intermediate_components_to_result_components.call(intermediate_square_components)
+
+    @result = Square.find(result_square_components)
+    
+What about our velocity? Well, we have taken *two* steps forward in time, not one. Both steps were the same size as the velocity of squares of size `2^(n-1)`, so let's grab one such square's velocity and double it:
+
+    @velocity = @nw.velocity * 2

@@ -25,10 +25,11 @@ describe 'basic mapper', ->
       (x) -> x + 2
       (x) -> x.a
     ]
-    timestwoplusone: [
-      (x) -> x + 1
-      (x) -> x * 2
-      'b'
+    timestwoplusone: [((x) -> x + 1), ((x) -> x * 2), 'b']
+    summer: [
+      (x) -> x.first + x.second
+      first: 'b'
+      second: 'a'
     ]
 
   it 'should return a function', ->
@@ -56,3 +57,6 @@ describe 'basic mapper', ->
 
   it 'should compose multiple simple functions', ->
     expect( m(abc).timestwoplusone ).toEqual 5
+
+  it 'should compose a function and a hash', ->
+    expect( m(abc).summer ).toEqual 3
