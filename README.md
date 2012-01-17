@@ -2,6 +2,8 @@
 
 **Achtung**! This is a work-in-progress. You're welcome to read along as I complete it, but please don't post the repository to sites like Hacker News or Proggit, at least not until there is actual working code. Thanks!
 
+---
+
 ## What
 
 Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular automata written in [CoffeeScript][cs]. Cafe au Life runs on [Node.js][node], it is not designed to run as an interactive program in a browser window.
@@ -84,7 +86,6 @@ In addition to initializing `Alive` and `Dead`, Cafe au Life pre-initializes the
     squares_0 = [Dead, Alive]
     
     squares_1 = (0..15).map (n) ->
-      # TODO: cache this result
       new Divisible
         nw: squares_0[(n&8)>>3]
         ne: squares_0[(n&4)>>2]
@@ -190,15 +191,13 @@ Cafe au Life initializes the results for squares of size four with a seed array 
         sw: squares_1[sw]
         result: squares_1[result]
 
-### Recursion: See 'Recursion'
+### Squares of size eight
 
 Now let's consider a square of size eight. First, we are going to assume that we can look up any `Divisible` square from the cache with the following method:
 
     Square.find({ nw: ..., ne: ..., se: ..., sw: ...})
 
-Given four component squares, this looks up a square in the cache. For the moment, we can ignore the question of what happens when a square is not in the cache, because when dealing with squares of size eight, we only ever need to look up squares of size four, and they are all seeded in the cache.
-
-Once we have established how to construct the result for a square of size eight, including its result and velocity, we will be able to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses' by constructing a new square, so let's do that.
+Given four component squares, this looks up a square in the cache. For the moment, we can ignore the question of what happens when a square is not in the cache, because when dealing with squares of size eight, we only ever need to look up squares of size four, and they are all seeded in the cache. (Once we have established how to construct the result for a square of size eight, including its result and velocity, we will be able to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses' by constructing a new square.)
 
 We know how to obtain any square of size four using `Square.find`. So what we need is a way to compute the result for any arbitrary square of size eight from squares of size four.
 

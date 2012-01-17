@@ -2,7 +2,6 @@ global = this
 
 mapper = require('../lib/mapping.coffee').mapper
 _ = require('underscore')
-require 'UnderscoreMatchersForJasmine'
 
 describe 'basic mapper', ->
 
