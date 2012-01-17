@@ -7,16 +7,16 @@ _.defaults global, require('../lib/cafeaulife.coffee').cafeaulife
 describe 'cafe au life', ->
 
   size_two_empties = Square.find
-    nw: Dead
-    ne: Dead
-    se: Dead
-    sw: Dead
+    nw: Indivisible.Dead
+    ne: Indivisible.Dead
+    se: Indivisible.Dead
+    sw: Indivisible.Dead
 
   size_two_fulls = Square.find
-    nw: Alive
-    ne: Alive
-    se: Alive
-    sw: Alive
+    nw: Indivisible.Alive
+    ne: Indivisible.Alive
+    se: Indivisible.Alive
+    sw: Indivisible.Alive
 
   describe 'non-trivial squares', ->
 
@@ -66,17 +66,6 @@ describe 'cafe au life', ->
       se: size_two_empties
       sw: size_two_fulls
 
-    it 'should drive identical hash behaviour', ->
-
-      expect( Square.hash
-        nw: size_two_empties
-        ne: size_two_fulls
-        se: size_two_empties
-        sw: size_two_fulls
-      ).toEqual(
-        Square.hash(b)
-      )
-
     it 'should find a in the hash', ->
 
       expect( Square.find
@@ -101,10 +90,10 @@ describe 'cafe au life', ->
   describe 'to_json', ->
 
     square_1 = Square.find
-      nw: Alive
-      ne: Alive
-      se: Dead
-      sw: Alive
+      nw: Indivisible.Alive
+      ne: Indivisible.Alive
+      se: Indivisible.Dead
+      sw: Indivisible.Alive
 
     it 'should handle a square of 1', ->
 
