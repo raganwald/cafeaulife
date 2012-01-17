@@ -17,6 +17,19 @@ describe 'basic mapper', ->
   m = mapper
     eh: 'a'
     ceetwo: 'c.c2'
+    ceemap:
+      one: 'c.c1',
+      two: 'c.c2'
+    fn: (obj) -> obj.a + obj.b
+    simplecomp: [
+      (x) -> x + 2
+      (x) -> x.a
+    ]
+    timestwoplusone: [
+      (x) -> x + 1
+      (x) -> x * 2
+      'b'
+    ]
 
   it 'should return a function', ->
 
@@ -25,9 +38,21 @@ describe 'basic mapper', ->
 
   it 'should perform simple string matching', ->
 
-    expect( m(abc).eh ).toEqual(1)
+    expect( m(abc).eh ).toEqual 1
 
 
-  it 'should perform a multiple step string matching', ->
+  it 'should perform multiple step string matching', ->
 
-    expect( m(abc).ceetwo ).toEqual('two')
+    expect( m(abc).ceetwo ).toEqual 'two'
+
+  it 'should perform simple hash mapping', ->
+
+    expect( m(abc).ceemap ).toEqual
+      one: 'one'
+      two: 'two'
+
+  it 'should handle custom functions', ->
+    expect( m(abc).fn ).toEqual 3
+
+  it 'should compose multiple simple functions', ->
+    expect( m(abc).timestwoplusone ).toEqual 5
