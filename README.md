@@ -175,7 +175,7 @@ Since the result represents the state one 'moment' later, we say the result has 
 Cafe au Life initializes the results for squares of size four with a seed array of all 65536 possible squares and their results:
 
     class SquareSz4 extends Divisible
-      constuctor({nw, ne, se, sw, @result}) ->
+      constructor({nw, ne, se, sw, @result}) ->
         super({nw: nw, ne:ne, se:se, sw:sw})
         @velocity = 1
 
