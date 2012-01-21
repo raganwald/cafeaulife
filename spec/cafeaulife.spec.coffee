@@ -95,6 +95,31 @@ describe 'cafe au life', ->
         [0, 0, 0, 0, 0, 0, 0, 0]
       ])
 
+  describe 'progress', ->
+
+    it 'should persist a block', ->
+
+      still_life = Square.find_or_create [
+        [1, 1]
+        [1, 1]
+      ]
+
+      inflated = still_life.inflate_by(3)
+
+      expect(inflated.result).toEqual(still_life.inflate_by(2))
+
+    it 'should kill orphans', ->
+
+      orphans = Square.find_or_create [
+        [0, 0]
+        [1, 1]
+      ]
+
+      inflated = orphans.inflate_by(3)
+
+      expect(inflated.result).not.toEqual(orphans.inflate_by(2))
+
+      expect(inflated.result).toEqual(orphans.inflate_by(2).empty())
 
   describe 'to_json', ->
 
