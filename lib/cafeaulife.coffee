@@ -24,9 +24,9 @@ class Indivisible extends Square
 ##################################################################################
 
 class Divisible extends Square
-  constructor: ({@nw, @ne, @se, @sw}) ->
+  constructor: (params) ->
+    {@nw, @ne, @se, @sw} = params
     @hash = Square.hash(this)
-    Square.add(this)
   to_json: ->
     a =
       nw: @nw.to_json()
@@ -141,14 +141,14 @@ NonTrivialSquare = do ->
 
 do (Square) ->
 
-  num_buckets = 7919
+  num_buckets = 99991 # chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K
   buckets = []
 
   Square.hash = (square_like) ->
     if square_like.hash?
       square_like.hash
     else
-      ((3 * Square.hash(square_like.nw)) + (9 * Square.hash(square_like.ne))  + (27 * Square.hash(square_like.se)) + (81 * Square.hash(square_like.sw)))
+      ((3 *Square.hash(square_like.nw)) + (37 * Square.hash(square_like.ne))  + (79 * Square.hash(square_like.se)) + (131 * Square.hash(square_like.sw)))
 
   Square.find = (square_params) ->
     bucket_number = Square.hash(square_params) % num_buckets
@@ -167,39 +167,16 @@ do (Square) ->
     bucket_number = square.hash % num_buckets
     (buckets[bucket_number] ||= []).push(square)
 
-#########
-# Seeds #
-#########
+  Square.bucketed = ->
+    _.reduce buckets, (sum, bucket) ->
+      sum + bucket.length
+    , 0
 
-do ->
+  Square.histogram = ->
+    _.reduce buckets, (histo, bucket) ->
+      _.tap histo, (h) ->
+        h[bucket.length] ||= 0
+        h[bucket.length] += 1
+    , []
 
-  Indivisible.Alive = new Indivisible(1)
-  Indivisible.Dead = new Indivisible(0)
-
-  size_twos = do ->
-    class SquareSz2 extends Divisible
-    dead_or_alive = [Indivisible.Dead, Indivisible.Alive]
-    [0..15].map (n) ->
-      new SquareSz2
-        nw: dead_or_alive[(n&8)>>3]
-        ne: dead_or_alive[(n&4)>>2]
-        se: dead_or_alive[(n&2)>>1]
-        sw: dead_or_alive[n&1]
-
-  class SquareSz4 extends Divisible
-    constructor: ({nw, ne, se, sw, @result}) ->
-      super({nw: nw, ne:ne, se:se, sw:sw})
-      @velocity = 1
-  [
-    [ 0,  0,  0,  0, 0],
-    # ...
-    [15, 15, 15, 15, 0]
-  ].forEach ([nw, ne, se, sw, result]) ->
-    new SquareSz4
-      nw: size_twos[nw]
-      ne: size_twos[ne]
-      se: size_twos[se]
-      sw: size_twos[sw]
-      result: size_twos[result]
-
-root.cafeaulife = {Square, Indivisible, NonTrivialSquare}
+root.cafeaulife = {Square, Indivisible, Divisible, NonTrivialSquare}

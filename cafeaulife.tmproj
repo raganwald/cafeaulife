@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>lib/cafeaulife.coffee</string>
+	<string>lib/programming_by_example.coffee</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -33,46 +33,61 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>466</integer>
+			<integer>454</integer>
 		</dict>
 		<key>lib/cafeaulife.coffee</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>6</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>173</integer>
+				<integer>180</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>137</integer>
+			<integer>0</integer>
+		</dict>
+		<key>lib/programming_by_example.coffee</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>26</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>spec/cafeaulife.spec.coffee</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>24</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>66</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>9</integer>
+			<integer>48</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>README.md</string>
 		<string>lib/cafeaulife.coffee</string>
+		<string>lib/programming_by_example.coffee</string>
 		<string>spec/cafeaulife.spec.coffee</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{312, 186}, {1625, 1027}}</string>
+	<string>{{231, 67}, {1625, 1318}}</string>
 </dict>
 </plist>
