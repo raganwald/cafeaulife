@@ -19,6 +19,12 @@ describe 'cafe au life', ->
     se: Indivisible.Alive
     sw: Indivisible.Alive
 
+  it 'should support the basics', ->
+
+    expect(Indivisible.Dead).not.toBeUndefined()
+
+    expect(Indivisible.Alive).not.toBeUndefined()
+
   describe 'non-trivial squares', ->
 
     size_four_empties = Square.find_or_create
@@ -52,40 +58,42 @@ describe 'cafe au life', ->
       expect(size_eight_empties.result).toEqual(size_four_empties)
 
 
-  # describe 'Square.find', ->
-  #
-  #   # TODO: Find a more complex example, because these will be pre-computed and will exist in the hash
-  #   a = new Divisible
-  #     nw: size_two_fulls
-  #     ne: size_two_empties
-  #     se: size_two_fulls
-  #     sw: size_two_empties
-  #
-  #   b = new Divisible
-  #     nw: size_two_empties
-  #     ne: size_two_fulls
-  #     se: size_two_empties
-  #     sw: size_two_fulls
-  #
-  #   it 'should find a in the hash', ->
-  #
-  #     expect( Square.find
-  #       nw: size_two_fulls
-  #       ne: size_two_empties
-  #       se: size_two_fulls
-  #       sw: size_two_empties
-  #     ).toEqual(
-  #       a
-  #     )
-  #
-  #   it 'should not find something not (yet) in the hash', ->
-  #
-  #     expect( Square.find
-  #       nw: size_two_fulls
-  #       ne: size_two_fulls
-  #       se: size_two_empties
-  #       sw: size_two_empties
-  #     ).toBeFalsy()
+  describe 'inflation', ->
+
+    two_by_two = Square.find_or_create [[1, 0], [0, 1]]
+
+    it 'should not inflate cells', ->
+
+      expect(Indivisible.Alive).not.toRespondTo('inflate_by')
+
+    it 'should inflate 2x2 at zero level to itself', ->
+
+      expect(two_by_two.inflate_by(0)).toEqual(Square.find_or_create [
+        [1, 0]
+        [0, 1]
+      ])
+
+    it 'should inflate 2x2 at one level to double itself', ->
+
+      expect(two_by_two.inflate_by(1).to_json()).toEqual([
+        [0, 0, 0, 0]
+        [0, 1, 0, 0]
+        [0, 0, 1, 0]
+        [0, 0, 0, 0]
+      ])
+
+    it 'should inflate 2x2 at two levels to quadruple itself', ->
+
+      expect(two_by_two.inflate_by(2).to_json()).toEqual([
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 1, 0, 0, 0, 0]
+        [0, 0, 0, 0, 1, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+      ])
 
 
   describe 'to_json', ->

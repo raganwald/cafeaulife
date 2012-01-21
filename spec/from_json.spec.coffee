@@ -5,7 +5,7 @@ _.defaults global, require('../lib/cafeaulife').cafeaulife
 
 require('../lib/seeds')
 
-describe 'stringification of', ->
+describe 'from_json', ->
 
   describe 'cells', ->
 
