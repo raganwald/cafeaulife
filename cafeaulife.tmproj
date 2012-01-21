@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>lib/programming_by_example.coffee</string>
+	<string>spec/from_json.spec.coffee</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -13,6 +13,8 @@
 			<string>cafeaulife</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|tmp|log|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>selected</key>
+			<true/>
 			<key>sourceDirectory</key>
 			<string></string>
 		</dict>
@@ -40,50 +42,34 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>21</integer>
+				<integer>71</integer>
 				<key>line</key>
-				<integer>180</integer>
+				<integer>171</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>143</integer>
 		</dict>
-		<key>lib/programming_by_example.coffee</key>
+		<key>spec/from_json.spec.coffee</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>26</integer>
+				<integer>30</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>78</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>spec/cafeaulife.spec.coffee</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>24</integer>
-				<key>line</key>
-				<integer>66</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>48</integer>
+			<integer>34</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>README.md</string>
 		<string>lib/cafeaulife.coffee</string>
-		<string>lib/programming_by_example.coffee</string>
-		<string>spec/cafeaulife.spec.coffee</string>
+		<string>spec/from_json.spec.coffee</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

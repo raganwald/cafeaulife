@@ -157,6 +157,38 @@ do (Square) ->
         sq.nw is square_params.nw and sq.ne is square_params.ne and sq.se is square_params.se and sq.sw is square_params.sw
 
   Square.find_or_create = (square_params) ->
+    if _.isArray(square_params)
+      unless _.isArray(square_params[0]) and square_params[0].length is square_params.length
+        console?.log JSON.stringify(square_params)
+        throw 'must be a square'
+      if square_params.length is 1
+        if square_params[0][0] instanceof Indivisible
+          return square_params[0][0]
+        else if square_params[0][0] is 0
+          return Indivisible.Dead
+        else if square_params[0][0] is 1
+          return Indivisible.Alive
+        else
+          throw 'a 1x1 square must contain a zero, one, or Indivisible'
+      else
+        half_length = square_params.length / 2
+        square_params =
+          nw: Square.find_or_create(
+            square_params.slice(0, half_length).map (row) ->
+              row.slice(0, half_length)
+          )
+          ne: Square.find_or_create(
+            square_params.slice(0, half_length).map (row) ->
+              row.slice(half_length)
+          )
+          se: Square.find_or_create(
+            square_params.slice(half_length).map (row) ->
+              row.slice(half_length)
+          )
+          sw: Square.find_or_create(
+            square_params.slice(half_length).map (row) ->
+              row.slice(0, half_length)
+          )
     found = Square.find(square_params)
     if found
       found
