@@ -224,7 +224,7 @@ NonTrivialSquare = do ->
   class NonTrivialSquare extends Divisible
     constructor: ({nw, ne, se, sw}) ->
       super({nw: nw, ne:ne, se:se, sw:sw})
-      @velocity = @nw.velocity * 2
+      @generations = @nw.generations * 2
       me = this
       @intermediate_result = _.memoize( ->
         new IntermediateResult(this)

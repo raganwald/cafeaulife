@@ -16,7 +16,7 @@ C.Indivisible.Dead = new C.Indivisible(0)
 class SquareSz4 extends C.Divisible
   constructor: (params) ->
     super(params)
-    @velocity = 1
+    @generations = 1
     @result = _.memoize( ->
       a = @.to_json()
       succ = (row, col) ->
