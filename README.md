@@ -36,8 +36,6 @@ My understanding of HashLife was gleaned from the writings of:
 
 HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two ( `2^0 -> 1`, `2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...).
 
-    class Square
-
 ### Subdivisions
 
 One property of a square of size `2^n | n > 0` is that it can be divided into four component squares of size `2^(n-1)`. For example, a square of size eight (`2^3`) is composed of four component squares of size four (`2^2`):
@@ -55,10 +53,7 @@ One property of a square of size `2^n | n > 0` is that it can be divided into fo
 
 The squares of size four are in turn each composed of four component squares of size two (`2^1`), which are each composed of four component squares of size one (`2^0`), which cannot be subdivided.(For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)
 
-HashLife exploits this symmetry by representing all squares of size `n > 0` as CoffeeScript class instances with four properties, conventionally labeled `nw`, `ne`, `se` and `sw`:
-
-    class Divisible extends Square
-      constructor: ({@nw, @ne, @se, @sw}) ->
+HashLife exploits this symmetry by representing all squares of size `n > 0` as CoffeeScript class instances with four quadrants, conventionally labeled `nw`, `ne`, `se` and `sw`.
 
 (The technical name for such a data structure is a [QuadTree][qt].)
 
@@ -66,35 +61,87 @@ HashLife exploits this symmetry by representing all squares of size `n > 0` as C
 
 ### Representing squares
 
-The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square object. There is no concept of an array or bitmap of cells except when performing import and export.
+```coffeescript
+class Square
+  constructor: ->
+    @toString = _.memoize( ->
+      (_.map @to_json(), (row) ->
+        (_.map row, (cell) ->
+          if cell then '*' else ' '
+        ).join('')
+      ).join('\n')
+    )
+```
 
-Squares of size `0` are represented as either of:
+The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. There is no concept of an array or bitmap of cells except when performing import and export.
 
-    class Indivisible extends Square
-      constructor: ({@if_alive, @if_dead})
-  
-    Alive = new Indivisible
-      if_alive: (fn) -> fn.call(this)
-      if_dead: (fn) ->
-    
-    Dead = new Indivisible
-      if_alive: (fn) ->
-      if_dead: (fn) -> fn.call(this)
-      
-In addition to initializing `Alive` and `Dead`, Cafe au Life pre-initializes the sixteen possible squares of size two:
+```coffeescript
+class Indivisible extends Square
+  constructor: (@hash) ->
+  toValue: ->
+    @hash
+  to_json: ->
+    [@hash]
+  level: ->
+    0
+  empty_copy: ->
+    Indivisible.Dead
 
-    squares_0 = [Dead, Alive]
-    
-    squares_1 = (0..15).map (n) ->
-      new Divisible
-        nw: squares_0[(n&8)>>3]
-        ne: squares_0[(n&4)>>2]
-        se: squares_0[(n&2)>>1]
-        sw: squares_0[n&1]
+Indivisible.Alive = _.tap new Indivisible(1), (alive) ->
+  alive.is_empty = ->
+    false
+Indivisible.Dead = _.tap new Indivisible(0), (dead) ->
+  dead.is_empty = ->
+    true
+```
 
-For example, a square of size thirty-two (`2^5`) consisting of entirely dead cells would have its `nw`, `ne`, `se`, and `sw` properties all containing the same square of size sixteen (`2^4`). That square would have its four properties containing the same square of size eight (`2^3`), which would have its four properties containing the same square of size four, which in turn would have all four if its properties containing the same square of size two, and that square would have four properties, all containing the size zero value `Dead`.
+All cells larger than size one are 'divisible':
 
-Thus, a board containing 1,024 cells could be represented by as few as six objects when there is maximal redundancy. This saves more than space: HashLife is able to cache the result of iterating forward in time with each square. HashLife thus trades a huge amount of calculation for cache lookups.
+```coffeescript
+class Divisible extends Square
+  constructor: (params) ->
+    super()
+    {@nw, @ne, @se, @sw} = params
+  #...
+```
+
+HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class `Square`. For example, there is exactly one representation of a cell of size two containing four empty cells, roughly:
+
+```coffeescript
+empty_two = new Divisible
+  nw: Indivisible.Empty
+  ne: Indivisible.Empty
+  se: Indivisible.Empty
+  sw: Indivisible.Empty
+```
+
+Likewise, there is one and only one square representing a cell of size four containing sixteen empty cells. Note well:
+
+```coffeescript
+new Divisible
+  nw: empty_two
+  ne: empty_two
+  se: empty_two
+  sw: empty_two
+```
+
+Furthermore, different squares can share the same quadrant. Here is a square of size four with a checker-board pattern:
+
+```coffeescript
+full_two = new Divisible
+  nw: Indivisible.Alive
+  ne: Indivisible.Alive
+  se: Indivisible.Alive
+  sw: Indivisible.Alive
+
+new Divisible
+  nw: empty_two
+  ne: full_two
+  se: empty_two
+  sw: full_two
+```
+
+It uses the same square used to make up the empty square of size four. We see from these examples the fundamental way HashLife represents the state of the Life "universe:" Squares are subdivided into quadrants of one size smaller, and the same square can and is reused anywhere that same representation is needed.
 
 ### The Speed of Light
 
@@ -168,28 +215,33 @@ The smallest square that computes a result is of size four (`2^2`). Its result i
     .++.
     ....
 
-The computation of the four inner `+` cells from their adjacent eight cells is straightforward and can be calculated from the basic 2-3 rules or looked up from a table with 65K entries. Thus, the result of a square of size four is a square of size two representing the state of the center at time `t+1`.
+The computation of the four inner `+` cells from their adjacent eight cells is straightforward and can be calculated from the basic 2-3 rules or looked up from a table with 65K entries. Thus, the result of a square of size four is a square of size two representing the state of the centre at time `t+1`. Since the result represents the state one 'moment' later, we say the result is one generation into the future. (We will see later that larger squares results more generations into the future.)
 
-Since the result represents the state one 'moment' later, we say the result has a *velocity* of one. (We will see later that larger squares will have higher velocities.)
+### Seeding
 
-Cafe au Life initializes the results for squares of size four with a seed array of all 65536 possible squares and their results:
+For reasons we will hand-wave now, Cafe au Life is "seeded" with the two possible squares of size one (Alive and Dead), the sixteen possible squares of size two, and the 65K possible squares of size four. The results for the squares of size four are computed using Life's rules:
 
-    class SquareSz4 extends Divisible
-      constructor({nw, ne, se, sw, @result}) ->
-        super({nw: nw, ne:ne, se:se, sw:sw})
-        @velocity = 1
+```coffeescript
+class SquareSz4 extends Divisible
+  constructor: (params) ->
+    super(params)
+    @generations = 1
+    @result = _.memoize( ->
+      a = @.to_json()
+      succ = (row, col) ->
+        count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] + a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
+        if count is 3 or (count is 2 and a[row][col] is 1) then C.Indivisible.Alive else C.Indivisible.Dead
+      Square.find_or_create
+        nw: succ(1,1)
+        ne: succ(1,2)
+        se: succ(2,2)
+        sw: succ(2,1)
+    )
+```  
 
-    [
-      [ 0,  0,  0,  0, 0],
-      # ...
-      [15, 15, 15, 15, 0]
-    ].each ([nw, ne, se, sw, result]) ->
-      new SquareSz4
-        nw: squares_1[nw]
-        ne: squares_1[ne]
-        se: squares_1[se]
-        sw: squares_1[sw]
-        result: squares_1[result]
+Since each square of size four is unique, HashLife never needs to recompute the same sixteen-by-sixteen pattern. This makes a number of optimizations moot. For example, it is easy to note that the result of an empty square is also empty, but since this will only ever be computed once, why bother?
+
+Squares of size eight and larger could be computed and their results memoized, but there are further optimizations to be had by exploiting redundancy.
 
 ### Squares of size eight
 
@@ -201,7 +253,7 @@ Given four component squares, this looks up a square in the cache. For the momen
 
 We know how to obtain any square of size four using `Square.find`. So what we need is a way to compute the result for any arbitrary square of size eight from squares of size four.
 
-First, Let's look at our square of size eight made up of four component squares of size four:
+First, Let's look at our square of size eight made up of four component squares of size four (the lines and crosses are part of the components):
 
     nw        ne  
       +--++--+
@@ -214,6 +266,17 @@ First, Let's look at our square of size eight made up of four component squares 
       +--++--+
     sw        se
 
+Our goal is to compute a result that looks like this (the lines and crosses are part of the result):
+
+    nw        ne  
+
+        +--+
+        |..|
+        |..|
+        +--+
+
+    sw        se
+    
 Given that we know the result for each of those four squares, we can start building an intermediate result. In this diagram, we have labeled the results by their source:
 
     nw        ne
@@ -227,18 +290,6 @@ Given that we know the result for each of those four squares, we can start build
        
     sw        se
     
-As we go along, we'll complete this bit of code:
-
-    class Square3 extends Square
-      constructor: ({nw, ne, se, sw}) ->
-        super({nw: nw, ne:ne, se:se, sw:sw})
-        
-        this_to_intermediate_components = ->
-          nw: @nw.result
-          ne: @ne.result
-          se: @se.result
-          sw: @sw.result
-          # ...
           
 We can also derive four overlapping squares, these representing `n`, `e`, `s`, and `w`:
 
@@ -265,41 +316,6 @@ Deriving these from our four component squares is straightforward, and when we t
        ..ss..
        
     sw        se
-    
-We add this into our code:
-
-          # ...
-          
-          nn: Square
-            .find
-              nw: @nw.ne
-              ne: @ne.nw
-              se: @ne.sw
-              sw: @nw.se
-            .result
-          ee: Square
-            .find
-              nw: @ne.sw
-              ne: @ne.se
-              se: @se.ne
-              sw: @se.nw
-            .result
-          ss: Square
-            .find
-              nw: @sw.ne
-              ne: @se.nw
-              se: @se.sw
-              sw: @sw.se
-            .result
-          ww: Square
-            .find
-              nw: @nw.sw
-              ne: @nw.se
-              se: @se.ne
-              sw: @se.nw
-            .result
-            
-          # ...
 
 We use a similar method to derive a center square:
 
@@ -315,16 +331,6 @@ We use a similar method to derive a center square:
     sw        se
     
 And we extract its result square accordingly:
-
-          # ...
-          
-          cc: Square
-            .find
-              nw: @nw.se
-              ne: @ne.sw
-              se: @se.nw
-              sw: @sw.ne
-            .result
 
 
     nw        ne
@@ -407,67 +413,7 @@ From this, we can make four *overlapping* squares of size `2^(n-1)`:
        
     sw        se  sw        se
     
-Note that these overlapping squares can all be built out of our intermediate results. So let's do that:
-    
-    square_to_overlaps = ->
-      nw: Square
-        .find
-          nw: @nw
-          ne: @nn
-          se: @cc
-          sw: @ww
-      ne: Square
-          .find
-          nw: @nn
-          ne: @ne
-          se: @ee
-          sw: @cc
-      se: Square
-        .find
-          nw: @cc
-          ne: @ee
-          se: @se
-          sw: @ss
-      sw: Square
-        .find
-          nw: @ww
-          ne: @cc
-          se: @ss
-          sw: @sw
-        
-What do we do with our four overlaps? Why, we get *their* results, of course. Let's revise our snippet:
-    
-    intermediate_components_to_result_components = ->
-      nw: Square
-        .find
-          nw: @nw
-          ne: @nn
-          se: @cc
-          sw: @ww
-        .result
-      ne: Square
-          .find
-          nw: @nn
-          ne: @ne
-          se: @ee
-          sw: @cc
-        .result
-      se: Square
-        .find
-          nw: @cc
-          ne: @ee
-          se: @se
-          sw: @ss
-        .result
-      sw: Square
-        .find
-          nw: @ww
-          ne: @cc
-          se: @ss
-          sw: @sw
-        .result
-
-This produces:
+Note that these overlapping squares can all be built out of our intermediate results. We can now derive results from each of those squares:
 
     nw        ne
     
@@ -480,7 +426,7 @@ This produces:
        
     sw        se
 
-And when we place it within our original square of size eight, we reveal we have a square of size four, `2^(n=-1)` as we wanted
+And when we place it within our original square of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
 
     nw        ne
       ........
@@ -492,14 +438,3 @@ And when we place it within our original square of size eight, we reveal we have
       ........
       ........
     sw        se
-
-Obviously, we can make a square out of that:
-
-    intermediate_square_components = this_to_intermediate_components.call(this)
-    result_square_components = intermediate_components_to_result_components.call(intermediate_square_components)
-
-    @result = Square.find(result_square_components)
-    
-What about our velocity? Well, we have taken *two* steps forward in time, not one. Both steps were the same size as the velocity of squares of size `2^(n-1)`, so let's grab one such square's velocity and double it:
-
-    @velocity = @nw.velocity * 2

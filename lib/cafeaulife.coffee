@@ -48,8 +48,8 @@ class Divisible extends Square
   constructor: (params) ->
     super()
     {@nw, @ne, @se, @sw} = params
-    @hash = cache.hash(this)
     @id = (id += 1)
+    @hash = cache.hash(this)
     @is_empty = _.memoize( ->
       @nw.is_empty() and @ne.is_empty() and @se.is_empty() and @sw.is_empty()
     )
