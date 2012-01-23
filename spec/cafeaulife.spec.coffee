@@ -136,6 +136,54 @@ describe 'cafe au life', ->
         [0, 0, 0, 0, 0, 0, 0, 0]
       ])
 
+  describe 'deflation', ->
+
+    square = Square.find_or_create [
+      [0, 0, 0, 0, 0, 0, 0, 1]
+      [0, 1, 0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0, 1, 0, 0]
+      [0, 0, 0, 1, 0, 0, 0, 0]
+      [1, 1, 1, 0, 1, 1, 0, 0]
+      [1, 0, 0, 1, 0, 1, 0, 0]
+      [1, 0, 0, 1, 0, 1, 1, 1]
+      [0, 1, 1, 1, 0, 0, 0, 1]
+    ]
+
+    it 'should have a zero deflation', ->
+
+      expect( square.deflate_by(0) ).toEqual(
+        Square.find_or_create [
+          [0, 0, 0, 0, 0, 0, 0, 1]
+          [0, 1, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0, 1, 0, 0]
+          [0, 0, 0, 1, 0, 0, 0, 0]
+          [1, 1, 1, 0, 1, 1, 0, 0]
+          [1, 0, 0, 1, 0, 1, 0, 0]
+          [1, 0, 0, 1, 0, 1, 1, 1]
+          [0, 1, 1, 1, 0, 0, 0, 1]
+        ]
+      )
+
+    it 'should deflate by one', ->
+
+      expect( square.deflate_by(1) ).toEqual(
+        Square.find_or_create [
+          [0, 0, 0, 1]
+          [0, 1, 0, 0]
+          [1, 0, 1, 1]
+          [0, 1, 0, 1]
+        ]
+      )
+
+    it 'should deflate by two', ->
+
+      expect( square.deflate_by(2) ).toEqual(
+        Square.find_or_create [
+          [1, 0]
+          [0, 1]
+        ]
+      )
+
   describe 'progress', ->
 
     it 'should persist a block', ->

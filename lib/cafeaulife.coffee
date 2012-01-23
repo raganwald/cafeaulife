@@ -85,6 +85,16 @@ class Divisible extends Square
       ne: empty_quadrant
       se: empty_quadrant
       sw: empty_quadrant
+  deflate_by: (extant) ->
+    return this if extant is 0
+    cache.find_or_create_by_quadrant(
+      _.reduce [0..(extant - 1)], (quadrants) ->
+        nw: quadrants.nw.se
+        ne: quadrants.ne.sw
+        se: quadrants.se.nw
+        sw: quadrants.sw.ne
+      , this
+    )
   inflate_by: (extant) ->
     if extant is 0
       return this
