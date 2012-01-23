@@ -1,6 +1,6 @@
 _ = require('underscore')
 
-C = require('./cafeaulife').cafeaulife
+C = require('./cafeaulife')
 
 root = this
 
