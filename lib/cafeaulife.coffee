@@ -200,7 +200,7 @@ cache = do ->
     if square_like.hash?
       square_like.hash
     else
-      hash(square_like.nw) + hash(square_like.ne)  + hash(square_like.se) + hash(square_like.sw)
+      ((3 *hash(square_like.nw)) + (37 * hash(square_like.ne))  + (79 * hash(square_like.se)) + (131 * hash(square_like.sw)))
 
   find = (quadrants) ->
     bucket_number = hash(quadrants) % num_buckets
