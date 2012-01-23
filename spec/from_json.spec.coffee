@@ -1,7 +1,7 @@
 _ = require('underscore')
 require 'UnderscoreMatchersForJasmine'
 
-_.defaults global, require('../lib/cafeaulife').cafeaulife
+_.defaults global, require('../lib/cafeaulife')
 
 require('../lib/seeds')
 

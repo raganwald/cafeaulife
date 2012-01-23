@@ -1,7 +1,7 @@
 _ = require('underscore')
 require 'UnderscoreMatchersForJasmine'
 
-_.defaults global, require('../lib/cafeaulife').cafeaulife
+_.defaults global, require('../lib/cafeaulife')
 
 require('../lib/seeds')
 
@@ -12,7 +12,7 @@ describe '.empty', ->
     [0, 1, 0, 0]
     [0, 0, 1, 0]
     [0, 0, 0, 0]
-  ]).empty()
+  ]).empty_copy()
 
   it 'should be a resulting square', ->
 
@@ -162,7 +162,7 @@ describe 'cafe au life', ->
 
       expect(inflated.result().to_json()).not.toEqual(orphans.inflate_by(2).to_json())
 
-      expect(inflated.result().to_json()).toEqual(orphans.inflate_by(2).empty().to_json())
+      expect(inflated.result().to_json()).toEqual(orphans.inflate_by(2).empty_copy().to_json())
 
     it 'should birth a square with three neighbours', ->
 
@@ -179,6 +179,47 @@ describe 'cafe au life', ->
       inflated = parents.inflate_by(1)
 
       expect( inflated.result() ).toEqual(block)
+
+  describe 'still life forms should persist', ->
+
+    blocks = [
+      Square.find_or_create [
+        [1, 1]
+        [1, 1]
+      ]
+    ]
+
+    boats = [
+      Square.find_or_create [
+        [0, 1, 0, 0]
+        [1, 0, 1, 0]
+        [0, 1, 1, 0]
+        [0, 0, 0, 0]
+      ]
+      Square.find_or_create [
+        [0, 0, 1, 0]
+        [0, 1, 0, 1]
+        [0, 1, 1, 0]
+        [0, 0, 0, 0]
+      ]
+      Square.find_or_create [
+        [0, 0, 0, 0]
+        [0, 1, 1, 0]
+        [0, 1, 0, 1]
+        [0, 0, 1, 0]
+      ]
+      Square.find_or_create [
+        [0, 0, 0, 0]
+        [0, 1, 1, 0]
+        [1, 0, 1, 0]
+        [0, 1, 0, 0]
+      ]
+    ]
+
+    _.each {Block: blocks, Boat: boats}, (examples, name) ->
+      _.each examples, (square) ->
+        it "Should not change a #{name}", ->
+          expect( square.inflate_by(1).result() ).toEqual(square)
 
   describe 'to_json', ->
 

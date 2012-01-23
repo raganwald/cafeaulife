@@ -8,6 +8,13 @@ root = this
 
 class Square
   constructor: ->
+    @toString = _.memoize( ->
+      (_.map @to_json(), (row) ->
+        (_.map row, (cell) ->
+          if cell then '*' else '.'
+        ).join('')
+      ).join('\n')
+    )
 
 ###########################################
 # Indivisibles represent individual cells #
@@ -21,11 +28,15 @@ class Indivisible extends Square
     [@hash]
   level: ->
     0
-  empty: ->
+  empty_copy: ->
     Indivisible.Dead
 
-Indivisible.Alive = new Indivisible(1)
-Indivisible.Dead = new Indivisible(0)
+Indivisible.Alive = _.tap new Indivisible(1), (alive) ->
+  alive.is_empty = ->
+    false
+Indivisible.Dead = _.tap new Indivisible(0), (dead) ->
+  dead.is_empty = ->
+    true
 
 ##################################################################################
 # Divisible is the parent for Size two, four, and larger ("non-trivial") squares #
@@ -39,32 +50,36 @@ class Divisible extends Square
     {@nw, @ne, @se, @sw} = params
     @hash = cache.hash(this)
     @id = (id += 1)
-  to_json: ->
-    a =
-      nw: @nw.to_json()
-      ne: @ne.to_json()
-      se: @se.to_json()
-      sw: @sw.to_json()
-    b =
-      top: _.map( _.zip(a.nw, a.ne), (row) ->
-        [left, right] = row
-        if _.isArray(left)
-          left.concat(right)
-        else
-          row
-      )
-      bottom: _.map( _.zip(a.sw, a.se), (row) ->
-        [left, right] = row
-        if _.isArray(left)
-          left.concat(right)
-        else
-          row
-      )
-    b.top.concat(b.bottom)
+    @is_empty = _.memoize( ->
+      @nw.is_empty() and @ne.is_empty() and @se.is_empty() and @sw.is_empty()
+    )
+    @to_json = _.memoize( ->
+      a =
+        nw: @nw.to_json()
+        ne: @ne.to_json()
+        se: @se.to_json()
+        sw: @sw.to_json()
+      b =
+        top: _.map( _.zip(a.nw, a.ne), (row) ->
+          [left, right] = row
+          if _.isArray(left)
+            left.concat(right)
+          else
+            row
+        )
+        bottom: _.map( _.zip(a.sw, a.se), (row) ->
+          [left, right] = row
+          if _.isArray(left)
+            left.concat(right)
+          else
+            row
+        )
+      b.top.concat(b.bottom)
+    )
   level: ->
     @nw.level() + 1
-  empty: ->
-    empty_quadrant = @nw.empty()
+  empty_copy: ->
+    empty_quadrant = @nw.empty_copy()
     cache.find_or_create_by_quadrant
       nw: empty_quadrant
       ne: empty_quadrant
@@ -74,7 +89,7 @@ class Divisible extends Square
     if extant is 0
       return this
     else
-      empty_quadrant = @nw.empty()
+      empty_quadrant = @nw.empty_copy()
       cache
         .find_or_create_by_quadrant
           nw: cache.find_or_create_by_quadrant
@@ -104,47 +119,6 @@ class Divisible extends Square
 #####################################################
 
 NonTrivialSquare = do ->
-
-  this_to_intermediate_components = ->
-    nw: @nw.result()
-    ne: @ne.result()
-    se: @se.result()
-    sw: @sw.result()
-    nn: Square
-      .find_or_create_by_quadrant
-        nw: @nw.ne
-        ne: @ne.nw
-        se: @ne.sw
-        sw: @nw.se
-      .result()
-    ee: Square
-      .find_or_create_by_quadrant
-        nw: @ne.sw
-        ne: @ne.se
-        se: @se.ne
-        sw: @se.nw
-      .result()
-    ss: Square
-      .find_or_create_by_quadrant
-        nw: @sw.ne
-        ne: @se.nw
-        se: @se.sw
-        sw: @sw.se
-      .result()
-    ww: Square
-      .find_or_create_by_quadrant
-        nw: @nw.sw
-        ne: @nw.se
-        se: @se.ne
-        sw: @se.nw
-      .result()
-    cc: Square
-      .find_or_create_by_quadrant
-        nw: @nw.se
-        ne: @ne.sw
-        se: @se.nw
-        sw: @sw.ne
-      .result()
 
   intermediate_components_to_result_components = ->
     nw: Square
@@ -176,14 +150,77 @@ NonTrivialSquare = do ->
         sw: @sw
       .result()
 
+  class IntermediateResult
+    constructor: (square) ->
+      _.extend this,
+        nw: square.nw.result()
+        ne: square.ne.result()
+        se: square.se.result()
+        sw: square.sw.result()
+        nn: Square
+          .find_or_create_by_quadrant
+            nw: square.nw.ne
+            ne: square.ne.nw
+            se: square.ne.sw
+            sw: square.nw.se
+          .result()
+        ee: Square
+          .find_or_create_by_quadrant
+            nw: square.ne.sw
+            ne: square.ne.se
+            se: square.se.ne
+            sw: square.se.nw
+          .result()
+        ss: Square
+          .find_or_create_by_quadrant
+            nw: square.sw.ne
+            ne: square.se.nw
+            se: square.se.sw
+            sw: square.sw.se
+          .result()
+        ww: Square
+          .find_or_create_by_quadrant
+            nw: square.nw.sw
+            ne: square.nw.se
+            se: square.sw.ne
+            sw: square.sw.nw
+          .result()
+        cc: Square
+          .find_or_create_by_quadrant
+            nw: square.nw.se
+            ne: square.ne.sw
+            se: square.se.nw
+            sw: square.sw.ne
+          .result()
+    to_json: ->
+      b =
+        top: _.map( _.zip(@nw.to_json(), @nn.to_json(), @ne.to_json()), (row) ->
+          _.reduce(row, (acc, cell) ->
+            acc.concat(cell)
+          , [])
+        )
+        mid: _.map( _.zip(@ww.to_json(), @cc.to_json(), @ee.to_json()), (row) ->
+          _.reduce(row, (acc, cell) ->
+            acc.concat(cell)
+          , [])
+        )
+        bot: _.map( _.zip(@sw.to_json(), @ss.to_json(), @sw.to_json()), (row) ->
+          _.reduce(row, (acc, cell) ->
+            acc.concat(cell)
+          , [])
+        )
+      b.top.concat(b.mid).concat(b.bot)
+
   class NonTrivialSquare extends Divisible
     constructor: ({nw, ne, se, sw}) ->
       super({nw: nw, ne:ne, se:se, sw:sw})
       @velocity = @nw.velocity * 2
       me = this
+      @intermediate_result = _.memoize( ->
+        new IntermediateResult(this)
+      )
       @result = _.memoize( ->
-        intermediate_square_components = this_to_intermediate_components.call(this)
-        result_square_components = intermediate_components_to_result_components.call(intermediate_square_components)
+        result_square_components = intermediate_components_to_result_components.call(@intermediate_result())
         cache.find_or_create_by_quadrant(result_square_components)
       )
 
@@ -279,4 +316,4 @@ cache = do ->
 
 _.extend Square, cache
 
-root.cafeaulife = {Square, Indivisible, Divisible, NonTrivialSquare}
+_.defaults root, {Square, Indivisible, Divisible, NonTrivialSquare}
