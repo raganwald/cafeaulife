@@ -120,36 +120,6 @@ class Divisible extends Square
 
 NonTrivialSquare = do ->
 
-  intermediate_components_to_result_components = ->
-    nw: Square
-      .find_or_create_by_quadrant
-        nw: @nw
-        ne: @nn
-        se: @cc
-        sw: @ww
-      .result()
-    ne: Square
-      .find_or_create_by_quadrant
-        nw: @nn
-        ne: @ne
-        se: @ee
-        sw: @cc
-      .result()
-    se: Square
-      .find_or_create_by_quadrant
-        nw: @cc
-        ne: @ee
-        se: @se
-        sw: @ss
-      .result()
-    sw: Square
-      .find_or_create_by_quadrant
-        nw: @ww
-        ne: @cc
-        se: @ss
-        sw: @sw
-      .result()
-
   class IntermediateResult
     constructor: (square) ->
       _.extend this,
@@ -192,6 +162,36 @@ NonTrivialSquare = do ->
             se: square.se.nw
             sw: square.sw.ne
           .result()
+    result: ->
+      Square.find_or_create_by_quadrant
+        nw: Square
+          .find_or_create_by_quadrant
+            nw: @nw
+            ne: @nn
+            se: @cc
+            sw: @ww
+          .result()
+        ne: Square
+          .find_or_create_by_quadrant
+            nw: @nn
+            ne: @ne
+            se: @ee
+            sw: @cc
+          .result()
+        se: Square
+          .find_or_create_by_quadrant
+            nw: @cc
+            ne: @ee
+            se: @se
+            sw: @ss
+          .result()
+        sw: Square
+          .find_or_create_by_quadrant
+            nw: @ww
+            ne: @cc
+            se: @ss
+            sw: @sw
+          .result()
     to_json: ->
       b =
         top: _.map( _.zip(@nw.to_json(), @nn.to_json(), @ne.to_json()), (row) ->
@@ -220,8 +220,7 @@ NonTrivialSquare = do ->
         new IntermediateResult(this)
       )
       @result = _.memoize( ->
-        result_square_components = intermediate_components_to_result_components.call(@intermediate_result())
-        cache.find_or_create_by_quadrant(result_square_components)
+        @intermediate_result().result()
       )
 
 #############################################
