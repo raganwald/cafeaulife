@@ -16,16 +16,18 @@ C.Indivisible.Dead = new C.Indivisible(0)
 class SquareSz4 extends C.Divisible
   constructor: (params) ->
     super(params)
-    a = @.to_json()
-    succ = (row, col) ->
-      count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] + a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
-      if count is 3 or (count is 2 and a[row][col] is 1) then C.Indivisible.Alive else C.Indivisible.Dead
-    @result = C.Square.find_or_create
-      nw: succ(1,1)
-      ne: succ(1,2)
-      se: succ(2,2)
-      sw: succ(2,1)
     @velocity = 1
+    @result = _.memoize( ->
+      a = @.to_json()
+      succ = (row, col) ->
+        count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] + a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
+        if count is 3 or (count is 2 and a[row][col] is 1) then C.Indivisible.Alive else C.Indivisible.Dead
+      C.Square.find_or_create
+        nw: succ(1,1)
+        ne: succ(1,2)
+        se: succ(2,2)
+        sw: succ(2,1)
+    )
 
 # a handy function for generatimg cartesian products of a range
 

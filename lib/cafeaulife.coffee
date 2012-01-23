@@ -7,6 +7,7 @@ root = this
 #########################
 
 class Square
+  constructor: ->
 
 ###########################################
 # Indivisibles represent individual cells #
@@ -30,10 +31,14 @@ Indivisible.Dead = new Indivisible(0)
 # Divisible is the parent for Size two, four, and larger ("non-trivial") squares #
 ##################################################################################
 
+id = 0
+
 class Divisible extends Square
   constructor: (params) ->
+    super()
     {@nw, @ne, @se, @sw} = params
     @hash = cache.hash(this)
+    @id = (id += 1)
   to_json: ->
     a =
       nw: @nw.to_json()
@@ -101,45 +106,45 @@ class Divisible extends Square
 NonTrivialSquare = do ->
 
   this_to_intermediate_components = ->
-    nw: @nw.result
-    ne: @ne.result
-    se: @se.result
-    sw: @sw.result
+    nw: @nw.result()
+    ne: @ne.result()
+    se: @se.result()
+    sw: @sw.result()
     nn: Square
       .find_or_create_by_quadrant
         nw: @nw.ne
         ne: @ne.nw
         se: @ne.sw
         sw: @nw.se
-      .result
+      .result()
     ee: Square
       .find_or_create_by_quadrant
         nw: @ne.sw
         ne: @ne.se
         se: @se.ne
         sw: @se.nw
-      .result
+      .result()
     ss: Square
       .find_or_create_by_quadrant
         nw: @sw.ne
         ne: @se.nw
         se: @se.sw
         sw: @sw.se
-      .result
+      .result()
     ww: Square
       .find_or_create_by_quadrant
         nw: @nw.sw
         ne: @nw.se
         se: @se.ne
         sw: @se.nw
-      .result
+      .result()
     cc: Square
       .find_or_create_by_quadrant
         nw: @nw.se
         ne: @ne.sw
         se: @se.nw
         sw: @sw.ne
-      .result
+      .result()
 
   intermediate_components_to_result_components = ->
     nw: Square
@@ -148,36 +153,39 @@ NonTrivialSquare = do ->
         ne: @nn
         se: @cc
         sw: @ww
-      .result
+      .result()
     ne: Square
       .find_or_create_by_quadrant
         nw: @nn
         ne: @ne
         se: @ee
         sw: @cc
-      .result
+      .result()
     se: Square
       .find_or_create_by_quadrant
         nw: @cc
         ne: @ee
         se: @se
         sw: @ss
-      .result
+      .result()
     sw: Square
       .find_or_create_by_quadrant
         nw: @ww
         ne: @cc
         se: @ss
         sw: @sw
-      .result
+      .result()
 
   class NonTrivialSquare extends Divisible
     constructor: ({nw, ne, se, sw}) ->
       super({nw: nw, ne:ne, se:se, sw:sw})
-      intermediate_square_components = this_to_intermediate_components.call(this)
-      result_square_components = intermediate_components_to_result_components.call(intermediate_square_components)
-      @result = cache.find_or_create_by_quadrant(result_square_components)
       @velocity = @nw.velocity * 2
+      me = this
+      @result = _.memoize( ->
+        intermediate_square_components = this_to_intermediate_components.call(this)
+        result_square_components = intermediate_components_to_result_components.call(intermediate_square_components)
+        cache.find_or_create_by_quadrant(result_square_components)
+      )
 
 #############################################
 # Various hash and cache methods for Square #
@@ -192,7 +200,7 @@ cache = do ->
     if square_like.hash?
       square_like.hash
     else
-      ((3 *hash(square_like.nw)) + (37 * hash(square_like.ne))  + (79 * hash(square_like.se)) + (131 * hash(square_like.sw)))
+      hash(square_like.nw) + hash(square_like.ne)  + hash(square_like.se) + hash(square_like.sw)
 
   find = (quadrants) ->
     bucket_number = hash(quadrants) % num_buckets
@@ -205,11 +213,12 @@ cache = do ->
     if found
       found
     else
-      new NonTrivialSquare(quadrants)
+      add(new NonTrivialSquare(quadrants))
 
   add = (square) ->
     bucket_number = square.hash % num_buckets
     (buckets[bucket_number] ||= []).push(square)
+    square
 
   bucketed = ->
     _.reduce buckets, (sum, bucket) ->

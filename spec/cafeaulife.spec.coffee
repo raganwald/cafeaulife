@@ -5,6 +5,47 @@ _.defaults global, require('../lib/cafeaulife').cafeaulife
 
 require('../lib/seeds')
 
+describe '.empty', ->
+
+  foursq = Square.find_or_create([
+    [0, 0, 0, 0]
+    [0, 1, 0, 0]
+    [0, 0, 1, 0]
+    [0, 0, 0, 0]
+  ]).empty()
+
+  it 'should be a resulting square', ->
+
+    expect(foursq).toRespondTo('result')
+
+  it 'should be a resulting square after inflation', ->
+
+    expect(foursq.inflate_by(1)).toRespondTo('result')
+
+
+describe '_.memoize', ->
+
+  it 'gratuitously re-result the same thing many times', ->
+
+    sq = Square.find_or_create([[1, 0], [0, 1]])
+      .inflate_by(2)
+    sq.result()
+
+    number_bucketed = Square.bucketed()
+
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+    sq.result()
+
+    expect( Square.bucketed() ).toEqual(number_bucketed)
+
 describe 'cafe au life', ->
 
   size_two_empties = Square.find
@@ -47,15 +88,15 @@ describe 'cafe au life', ->
 
     it 'should compute results', ->
 
-      expect(size_eight_empties.result).toBeTruthy()
+      expect(size_eight_empties.result()).toBeTruthy()
 
     it 'should compute square results', ->
 
-      expect(size_eight_empties.result).toBeA(Square)
+      expect(size_eight_empties.result()).toBeA(Square)
 
     it 'should compute result squares that are full of empty cells', ->
 
-      expect(size_eight_empties.result).toEqual(size_four_empties)
+      expect(size_eight_empties.result()).toEqual(size_four_empties)
 
 
   describe 'inflation', ->
@@ -106,7 +147,9 @@ describe 'cafe au life', ->
 
       inflated = still_life.inflate_by(3)
 
-      expect(inflated.result).toEqual(still_life.inflate_by(2))
+      expect(inflated.result().to_json()).toEqual(still_life.inflate_by(2).to_json())
+
+      expect(inflated.result()).toEqual(still_life.inflate_by(2))
 
     it 'should kill orphans', ->
 
@@ -117,9 +160,25 @@ describe 'cafe au life', ->
 
       inflated = orphans.inflate_by(3)
 
-      expect(inflated.result).not.toEqual(orphans.inflate_by(2))
+      expect(inflated.result().to_json()).not.toEqual(orphans.inflate_by(2).to_json())
 
-      expect(inflated.result).toEqual(orphans.inflate_by(2).empty())
+      expect(inflated.result().to_json()).toEqual(orphans.inflate_by(2).empty().to_json())
+
+    it 'should birth a square with three neighbours', ->
+
+      parents = Square.find_or_create [
+        [0, 1]
+        [1, 1]
+      ]
+
+      block = Square.find_or_create [
+        [1, 1]
+        [1, 1]
+      ]
+
+      inflated = parents.inflate_by(1)
+
+      expect( inflated.result() ).toEqual(block)
 
   describe 'to_json', ->
 
