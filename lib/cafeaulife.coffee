@@ -11,7 +11,7 @@ class Square
     @toString = _.memoize( ->
       (_.map @to_json(), (row) ->
         (_.map row, (cell) ->
-          if cell then '*' else '.'
+          if cell then '*' else ' '
         ).join('')
       ).join('\n')
     )
