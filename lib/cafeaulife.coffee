@@ -10,9 +10,7 @@ class Square
   constructor: ->
     @toString = _.memoize( ->
       (_.map @to_json(), (row) ->
-        (_.map row, (cell) ->
-          if cell then '*' else ' '
-        ).join('')
+        (if cell then '*' else ' ' for cell in row).join('')
       ).join('\n')
     )
 
@@ -22,6 +20,7 @@ class Square
 
 class Indivisible extends Square
   constructor: (@hash) ->
+    super()
   toValue: ->
     @hash
   to_json: ->
@@ -60,19 +59,17 @@ class Divisible extends Square
         se: @se.to_json()
         sw: @sw.to_json()
       b =
-        top: _.map( _.zip(a.nw, a.ne), (row) ->
-          [left, right] = row
+        top: _.map( _.zip(a.nw, a.ne), ([left, right]) ->
           if _.isArray(left)
             left.concat(right)
           else
-            row
+            [left, right]
         )
-        bottom: _.map( _.zip(a.sw, a.se), (row) ->
-          [left, right] = row
+        bottom: _.map( _.zip(a.sw, a.se), ([left, right]) ->
           if _.isArray(left)
             left.concat(right)
           else
-            row
+            [left, right]
         )
       b.top.concat(b.bottom)
     )

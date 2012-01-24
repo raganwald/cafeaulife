@@ -1,6 +1,5 @@
 _ = require('underscore')
-
-C = require('./cafeaulife')
+_.defaults this, require('./cafeaulife')
 
 root = this
 
@@ -8,25 +7,27 @@ root = this
 # Seeds #
 #########
 
-C.Indivisible.Alive = new C.Indivisible(1)
-C.Indivisible.Dead = new C.Indivisible(0)
+Indivisible.Alive = new Indivisible(1)
+Indivisible.Dead = new Indivisible(0)
 
 # the size four class generates its own result from Life's rules
 
-class SquareSz4 extends C.Divisible
+class SquareSz4 extends Divisible
   constructor: (params) ->
     super(params)
     @generations = 1
-    @result = _.memoize( ->
-      a = @.to_json()
-      succ = (row, col) ->
-        count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] + a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
-        if count is 3 or (count is 2 and a[row][col] is 1) then C.Indivisible.Alive else C.Indivisible.Dead
-      C.Square.find_or_create
-        nw: succ(1,1)
-        ne: succ(1,2)
-        se: succ(2,2)
-        sw: succ(2,1)
+    @result = _.memoize( 
+      ->
+        a = @.to_json()
+        succ = (row, col) ->
+          count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] +
+                  a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
+          if count is 3 or (count is 2 and a[row][col] is 1) then Indivisible.Alive else Indivisible.Dead
+        Square.find_or_create
+          nw: succ(1,1)
+          ne: succ(1,2)
+          se: succ(2,2)
+          sw: succ(2,1)
     )
 
 # a handy function for generatimg cartesian products of a range
@@ -45,9 +46,9 @@ cartesian_product = (range) ->
 cartesian_product(
 
   # ...from all sixteen possible size twos
-  cartesian_product([C.Indivisible.Dead, C.Indivisible.Alive]).map ([nw, ne, se, sw]) ->
-    _.tap new C.Divisible({nw, ne, se, sw}), (sq) ->
-      C.Square.add(sq) unless C.Square.find({nw, ne, se, sw})
+  cartesian_product([Indivisible.Dead, Indivisible.Alive]).map ([nw, ne, se, sw]) ->
+    _.tap new Divisible({nw, ne, se, sw}), (sq) ->
+      Square.add(sq) unless Square.find({nw, ne, se, sw})
 
 ).forEach ([nw, ne, se, sw]) ->
-  C.Square.add(new SquareSz4({nw, ne, se, sw})) unless C.Square.find({nw, ne, se, sw})
+  Square.add(new SquareSz4({nw, ne, se, sw})) unless Square.find({nw, ne, se, sw})
