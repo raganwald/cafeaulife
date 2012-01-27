@@ -3,7 +3,7 @@ require 'UnderscoreMatchersForJasmine'
 
 _.defaults global, require('../lib/cafeaulife')
 
-require('../lib/seeds')
+require( 'lib/lifelike' ).generate_seeds_from_rule [2,3],[3]
 
 describe 'from_json', ->
 
@@ -11,18 +11,18 @@ describe 'from_json', ->
 
     it 'should handle ones and zeroes', ->
 
-      expect( Square.find_or_create [[1]] ).toEqual(Indivisible.Alive)
+      expect( Square.find_or_create [[1]] ).toEqual(Cell.Alive)
 
-      expect( Square.find_or_create [[0]] ).toEqual(Indivisible.Dead)
+      expect( Square.find_or_create [[0]] ).toEqual(Cell.Dead)
 
     it 'should handle size two squares', ->
 
       expect( Square.find_or_create [[1, 0], [0, 1]] ).toEqual(
         Square.find_or_create
-          nw: Indivisible.Alive
-          ne: Indivisible.Dead
-          se: Indivisible.Alive
-          sw: Indivisible.Dead
+          nw: Cell.Alive
+          ne: Cell.Dead
+          se: Cell.Alive
+          sw: Cell.Dead
       )
 
     it 'should handle size four squares', ->
@@ -35,25 +35,25 @@ describe 'from_json', ->
       ] ).toEqual(
         Square.find_or_create
           nw: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Dead
-            se: Indivisible.Dead
-            sw: Indivisible.Dead
+            nw: Cell.Dead
+            ne: Cell.Dead
+            se: Cell.Dead
+            sw: Cell.Dead
           ne: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Alive
-            se: Indivisible.Dead
-            sw: Indivisible.Alive
+            nw: Cell.Dead
+            ne: Cell.Alive
+            se: Cell.Dead
+            sw: Cell.Alive
           se: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Dead
-            se: Indivisible.Dead
-            sw: Indivisible.Dead
+            nw: Cell.Dead
+            ne: Cell.Dead
+            se: Cell.Dead
+            sw: Cell.Dead
           sw: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Alive
-            se: Indivisible.Dead
-            sw: Indivisible.Alive
+            nw: Cell.Dead
+            ne: Cell.Alive
+            se: Cell.Dead
+            sw: Cell.Alive
       )
 
       expect( Square.find_or_create [
@@ -64,23 +64,23 @@ describe 'from_json', ->
       ] ).toEqual(
         Square.find_or_create
           nw: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Dead
-            se: Indivisible.Dead
-            sw: Indivisible.Dead
+            nw: Cell.Dead
+            ne: Cell.Dead
+            se: Cell.Dead
+            sw: Cell.Dead
           ne: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Dead
-            se: Indivisible.Dead
-            sw: Indivisible.Alive
+            nw: Cell.Dead
+            ne: Cell.Dead
+            se: Cell.Dead
+            sw: Cell.Alive
           se: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Dead
-            se: Indivisible.Alive
-            sw: Indivisible.Dead
+            nw: Cell.Dead
+            ne: Cell.Dead
+            se: Cell.Alive
+            sw: Cell.Dead
           sw: Square.find_or_create
-            nw: Indivisible.Dead
-            ne: Indivisible.Alive
-            se: Indivisible.Dead
-            sw: Indivisible.Dead
+            nw: Cell.Dead
+            ne: Cell.Alive
+            se: Cell.Dead
+            sw: Cell.Dead
       )

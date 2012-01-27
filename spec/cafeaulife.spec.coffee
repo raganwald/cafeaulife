@@ -3,7 +3,7 @@ require 'UnderscoreMatchersForJasmine'
 
 _.defaults global, require('../lib/cafeaulife')
 
-require('../lib/seeds')
+require( 'lib/lifelike' ).generate_seeds_from_rule [2,3],[3]
 
 describe '.empty', ->
 
@@ -49,22 +49,22 @@ describe '_.memoize', ->
 describe 'cafe au life', ->
 
   size_two_empties = Square.find
-    nw: Indivisible.Dead
-    ne: Indivisible.Dead
-    se: Indivisible.Dead
-    sw: Indivisible.Dead
+    nw: Cell.Dead
+    ne: Cell.Dead
+    se: Cell.Dead
+    sw: Cell.Dead
 
   size_two_fulls = Square.find
-    nw: Indivisible.Alive
-    ne: Indivisible.Alive
-    se: Indivisible.Alive
-    sw: Indivisible.Alive
+    nw: Cell.Alive
+    ne: Cell.Alive
+    se: Cell.Alive
+    sw: Cell.Alive
 
   it 'should support the basics', ->
 
-    expect(Indivisible.Dead).not.toBeUndefined()
+    expect(Cell.Dead).not.toBeUndefined()
 
-    expect(Indivisible.Alive).not.toBeUndefined()
+    expect(Cell.Alive).not.toBeUndefined()
 
   describe 'non-trivial squares', ->
 
@@ -105,7 +105,7 @@ describe 'cafe au life', ->
 
     it 'should not inflate cells', ->
 
-      expect(Indivisible.Alive).not.toRespondTo('inflate_by')
+      expect(Cell.Alive).not.toRespondTo('inflate_by')
 
     it 'should inflate 2x2 at zero level to itself', ->
 
@@ -272,10 +272,10 @@ describe 'cafe au life', ->
   describe 'to_json', ->
 
     square_1 = Square.find
-      nw: Indivisible.Alive
-      ne: Indivisible.Alive
-      se: Indivisible.Dead
-      sw: Indivisible.Alive
+      nw: Cell.Alive
+      ne: Cell.Alive
+      se: Cell.Dead
+      sw: Cell.Alive
 
     it 'should handle a square of 1', ->
 

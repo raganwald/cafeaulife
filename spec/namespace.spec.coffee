@@ -1,4 +1,4 @@
-require '../lib/seeds'
+require '../lib/lifelike'
 require 'UnderscoreMatchersForJasmine'
 
 describe 'namespaces', ->

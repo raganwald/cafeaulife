@@ -2,25 +2,12 @@ _ = require('underscore')
 
 root = this
 
-#########################
-# The Grand-daddy class #
-#########################
+######################################
+# Cells represent indivisible points #
+######################################
 
-class Square
-  constructor: ->
-    @toString = _.memoize( ->
-      (_.map @to_json(), (row) ->
-        (if cell then '*' else ' ' for cell in row).join('')
-      ).join('\n')
-    )
-
-###########################################
-# Indivisibles represent individual cells #
-###########################################
-
-class Indivisible extends Square
+class Cell
   constructor: (@hash) ->
-    super()
   toValue: ->
     @hash
   to_json: ->
@@ -28,30 +15,22 @@ class Indivisible extends Square
   level: ->
     0
   empty_copy: ->
-    Indivisible.Dead
+    Cell.Dead
 
-Indivisible.Alive = _.tap new Indivisible(1), (alive) ->
-  alive.is_empty = ->
-    false
-Indivisible.Dead = _.tap new Indivisible(0), (dead) ->
-  dead.is_empty = ->
-    true
+Cell.Alive = new Cell(1)
+Cell.Dead = new Cell(0)
 
-##################################################################################
-# Divisible is the parent for Size two, four, and larger ("non-trivial") squares #
-##################################################################################
+###############################################################################
+# Square is the parent for Size two, four, and larger ("non-trivial") squares #
+###############################################################################
 
 id = 0
 
-class Divisible extends Square
+class Square
   constructor: (params) ->
-    super()
     {@nw, @ne, @se, @sw} = params
     @id = (id += 1)
     @hash = cache.hash(this)
-    @is_empty = _.memoize( ->
-      @nw.is_empty() and @ne.is_empty() and @se.is_empty() and @sw.is_empty()
-    )
     @to_json = _.memoize( ->
       a =
         nw: @nw.to_json()
@@ -72,6 +51,11 @@ class Divisible extends Square
             [left, right]
         )
       b.top.concat(b.bottom)
+    )
+    @toString = _.memoize( ->
+      (_.map @to_json(), (row) ->
+        ([' ', '*'][c] for c in row).join('')
+      ).join('\n')
     )
   level: ->
     @nw.level() + 1
@@ -121,11 +105,13 @@ class Divisible extends Square
             sw: empty_quadrant
         .inflate_by(extant - 1)
 
-#####################################################
-# Non-Trivial squares are eight and larger in size. #
-#####################################################
+################################################################
+# Recursively computable squares are eight and larger in size. #
+#                                                              #
+# Smaller squares (size two and four) must be seeded.          #
+################################################################
 
-NonTrivialSquare = do ->
+RecursivelyComputableSquare = do ->
 
   class IntermediateResult
     constructor: (square) ->
@@ -218,7 +204,7 @@ NonTrivialSquare = do ->
         )
       b.top.concat(b.mid).concat(b.bot)
 
-  class NonTrivialSquare extends Divisible
+  class RecursivelyComputableSquare extends Square
     constructor: ({nw, ne, se, sw}) ->
       super({nw: nw, ne:ne, se:se, sw:sw})
       @generations = @nw.generations * 2
@@ -256,7 +242,7 @@ cache = do ->
     if found
       found
     else
-      add(new NonTrivialSquare(quadrants))
+      add(new RecursivelyComputableSquare(quadrants))
 
   add = (square) ->
     bucket_number = square.hash % num_buckets
@@ -282,14 +268,14 @@ cache = do ->
     unless _.isArray(json[0]) and json[0].length is json.length
       throw 'must be a square'
     if json.length is 1
-      if json[0][0] instanceof Indivisible
+      if json[0][0] instanceof Cell
         json[0][0]
       else if json[0][0] is 0
-        Indivisible.Dead
+        Cell.Dead
       else if json[0][0] is 1
-        Indivisible.Alive
+        Cell.Alive
       else
-        throw 'a 1x1 square must contain a zero, one, or Indivisible'
+        throw 'a 1x1 square must contain a zero, one, or Cell'
     else
       half_length = json.length / 2
       find_or_create_by_quadrant
@@ -313,13 +299,15 @@ cache = do ->
   find_or_create = (params) ->
     if _.isArray(params)
       find_or_create_by_json(params)
+    else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Cell) )
+      find_or_create_by_quadrant params
     else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Square) )
       find_or_create_by_quadrant params
     else
-      throw "Can't handle #{JSON.stringify(params)}"
+      throw "Cache can't handle #{JSON.stringify(params)}"
 
   {hash, find, find_or_create, find_or_create_by_quadrant, add, bucketed, histogram}
 
 _.extend Square, cache
 
-_.defaults root, {Square, Indivisible, Divisible, NonTrivialSquare}
+_.defaults root, {Square, Cell, RecursivelyComputableSquare}
