@@ -12,33 +12,27 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 [cs]: http://jashkenas.github.com/coffee-script/
 [node]: http://nodejs.org
 
+The Life Universe is an infinite two-dimensional matrix of cells. Cells are indivisible and are in either of two states, commnly called "alive" and "dead." Time is represented as discrete quanta called either "ticks" or "generations." With each generation, a rule is applied to decide the state the cell will assume. The rules are decided simultaneously, and there are only two considerations: The current state of the cell, and the states of the cells in its [Moore Neighbourhood][moore], the eight cells adjacent horizontally, vertically, or diagonally.
+
+[moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
+
+Cafe au Life implements Conway's Game of Life, as well as other "[life-like][ll]" games in the same family.
+
+[ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
+
 ## Why
 
-Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm. HashLife is usually implemented in C and optimized to run very long simulations with very large 'boards' stinking fast. [Golly][golly] is a fast Life simulator that contains, amongst other things, an implementation of HashLife written for raw speed.
+Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm. HashLife is usually implemented in C and optimized to run very long simulations with very large 'boards' stinking fast. The HashLife algorithm is, in a word, **a beautiful design**, one that is "in the book." To read its description is to feel the desire to explore it on a computer.
 
 [hl]: http://en.wikipedia.org/wiki/Hashlife
-[golly]: http://golly.sourceforge.net/
 
 Broadly speaking, HashLife has two major components. The first is a high level algorithm that is implementation independent. This algorithm exploits repetition and redundancy, aggressively 'caching' previously computed results for regions of the board. The second component is the cache itself, which is normally implemented cleverly in C to exploit memory and CPU efficiency in looking up precomputed results.
 
 Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the performance of the cache itself in a JavaScript application will not be anything to write home about.
 
-HashLife is, in a word, a beautiful design, one that is "in the book." To read its description is to feel the desire to explore it on a computer.
-
-## Whence
-
-My understanding of HashLife was gleaned from the writings of:
-
-* [Tony Finch explains HashLife](http://fanf.livejournal.com/83709.html)
-* [An Algorithm for Compressing Space and Time](http://drdobbs.com/jvm/184406478)
-
 ## How
 
-HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two ( `2^0 -> 1`, `2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...).
-
-### Subdivisions
-
-One property of a square of size `2^n | n > 0` is that it can be divided into four component squares of size `2^(n-1)`. For example, a square of size eight (`2^3`) is composed of four component squares of size four (`2^2`):
+HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Cells are not considered squares. Therefore, the smallest possible square (of size `2^1`) has four cells as its quadrants, while all larger squares (of size `2^n`) have squares of one smaller size (`2^(n-1)`) as their quadrants. For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`):
 
     nw        ne  
       +--++--+
@@ -51,97 +45,45 @@ One property of a square of size `2^n | n > 0` is that it can be divided into fo
       +--++--+
     sw        se
 
-The squares of size four are in turn each composed of four component squares of size two (`2^1`), which are each composed of four component squares of size one (`2^0`), which cannot be subdivided.(For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)
-
-HashLife exploits this symmetry by representing all squares of size `n > 0` as CoffeeScript class instances with four quadrants, conventionally labeled `nw`, `ne`, `se` and `sw`.
-
-(The technical name for such a data structure is a [QuadTree][qt].)
+The squares of size four are in turn each composed of four squares of size two (`2^1`), which are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)
 
 [qt]: http://en.wikipedia.org/wiki/Quadtree
 
 ### Representing squares
 
-```coffeescript
-class Square
-  constructor: ->
-    @toString = _.memoize( ->
-      (_.map @to_json(), (row) ->
-        (_.map row, (cell) ->
-          if cell then '*' else ' '
-        ).join('')
-      ).join('\n')
-    )
-```
+The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class `Square`. For example, there is exactly one representation of a cell of size two containing four empty cells:
 
-The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. There is no concept of an array or bitmap of cells except when performing import and export.
+    nw  ne
+      ..
+      ..
+    sw  sw
+
+HashLife represents this as a structure with four quadrants, each of which is the canonical representation of an empty cell. In pseudo-CoffeeScript:
 
 ```coffeescript
-class Cell extends Square
-  constructor: (@hash) ->
-  toValue: ->
-    @hash
-  to_json: ->
-    [@hash]
-  level: ->
-    0
-  empty_copy: ->
-    Cell.Dead
-
-Cell.Alive = _.tap new Cell(1), (alive) ->
-  alive.is_empty = ->
-    false
-Cell.Dead = _.tap new Cell(0), (dead) ->
-  dead.is_empty = ->
-    true
-```
-
-All cells larger than size one are 'divisible':
-
-```coffeescript
-class Square extends Square
-  constructor: (params) ->
-    super()
-    {@nw, @ne, @se, @sw} = params
-  #...
-```
-
-HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class `Square`. For example, there is exactly one representation of a cell of size two containing four empty cells, roughly:
-
-```coffeescript
-empty_two = new Square
+empty_n_1 = Square.find_or_create_by_quadrant
   nw: Cell.Empty
   ne: Cell.Empty
   se: Cell.Empty
-  sw: Cell.Empty
+  sw: Cell.empty
 ```
 
-Likewise, there is one and only one square representing a cell of size four containing sixteen empty cells. Note well:
+Thus, a square of size four that represents sixteen empty cells is actually represented as a structure with four quadrants, each of which is the canonical representation of the empty square of size four:
 
+    nw  ne
+      ..
+      ..
+    sw  sw
+    
 ```coffeescript
-new Square
-  nw: empty_two
-  ne: empty_two
-  se: empty_two
-  sw: empty_two
+empty_n_2 = Square.find_or_create_by_quadrant
+  nw: empty_n_1
+  ne: empty_n_1
+  se: empty_n_1
+  sw: empty_n_1
 ```
 
-Furthermore, different squares can share the same quadrant. Here is a square of size four with a checker-board pattern:
-
-```coffeescript
-full_two = new Square
-  nw: Cell.Alive
-  ne: Cell.Alive
-  se: Cell.Alive
-  sw: Cell.Alive
-
-new Square
-  nw: empty_two
-  ne: full_two
-  se: empty_two
-  sw: full_two
-```
-
-It uses the same square used to make up the empty square of size four. We see from these examples the fundamental way HashLife represents the state of the Life "universe:" Squares are subdivided into quadrants of one size smaller, and the same square can and is reused anywhere that same representation is needed.
+Since squares are immutable, HashLife does not change the quadrants of a square when moving forward or backwards in time, it simply creates and/or selects squares representing the new generation's state.
 
 ### The Speed of Light
 
@@ -219,25 +161,7 @@ The computation of the four inner `+` cells from their adjacent eight cells is s
 
 ### Seeding
 
-For reasons we will hand-wave now, Cafe au Life is "seeded" with the two possible squares of size one (Alive and Dead), the sixteen possible squares of size two, and the 65K possible squares of size four. The results for the squares of size four are computed using Life's rules:
-
-```coffeescript
-class SquareSz4 extends Square
-  constructor: (params) ->
-    super(params)
-    @generations = 1
-    @result = _.memoize( ->
-      a = @.to_json()
-      succ = (row, col) ->
-        count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] + a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
-        if count is 3 or (count is 2 and a[row][col] is 1) then C.Cell.Alive else C.Cell.Dead
-      Square.find_or_create
-        nw: succ(1,1)
-        ne: succ(1,2)
-        se: succ(2,2)
-        sw: succ(2,1)
-    )
-```  
+For reasons we will hand-wave now, Cafe au Life is "seeded" with the two possible squares of size one (Alive and Dead), the sixteen possible squares of size two, and the 65K possible squares of size four. The results for the squares of size four are computed using Life's rules.
 
 Since each square of size four is unique, HashLife never needs to recompute the same sixteen-by-sixteen pattern. This makes a number of optimizations moot. For example, it is easy to note that the result of an empty square is also empty, but since this will only ever be computed once, why bother?
 
@@ -245,11 +169,7 @@ Squares of size eight and larger could be computed and their results memoized, b
 
 ### Squares of size eight
 
-Now let's consider a square of size eight. First, we are going to assume that we can look up any `Square` square from the cache with the following method:
-
-    Square.find({ nw: ..., ne: ..., se: ..., sw: ...})
-
-Given four component squares, this looks up a square in the cache. For the moment, we can ignore the question of what happens when a square is not in the cache, because when dealing with squares of size eight, we only ever need to look up squares of size four, and they are all seeded in the cache. (Once we have established how to construct the result for a square of size eight, including its result and velocity, we will be able to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses' by constructing a new square.)
+Now let's consider a square of size eight. For the moment, we can ignore the question of what happens when a square is not in the cache, because when dealing with squares of size eight, we only ever need to look up squares of size four, and they are all seeded in the cache. (Once we have established how to construct the result for a square of size eight, including its result and velocity, we will be able to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses' by constructing a new square.)
 
 We know how to obtain any square of size four using `Square.find`. So what we need is a way to compute the result for any arbitrary square of size eight from squares of size four.
 
@@ -438,3 +358,19 @@ And when we place it within our original square of size eight, we reveal we have
       ........
       ........
     sw        se
+
+### Memoizing: The "Hash" in HashLife
+
+HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache. Any result, at any scale, that has been computed before is reused. This is extremely efficient when dealing with patterns that contain a great deal of redundancy, such as the kinds of patterns constructed for the purpose of emulating circuits or machines in Life.
+
+For example, once Cafe au Life has calculated the results for the 65K possible four-by-four squares, the rules are no longer applied to any generation: Any pattern of any size is recursively computed terminating in a four-by-four square that has already been computed and cached.
+
+## Whence
+
+My understanding of HashLife was gleaned from the writings of:
+
+* [Tony Finch explains HashLife](http://fanf.livejournal.com/83709.html)
+* [An Algorithm for Compressing Space and Time](http://drdobbs.com/jvm/184406478)
+* [Golly][golly] is a fast Life simulator that contains, amongst other things, an implementation of HashLife written for raw speed.
+
+[golly]: http://golly.sourceforge.net/
