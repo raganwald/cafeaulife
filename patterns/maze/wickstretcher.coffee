@@ -1,6 +1,5 @@
-_ = require('underscore')
-C = require('lib/cafeaulife')
-require( 'lib/lifelike' ).generate_seeds_from_rule [1..5],[3]
+C = require('../../lib/cafeaulife')
+require( '../../lib/lifelike' ).generate_seeds_from_rule [1..5],[3]
 
 wickstretcher = C.Square.find_or_create [
   [0, 1, 1, 0, 0, 0, 0, 0]
