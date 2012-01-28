@@ -17,9 +17,15 @@ cartesian_product = (range) ->
     , (x, y) -> x.concat(y))
   , (x, y) -> x.concat(y))
 
+dfunc = (dictionary) ->
+  (indices...) ->
+    _.reduce indices, (a, i) ->
+      a[i]
+    , dictionary
+
 _.defaults root,
   generate_seeds_from_rule: (survival, birth) ->
-    rule = [
+    rule = dfunc [
       (if birth.indexOf(x) >= 0 then C.Cell.Alive else C.Cell.Dead) for x in [0..9]
       (if survival.indexOf(x) >= 0 then C.Cell.Alive else C.Cell.Dead) for x in [0..9]
     ]
@@ -34,7 +40,7 @@ _.defaults root,
             succ = (row, col) ->
               count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] +
                       a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
-              rule[a[row][col]][count]
+              rule(a[row][col], count)
             C.Square.find_or_create
               nw: succ(1,1)
               ne: succ(1,2)
