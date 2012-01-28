@@ -76,7 +76,7 @@ class Square
 The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. There is no concept of an array or bitmap of cells except when performing import and export.
 
 ```coffeescript
-class Indivisible extends Square
+class Cell extends Square
   constructor: (@hash) ->
   toValue: ->
     @hash
@@ -85,12 +85,12 @@ class Indivisible extends Square
   level: ->
     0
   empty_copy: ->
-    Indivisible.Dead
+    Cell.Dead
 
-Indivisible.Alive = _.tap new Indivisible(1), (alive) ->
+Cell.Alive = _.tap new Cell(1), (alive) ->
   alive.is_empty = ->
     false
-Indivisible.Dead = _.tap new Indivisible(0), (dead) ->
+Cell.Dead = _.tap new Cell(0), (dead) ->
   dead.is_empty = ->
     true
 ```
@@ -98,7 +98,7 @@ Indivisible.Dead = _.tap new Indivisible(0), (dead) ->
 All cells larger than size one are 'divisible':
 
 ```coffeescript
-class Divisible extends Square
+class Square extends Square
   constructor: (params) ->
     super()
     {@nw, @ne, @se, @sw} = params
@@ -108,17 +108,17 @@ class Divisible extends Square
 HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class `Square`. For example, there is exactly one representation of a cell of size two containing four empty cells, roughly:
 
 ```coffeescript
-empty_two = new Divisible
-  nw: Indivisible.Empty
-  ne: Indivisible.Empty
-  se: Indivisible.Empty
-  sw: Indivisible.Empty
+empty_two = new Square
+  nw: Cell.Empty
+  ne: Cell.Empty
+  se: Cell.Empty
+  sw: Cell.Empty
 ```
 
 Likewise, there is one and only one square representing a cell of size four containing sixteen empty cells. Note well:
 
 ```coffeescript
-new Divisible
+new Square
   nw: empty_two
   ne: empty_two
   se: empty_two
@@ -128,13 +128,13 @@ new Divisible
 Furthermore, different squares can share the same quadrant. Here is a square of size four with a checker-board pattern:
 
 ```coffeescript
-full_two = new Divisible
-  nw: Indivisible.Alive
-  ne: Indivisible.Alive
-  se: Indivisible.Alive
-  sw: Indivisible.Alive
+full_two = new Square
+  nw: Cell.Alive
+  ne: Cell.Alive
+  se: Cell.Alive
+  sw: Cell.Alive
 
-new Divisible
+new Square
   nw: empty_two
   ne: full_two
   se: empty_two
@@ -222,7 +222,7 @@ The computation of the four inner `+` cells from their adjacent eight cells is s
 For reasons we will hand-wave now, Cafe au Life is "seeded" with the two possible squares of size one (Alive and Dead), the sixteen possible squares of size two, and the 65K possible squares of size four. The results for the squares of size four are computed using Life's rules:
 
 ```coffeescript
-class SquareSz4 extends Divisible
+class SquareSz4 extends Square
   constructor: (params) ->
     super(params)
     @generations = 1
@@ -230,7 +230,7 @@ class SquareSz4 extends Divisible
       a = @.to_json()
       succ = (row, col) ->
         count = a[row-1][col-1] + a[row-1][col] + a[row-1][col+1] + a[row][col-1] + a[row][col+1] + a[row+1][col-1] + a[row+1][col] + a[row+1][col+1]
-        if count is 3 or (count is 2 and a[row][col] is 1) then C.Indivisible.Alive else C.Indivisible.Dead
+        if count is 3 or (count is 2 and a[row][col] is 1) then C.Cell.Alive else C.Cell.Dead
       Square.find_or_create
         nw: succ(1,1)
         ne: succ(1,2)
@@ -245,7 +245,7 @@ Squares of size eight and larger could be computed and their results memoized, b
 
 ### Squares of size eight
 
-Now let's consider a square of size eight. First, we are going to assume that we can look up any `Divisible` square from the cache with the following method:
+Now let's consider a square of size eight. First, we are going to assume that we can look up any `Square` square from the cache with the following method:
 
     Square.find({ nw: ..., ne: ..., se: ..., sw: ...})
 
