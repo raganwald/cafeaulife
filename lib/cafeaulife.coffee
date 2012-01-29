@@ -3,65 +3,6 @@
 # Cafe au Life is freely distributable under the terms of the
 # [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 
-# ---
-#
-# ## What
-#
-# ![Gosper's Glider Gun](gospers_glider_gun.gif)
-#
-#*(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefiniately.)*
-#
-# Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular automata written in [CoffeeScript][cs].
-# Cafe au Life runs on [Node.js][node], it is not designed to run as an interactive program in a browser window.
-#
-# [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
-# [cs]: http://jashkenas.github.com/coffee-script/
-# [node]: http://nodejs.org
-#
-# ### Conway's Life and other two-dimensional cellular automata
-#
-# The Life Universe is an infinite two-dimensional matrix of cells. Cells are indivisible and are in either of two states,
-# commonly called "alive" and "dead." Time is represented as discrete quanta called either "ticks" or "generations."
-# With each generation, a rule is applied to decide the state the cell will assume. The rules are decided simultaneously,
-# and there are only two considerations: The current state of the cell, and the states of the cells in its
-# [Moore Neighbourhood][moore], the eight cells adjacent horizontally, vertically, or diagonally.
-#
-# Cafe au Life implements Conway's Game of Life, as well as other "[life-like][ll]" games in the same family.
-#
-# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
-# [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
-
-# ---
-#
-# ## Why
-#
-# ![Period 24 Glider Gun](Trueperiod24gun.png)
-#
-# *(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
-# Life machines.)*
-#
-# Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm. HashLife is usually implemented in C and optimized
-# to run very long simulations with very large 'boards' stinking fast. The HashLife algorithm is, in a word,
-# **a beautiful design**, one that is "in the book." To read its description is to feel the desire to explore it on a computer.
-#
-# Broadly speaking, HashLife has two major components. The first is a high level algorithm that is implementation independent.
-# This algorithm exploits repetition and redundancy, aggressively 'caching' previously computed results for regions of the board.
-# The second component is the cache itself, which is normally implemented cleverly in C to exploit memory and CPU efficiency
-# in looking up precomputed results.
-#
-# Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the
-# performance in a JavaScript application will not be anything to write home about.
-#
-# [hl]: http://en.wikipedia.org/wiki/Hashlife
-
-# ---
-#
-# ## How
-#
-# ![Block laying seed](block_laying_seed.png)
-#
-# *(A small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
-
 # ### Baseline Setup
 
 # Cafe au Life uses [Underscore.js][u] extensively:
@@ -110,6 +51,10 @@ class Cell
     '' + @hash
 
 # ### Squares
+#
+# ![Block laying seed](block_laying_seed.png)
+#
+# *(A small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
 #
 # HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
 # (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Cells are not considered squares. Therefore, the smallest possible square
@@ -303,7 +248,11 @@ class Square
 # HashLife takes advantage of this by storing enough information to quickly look up the shrinking
 # 'future' for every square of size `2^n | n > 1`. The information is called a square's *result*.
 #
-# ### Computing the result for squares
+# ## Computing the result for squares
+#
+# ![Block laying seed](block_laying_seed_2.png)
+#
+# *(Another small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
 #
 # Let's revisit the obvious: Cells do not have results. Also, Squares ofsize two do not have results,
 # because at time `t+1`, cells outside of the square will affect every cell in the square.
@@ -765,25 +714,16 @@ Cache = do ->
   # export the functions to the cache
   {hash, find, find_or_create, find_or_create_by_quadrant, add, bucketed, histogram}
 
-# Expose `find_or_create` through Square
+# Expose `find_or_create` through `Square`
 Square.find_or_create = (params) ->
   Cache.find_or_create(params)
 
-# Export Square for regular use and others for specs
+# Export `Square` for regular use and others for specs
 _.defaults exports, {Square, Cell, RecursivelyComputableSquare}
 
-# ---
-#
-# ## Whence
-#
-# ![Block laying seed](block_laying_seed_2.png)
-#
-# *(Another small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
-#
-# My understanding of HashLife was gleaned from the writings of:
-#
-# * [Tony Finch explains HashLife](http://fanf.livejournal.com/83709.html)
-# * [An Algorithm for Compressing Space and Time](http://drdobbs.com/jvm/184406478)
-# * [Golly][golly] is a fast Life simulator that contains, amongst other things, an implementation of HashLife written for raw speed.
-#
-# [golly]: http://golly.sourceforge.net/=
+# [hl]: http://en.wikipedia.org/wiki/Hashlife
+# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
+# [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
+# [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
+# [cs]: http://jashkenas.github.com/coffee-script/
+# [node]: http://nodejs.org
