@@ -7,19 +7,11 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 [node]: http://nodejs.org
 
 Cafe au Life's annotated source code is [here](http://raganwald.github.com/cafeaulife/docs/cafeaulife.html).
-
 ## What
 
 ![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
 
 *(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefinitely.)*
-
-Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular automata written in [CoffeeScript][cs].
-Cafe au Life runs on [Node.js][node], it is not designed to run as an interactive program in a browser window.
-
-[life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
-[cs]: http://jashkenas.github.com/coffee-script/
-[node]: http://nodejs.org
 
 ### Conway's Life and other two-dimensional cellular automata
 
