@@ -1,158 +1,157 @@
 _ = require('underscore')
 require 'UnderscoreMatchersForJasmine'
 
-_.defaults global, require('../lib/cafeaulife')
-
-require( 'lib/lifelike' ).generate_seeds_from_rule [2,3],[3]
-
-describe '.empty', ->
-
-  foursq = Square.find_or_create([
-    [0, 0, 0, 0]
-    [0, 1, 0, 0]
-    [0, 0, 1, 0]
-    [0, 0, 0, 0]
-  ]).empty_copy()
-
-  it 'should be a resulting square', ->
-
-    expect(foursq).toRespondTo('result')
-
-  it 'should be a resulting square after inflation', ->
-
-    expect(foursq.inflate_by(1)).toRespondTo('result')
-
-
-describe '_.memoize', ->
-
-  it 'gratuitously re-result the same thing many times', ->
-
-    sq = Square.find_or_create([[1, 0], [0, 1]])
-      .inflate_by(2)
-    sq.result()
-
-    number_bucketed = Square.bucketed()
-
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-    sq.result()
-
-    expect( Square.bucketed() ).toEqual(number_bucketed)
+Life = require('../lib/cafeaulife')
+Life.generate_seeds_from_rule()
 
 describe 'cafe au life', ->
 
-  size_two_empties = Square.find
-    nw: Cell.Dead
-    ne: Cell.Dead
-    se: Cell.Dead
-    sw: Cell.Dead
+  beforeEach ->
+    Life.generate_seeds_from_rule()
 
-  size_two_fulls = Square.find
-    nw: Cell.Alive
-    ne: Cell.Alive
-    se: Cell.Alive
-    sw: Cell.Alive
+  describe '.empty', ->
 
-  it 'should support the basics', ->
-
-    expect(Cell.Dead).not.toBeUndefined()
-
-    expect(Cell.Alive).not.toBeUndefined()
-
-  describe 'non-trivial squares', ->
-
-    size_four_empties = Square.find_or_create
-      nw: size_two_empties
-      ne: size_two_empties
-      se: size_two_empties
-      sw: size_two_empties
-
-    size_four_fulls = Square.find_or_create
-      nw: size_two_fulls
-      ne: size_two_fulls
-      se: size_two_fulls
-      sw: size_two_fulls
-
-    size_eight_empties = Square.find_or_create
-      nw: size_four_empties
-      ne: size_four_empties
-      se: size_four_empties
-      sw: size_four_empties
-
-    it 'should compute results', ->
-
-      expect(size_eight_empties.result()).toBeTruthy()
-
-    it 'should compute square results', ->
-
-      expect(size_eight_empties.result()).toBeA(Square)
-
-    it 'should compute result squares that are full of empty cells', ->
-
-      expect(size_eight_empties.result()).toEqual(size_four_empties)
-
-
-  describe 'inflation', ->
-
-    two_by_two = Square.find_or_create [[1, 0], [0, 1]]
-
-    it 'should not inflate cells', ->
-
-      expect(Cell.Alive).not.toRespondTo('inflate_by')
-
-    it 'should inflate 2x2 at zero level to itself', ->
-
-      expect(two_by_two.inflate_by(0)).toEqual(Square.find_or_create [
-        [1, 0]
-        [0, 1]
-      ])
-
-    it 'should inflate 2x2 at one level to double itself', ->
-
-      expect(two_by_two.inflate_by(1).to_json()).toEqual([
+    beforeEach ->
+      @foursq = Life.Square.find_or_create([
         [0, 0, 0, 0]
         [0, 1, 0, 0]
         [0, 0, 1, 0]
         [0, 0, 0, 0]
-      ])
+      ]).empty_copy()
 
-    it 'should inflate 2x2 at two levels to quadruple itself', ->
+    it 'should be a resulting square', ->
 
-      expect(two_by_two.inflate_by(2).to_json()).toEqual([
-        [0, 0, 0, 0, 0, 0, 0, 0]
-        [0, 0, 0, 0, 0, 0, 0, 0]
-        [0, 0, 0, 0, 0, 0, 0, 0]
-        [0, 0, 0, 1, 0, 0, 0, 0]
-        [0, 0, 0, 0, 1, 0, 0, 0]
-        [0, 0, 0, 0, 0, 0, 0, 0]
-        [0, 0, 0, 0, 0, 0, 0, 0]
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ])
+      expect(@foursq).toRespondTo('result')
 
-  describe 'deflation', ->
+    it 'should be a resulting square after inflation', ->
 
-    square = Square.find_or_create [
-      [0, 0, 0, 0, 0, 0, 0, 1]
-      [0, 1, 0, 0, 0, 0, 0, 0]
-      [0, 0, 0, 0, 0, 1, 0, 0]
-      [0, 0, 0, 1, 0, 0, 0, 0]
-      [1, 1, 1, 0, 1, 1, 0, 0]
-      [1, 0, 0, 1, 0, 1, 0, 0]
-      [1, 0, 0, 1, 0, 1, 1, 1]
-      [0, 1, 1, 1, 0, 0, 0, 1]
-    ]
+      expect(@foursq.inflate_by(1)).toRespondTo('result')
 
-    it 'should have a zero deflation', ->
 
-      expect( square.deflate_by(0) ).toEqual(
-        Square.find_or_create [
+  describe '_.memoize', ->
+
+    it 'gratuitously re-result the same thing many times', ->
+
+      sq = Life.Square.find_or_create([[1, 0], [0, 1]])
+        .inflate_by(2)
+      sq.result()
+
+      number_bucketed = Life.Square.cache.bucketed()
+
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+
+      expect( Life.Square.cache.bucketed() ).toEqual(number_bucketed)
+
+  describe 'squares', ->
+
+    beforeEach ->
+
+      @size_two_empties = Life.Square.cache.find
+        nw: Life.Cell.Dead
+        ne: Life.Cell.Dead
+        se: Life.Cell.Dead
+        sw: Life.Cell.Dead
+
+      @size_two_fulls = Life.Square.cache.find
+        nw: Life.Cell.Alive
+        ne: Life.Cell.Alive
+        se: Life.Cell.Alive
+        sw: Life.Cell.Alive
+
+    it 'should support the basics', ->
+
+      expect(Life.Cell.Dead).not.toBeUndefined()
+
+      expect(Life.Cell.Alive).not.toBeUndefined()
+
+    describe 'non-trivial squares', ->
+
+      beforeEach ->
+        @size_four_empties = Life.Square.find_or_create
+          nw: @size_two_empties
+          ne: @size_two_empties
+          se: @size_two_empties
+          sw: @size_two_empties
+
+        @size_four_fulls = Life.Square.find_or_create
+          nw: @size_two_fulls
+          ne: @size_two_fulls
+          se: @size_two_fulls
+          sw: @size_two_fulls
+
+        @size_eight_empties = Life.Square.find_or_create
+          nw: @size_four_empties
+          ne: @size_four_empties
+          se: @size_four_empties
+          sw: @size_four_empties
+
+      it 'should compute results', ->
+
+        expect(@size_eight_empties.result()).toBeTruthy()
+
+      it 'should compute square results', ->
+
+        expect(@size_eight_empties.result()).toBeA(Life.Square)
+
+      it 'should compute result squares that are full of empty cells', ->
+
+        expect(@size_eight_empties.result()).toEqual(@size_four_empties)
+
+
+    describe 'inflation', ->
+
+      beforeEach ->
+        @two_by_two = Life.Square.find_or_create [
+          [1, 0]
+          [0, 1]
+        ]
+
+      it 'should not inflate cells', ->
+
+        expect(Life.Cell.Alive).not.toRespondTo('inflate_by')
+
+      it 'should inflate 2x2 at zero level to itself', ->
+
+        expect(@two_by_two.inflate_by(0)).toEqual(Life.Square.find_or_create [
+          [1, 0]
+          [0, 1]
+        ])
+
+      it 'should inflate 2x2 at one level to double itself', ->
+
+        expect(@two_by_two.inflate_by(1).to_json()).toEqual([
+          [0, 0, 0, 0]
+          [0, 1, 0, 0]
+          [0, 0, 1, 0]
+          [0, 0, 0, 0]
+        ])
+
+      it 'should inflate 2x2 at two levels to quadruple itself', ->
+
+        expect(@two_by_two.inflate_by(2).to_json()).toEqual([
+          [0, 0, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 1, 0, 0, 0, 0]
+          [0, 0, 0, 0, 1, 0, 0, 0]
+          [0, 0, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0, 0, 0, 0]
+        ])
+
+    describe 'deflation', ->
+
+      beforeEach ->
+        @square = Life.Square.find_or_create [
           [0, 0, 0, 0, 0, 0, 0, 1]
           [0, 1, 0, 0, 0, 0, 0, 0]
           [0, 0, 0, 0, 0, 1, 0, 0]
@@ -162,121 +161,169 @@ describe 'cafe au life', ->
           [1, 0, 0, 1, 0, 1, 1, 1]
           [0, 1, 1, 1, 0, 0, 0, 1]
         ]
-      )
 
-    it 'should deflate by one', ->
+      it 'should have a zero deflation', ->
 
-      expect( square.deflate_by(1) ).toEqual(
-        Square.find_or_create [
-          [0, 0, 0, 1]
-          [0, 1, 0, 0]
-          [1, 0, 1, 1]
-          [0, 1, 0, 1]
+        expect( @square.deflate_by(0) ).toEqual(
+          Life.Square.find_or_create [
+            [0, 0, 0, 0, 0, 0, 0, 1]
+            [0, 1, 0, 0, 0, 0, 0, 0]
+            [0, 0, 0, 0, 0, 1, 0, 0]
+            [0, 0, 0, 1, 0, 0, 0, 0]
+            [1, 1, 1, 0, 1, 1, 0, 0]
+            [1, 0, 0, 1, 0, 1, 0, 0]
+            [1, 0, 0, 1, 0, 1, 1, 1]
+            [0, 1, 1, 1, 0, 0, 0, 1]
+          ]
+        )
+
+      it 'should deflate by one', ->
+
+        expect( @square.deflate_by(1) ).toEqual(
+          Life.Square.find_or_create [
+            [0, 0, 0, 1]
+            [0, 1, 0, 0]
+            [1, 0, 1, 1]
+            [0, 1, 0, 1]
+          ]
+        )
+
+      it 'should deflate by two', ->
+
+        expect( @square.deflate_by(2) ).toEqual(
+          Life.Square.find_or_create [
+            [1, 0]
+            [0, 1]
+          ]
+        )
+
+    describe 'progress', ->
+
+      it 'should persist a block', ->
+
+        still_life = Life.Square.find_or_create [
+          [1, 1]
+          [1, 1]
         ]
-      )
 
-    it 'should deflate by two', ->
+        inflated = still_life.inflate_by(3)
 
-      expect( square.deflate_by(2) ).toEqual(
-        Square.find_or_create [
-          [1, 0]
+        expect(inflated.result().to_json()).toEqual(still_life.inflate_by(2).to_json())
+
+        expect(inflated.result()).toEqual(still_life.inflate_by(2))
+
+      it 'should kill orphans', ->
+
+        orphans = Life.Square.find_or_create [
+          [0, 0]
+          [1, 1]
+        ]
+
+        inflated = orphans.inflate_by(3)
+
+        expect(inflated.result().to_json()).not.toEqual(orphans.inflate_by(2).to_json())
+
+        expect(inflated.result().to_json()).toEqual(orphans.inflate_by(2).empty_copy().to_json())
+
+      it 'should birth a square with three neighbours', ->
+
+        parents = Life.Square.find_or_create [
           [0, 1]
+          [1, 1]
         ]
-      )
 
-  describe 'progress', ->
+        block = Life.Square.find_or_create [
+          [1, 1]
+          [1, 1]
+        ]
 
-    it 'should persist a block', ->
+        inflated = parents.inflate_by(1)
 
-      still_life = Square.find_or_create [
-        [1, 1]
-        [1, 1]
-      ]
+        expect( inflated.result() ).toEqual(block)
 
-      inflated = still_life.inflate_by(3)
+    describe 'still life forms should persist', ->
 
-      expect(inflated.result().to_json()).toEqual(still_life.inflate_by(2).to_json())
+      beforeEach ->
+        @blocks = [
+          Life.Square.cache.find_or_create [
+            [1, 1]
+            [1, 1]
+          ]
+        ]
 
-      expect(inflated.result()).toEqual(still_life.inflate_by(2))
+        @boats = [
+          Life.Square.find_or_create [
+            [0, 1, 0, 0]
+            [1, 0, 1, 0]
+            [0, 1, 1, 0]
+            [0, 0, 0, 0]
+          ]
+          Life.Square.find_or_create [
+            [0, 0, 1, 0]
+            [0, 1, 0, 1]
+            [0, 1, 1, 0]
+            [0, 0, 0, 0]
+          ]
+          Life.Square.find_or_create [
+            [0, 0, 0, 0]
+            [0, 1, 1, 0]
+            [0, 1, 0, 1]
+            [0, 0, 1, 0]
+          ]
+          Life.Square.find_or_create [
+            [0, 0, 0, 0]
+            [0, 1, 1, 0]
+            [1, 0, 1, 0]
+            [0, 1, 0, 0]
+          ]
+        ]
 
-    it 'should kill orphans', ->
+      it 'should find identical blocks by number', ->
+        expect(Life.Square.cache.find_or_create [
+          [1, 1]
+          [1, 1]
+        ]).toEqual(Life.Square.cache.find_or_create [
+          [1, 1]
+          [1, 1]
+        ])
 
-      orphans = Square.find_or_create [
-        [0, 0]
-        [1, 1]
-      ]
+      it 'should have a block in the cache', ->
+        expect(Life.Square.cache.find
+          nw: Life.Cell.Alive
+          ne: Life.Cell.Alive
+          se: Life.Cell.Alive
+          sw: Life.Cell.Alive
+        ).not.toBeUndefined()
 
-      inflated = orphans.inflate_by(3)
+      it 'should come up with identical blocks', ->
+        expect(Life.Square.cache.find
+          nw: Life.Cell.Alive
+          ne: Life.Cell.Alive
+          se: Life.Cell.Alive
+          sw: Life.Cell.Alive
+        ).toEqual(Life.Square.cache.find_or_create [
+          [1, 1]
+          [1, 1]
+        ])
 
-      expect(inflated.result().to_json()).not.toEqual(orphans.inflate_by(2).to_json())
+      _.each {
+        Block: @blocks
+        Boat: @boats
+      }, (examples, name) ->
+        _.each examples, (square) ->
+          it "Should not change a #{name}", ->
+            console?.log square.debug_id, square.inflate_by(1).result().debug_id
+            expect( square.inflate_by(1).result() ).toEqual(square)
 
-      expect(inflated.result().to_json()).toEqual(orphans.inflate_by(2).empty_copy().to_json())
+    describe 'to_json', ->
 
-    it 'should birth a square with three neighbours', ->
+      beforeEach ->
+        @square_1 = Life.Square.cache.find
+          nw: Life.Cell.Alive
+          ne: Life.Cell.Alive
+          se: Life.Cell.Dead
+          sw: Life.Cell.Alive
 
-      parents = Square.find_or_create [
-        [0, 1]
-        [1, 1]
-      ]
+      it 'should handle a square of 1', ->
 
-      block = Square.find_or_create [
-        [1, 1]
-        [1, 1]
-      ]
-
-      inflated = parents.inflate_by(1)
-
-      expect( inflated.result() ).toEqual(block)
-
-  describe 'still life forms should persist', ->
-
-    blocks = [
-      Square.find_or_create [
-        [1, 1]
-        [1, 1]
-      ]
-    ]
-
-    boats = [
-      Square.find_or_create [
-        [0, 1, 0, 0]
-        [1, 0, 1, 0]
-        [0, 1, 1, 0]
-        [0, 0, 0, 0]
-      ]
-      Square.find_or_create [
-        [0, 0, 1, 0]
-        [0, 1, 0, 1]
-        [0, 1, 1, 0]
-        [0, 0, 0, 0]
-      ]
-      Square.find_or_create [
-        [0, 0, 0, 0]
-        [0, 1, 1, 0]
-        [0, 1, 0, 1]
-        [0, 0, 1, 0]
-      ]
-      Square.find_or_create [
-        [0, 0, 0, 0]
-        [0, 1, 1, 0]
-        [1, 0, 1, 0]
-        [0, 1, 0, 0]
-      ]
-    ]
-
-    _.each {Block: blocks, Boat: boats}, (examples, name) ->
-      _.each examples, (square) ->
-        it "Should not change a #{name}", ->
-          expect( square.inflate_by(1).result() ).toEqual(square)
-
-  describe 'to_json', ->
-
-    square_1 = Square.find
-      nw: Cell.Alive
-      ne: Cell.Alive
-      se: Cell.Dead
-      sw: Cell.Alive
-
-    it 'should handle a square of 1', ->
-
-      expect( square_1.to_json() ).toEqual [ [1, 1], [1, 0] ]
+        expect( @square_1.to_json() ).toEqual [ [1, 1], [1, 0] ]

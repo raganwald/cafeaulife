@@ -50,6 +50,10 @@ class Cell
   toString: ->
     '' + @hash
 
+# The two canonical cells. No more should ever be created. In C++ terms, `new` is private.
+Cell.Alive = new Cell(1)
+Cell.Dead = new Cell(0)
+
 # ### Squares
 #
 # ![Block laying seed](block_laying_seed.png)
@@ -90,13 +94,18 @@ class Cell
 #       ..
 #     sw  sw
 
+# An id for debugging purposes
+debug_id = 0
+
 # HashLife represents each unique square as a structure with four quadrants:
 class Square
 
   # Squares are constructed from four quadrant squares or cells and store a hash used
   # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
-    @hash = Cache.hash(this)
+    @hash = Square.cache.hash(this)
+
+    @debug_id = (debug_id += 1)
 
     # `to_json` is a memoized method
     @to_json = _.memoize( ->
@@ -136,7 +145,7 @@ class Square
   # Find or create an empty square with teh same dimensions
   empty_copy: ->
     empty_quadrant = @nw.empty_copy()
-    Cache.find_or_create_by_quadrant
+    Square.cache.find_or_create_by_quadrant
       nw: empty_quadrant
       ne: empty_quadrant
       se: empty_quadrant
@@ -145,7 +154,7 @@ class Square
   # Find or create a smaller square centered on this square
   deflate_by: (extant) ->
     return this if extant is 0
-    Cache.find_or_create_by_quadrant(
+    Square.cache.find_or_create_by_quadrant(
       _.reduce [0..(extant - 1)], (quadrants) ->
         nw: quadrants.nw.se
         ne: quadrants.ne.sw
@@ -161,24 +170,24 @@ class Square
       return this
     else
       empty_quadrant = @nw.empty_copy()
-      Cache
+      Square.cache
         .find_or_create_by_quadrant
-          nw: Cache.find_or_create_by_quadrant
+          nw: Square.cache.find_or_create_by_quadrant
             nw: empty_quadrant
             ne: empty_quadrant
             se: @nw
             sw: empty_quadrant
-          ne: Cache.find_or_create_by_quadrant
+          ne: Square.cache.find_or_create_by_quadrant
             nw: empty_quadrant
             ne: empty_quadrant
             se: empty_quadrant
             sw: @ne
-          se: Cache.find_or_create_by_quadrant
+          se: Square.cache.find_or_create_by_quadrant
             nw: @se
             ne: empty_quadrant
             se: empty_quadrant
             sw: empty_quadrant
-          sw: Cache.find_or_create_by_quadrant
+          sw: Square.cache.find_or_create_by_quadrant
             nw: empty_quadrant
             ne: @sw
             se: empty_quadrant
@@ -281,9 +290,7 @@ class Square
 _.defaults exports,
   generate_seeds_from_rule: (survival = [2,3], birth = [3]) ->
 
-    # The two canonical cells. No more should ever be created. In C++ terms, `new` is private.
-    Cell.Alive = new Cell(1)
-    Cell.Dead = new Cell(0)
+    return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
 
     # The rules expressed as a dictionary function
     rule = dfunc [
@@ -315,21 +322,26 @@ _.defaults exports,
         @result = _.memoize(
           ->
             a = @to_json()
-            Cache.find_or_create
+            Square.cache.find
               nw: succ(a, 1,1)
               ne: succ(a, 1,2)
               se: succ(a, 2,2)
               sw: succ(a, 2,1)
         )
 
+    # Clear the cache out
+    Square.cache.clear()
+
     # The sixteen canonical 2x2 squares. Each is added to the cache (see below)
     all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
-      Cache.add new Square(quadrants)
+      Square.cache.add new Square(quadrants)
 
     # Now precompute all 65K SeedSquares so that the algorithm for recursively genrating results
     # terminates when it reaches a size four square
     cartesian_product(all_2x2_squares).forEach (quadrants) ->
-      Cache.add new SeedSquare(quadrants)
+      Square.cache.add new SeedSquare(quadrants)
+
+    Square.cache.current_rules = {survival, birth}
 
 # ---
 #
@@ -433,28 +445,28 @@ RecursivelyComputableSquare = do ->
 #        ..ss..
 #
 #     sw        se
-        nn: Cache
+        nn: Square.cache
           .find_or_create_by_quadrant
             nw: square.nw.ne
             ne: square.ne.nw
             se: square.ne.sw
             sw: square.nw.se
           .result()
-        ee: Cache
+        ee: Square.cache
           .find_or_create_by_quadrant
             nw: square.ne.sw
             ne: square.ne.se
             se: square.se.ne
             sw: square.se.nw
           .result()
-        ss: Cache
+        ss: Square.cache
           .find_or_create_by_quadrant
             nw: square.sw.ne
             ne: square.se.nw
             se: square.se.sw
             sw: square.sw.se
           .result()
-        ww: Cache
+        ww: Square.cache
           .find_or_create_by_quadrant
             nw: square.nw.sw
             ne: square.nw.se
@@ -487,7 +499,7 @@ RecursivelyComputableSquare = do ->
 #        ......
 #
 #     sw        se
-        cc: Cache
+        cc: Square.cache
           .find_or_create_by_quadrant
             nw: square.nw.se
             ne: square.ne.sw
@@ -540,25 +552,25 @@ RecursivelyComputableSquare = do ->
 #
 #     sw        se  sw        se
       overlapping_squares =
-        nw: Cache
+        nw: Square.cache
           .find_or_create_by_quadrant
             nw: @nw
             ne: @nn
             se: @cc
             sw: @ww
-        ne: Cache
+        ne: Square.cache
           .find_or_create_by_quadrant
             nw: @nn
             ne: @ne
             se: @ee
             sw: @cc
-        se: Cache
+        se: Square.cache
           .find_or_create_by_quadrant
             nw: @cc
             ne: @ee
             se: @se
             sw: @ss
-        sw: Cache
+        sw: Square.cache
           .find_or_create_by_quadrant
             nw: @ww
             ne: @cc
@@ -576,7 +588,7 @@ RecursivelyComputableSquare = do ->
 #        ......
 #
 #     sw        se
-      Cache.find_or_create_by_quadrant
+      Square.cache.find_or_create_by_quadrant
         nw: overlapping_squares.nw.result()
         ne: overlapping_squares.ne.result()
         se: overlapping_squares.se.result()
@@ -617,38 +629,40 @@ RecursivelyComputableSquare = do ->
 # Once Cafe au Life has calculated the results for the 65K possible four-by-four
 # squares, the rules are no longer applied to any generation: Any pattern of any size is
 # recursively computed terminating in a four-by-four square that has already been computed and cached.
+Square.cache =
 
-# Isolate the cache's locals
-Cache = do ->
+  # chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K
+  num_buckets: 99991
+  buckets: []
 
-  num_buckets = 99991 # chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K
-  buckets = []
+  clear: ->
+    @buckets = []
 
   # `hash` returns an integer for any square
-  hash = (square_like) ->
+  hash: (square_like) ->
     if square_like.hash?
       square_like.hash
     else
-      ((3 *hash(square_like.nw)) + (37 * hash(square_like.ne))  + (79 * hash(square_like.se)) + (131 * hash(square_like.sw)))
+      ((3 *@hash(square_like.nw)) + (37 * @hash(square_like.ne))  + (79 * @hash(square_like.se)) + (131 * @hash(square_like.sw)))
 
   # `find` locates a square in the cache if it exists
-  find = (quadrants) ->
-    bucket_number = hash(quadrants) % num_buckets
-    if buckets[bucket_number]?
-      _.find buckets[bucket_number], (sq) ->
+  find: (quadrants) ->
+    bucket_number = @hash(quadrants) % @num_buckets
+    if @buckets[bucket_number]?
+      _.find @buckets[bucket_number], (sq) ->
         sq.nw is quadrants.nw and sq.ne is quadrants.ne and sq.se is quadrants.se and sq.sw is quadrants.sw
 
   # `Like find`, but creates a `RecursivelyComputableSquare` if none is found
-  find_or_create_by_quadrant = (quadrants) ->
-    found = find(quadrants)
+  find_or_create_by_quadrant: (quadrants) ->
+    found = @find(quadrants)
     if found
       found
     else
-      add(new RecursivelyComputableSquare(quadrants))
+      @add(new RecursivelyComputableSquare(quadrants))
 
   # `Like find_or_create_by_quadrant`, but takes json as an argument. Useful
   # for seeding teh world from a data file.
-  find_or_create_by_json = (json) ->
+  find_or_create_by_json: (json) ->
     unless _.isArray(json[0]) and json[0].length is json.length
       throw 'must be a square'
     if json.length is 1
@@ -662,64 +676,64 @@ Cache = do ->
         throw 'a 1x1 square must contain a zero, one, or Cell'
     else
       half_length = json.length / 2
-      find_or_create_by_quadrant
-        nw: find_or_create_by_json(
+      @find_or_create_by_quadrant
+        nw: @find_or_create_by_json(
           json.slice(0, half_length).map (row) ->
             row.slice(0, half_length)
         )
-        ne: find_or_create_by_json(
+        ne: @find_or_create_by_json(
           json.slice(0, half_length).map (row) ->
             row.slice(half_length)
         )
-        se: find_or_create_by_json(
+        se: @find_or_create_by_json(
           json.slice(half_length).map (row) ->
             row.slice(half_length)
         )
-        sw: find_or_create_by_json(
+        sw: @find_or_create_by_json(
           json.slice(half_length).map (row) ->
             row.slice(0, half_length)
         )
 
   # An agnostic method that can find or create anything
-  find_or_create = (params) ->
+  find_or_create: (params) ->
     if _.isArray(params)
-      find_or_create_by_json(params)
+      @find_or_create_by_json(params)
     else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Cell) )
-      find_or_create_by_quadrant params
+      @find_or_create_by_quadrant params
     else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Square) )
-      find_or_create_by_quadrant params
+      @find_or_create_by_quadrant params
     else
       throw "Cache can't handle #{JSON.stringify(params)}"
 
-  # adds a square to the cache
-  add = (square) ->
-    bucket_number = square.hash % num_buckets
-    (buckets[bucket_number] ||= []).push(square)
+  # adds a square to the cache if it doesn't already exist
+  add: (square) ->
+    bucket_number = square.hash % @num_buckets
+    @buckets[bucket_number] ||= []
+    @buckets[bucket_number] = _.reject @buckets[bucket_number], (found) ->
+      found.nw is square.nw and found.ne is square.ne and found.se is square.se and found.sw is square.sw
+    @buckets[bucket_number].push(square)
     square
 
   # For debugging, it can be useful to count the number of squares in the cache
-  bucketed = ->
-    _.reduce buckets, (sum, bucket) ->
+  bucketed: ->
+    _.reduce @buckets, (sum, bucket) ->
       sum + bucket.length
     , 0
 
   # For debugging, it can be useful to get an idea of the relative sizes of the cache buckets
-  histogram = ->
-    _.reduce buckets, (histo, bucket) ->
+  histogram: ->
+    _.reduce @buckets, (histo, bucket) ->
       _.tap histo, (h) ->
         h[bucket.length] ||= 0
         h[bucket.length] += 1
     , []
 
-  # export the functions to the cache
-  {hash, find, find_or_create, find_or_create_by_quadrant, add, bucketed, histogram}
-
 # Expose `find_or_create` through `Square`
 Square.find_or_create = (params) ->
-  Cache.find_or_create(params)
+  @cache.find_or_create(params)
 
 # Export `Square` for regular use and others for specs
-_.defaults exports, {Square, Cell, RecursivelyComputableSquare}
+_.defaults exports, {Square, Cell}
 
 # [hl]: http://en.wikipedia.org/wiki/Hashlife
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
