@@ -7,7 +7,6 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 [node]: http://nodejs.org
 
 Cafe au Life's annotated source code is [here](http://raganwald.github.com/cafeaulife/docs/cafeaulife.html).
-## What
 
 ![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
 
