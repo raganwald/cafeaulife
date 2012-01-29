@@ -1,5 +1,5 @@
 C = require('../../lib/cafeaulife')
-require( '../../lib/lifelike' ).generate_seeds_from_rule [1..5],[3]
+C.generate_seeds_from_rule [1..5],[3]
 
 random = C.Square.find_or_create [
   Math.floor(Math.random()*2) for x in [1..8]

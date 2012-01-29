@@ -1,11 +1,101 @@
+# # Cafe au Life
+# **(c) 2012 Reginald Braithwaite**
+# Cafe au Life is freely distributable under the terms of the
+# [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+
+# ---
+#
+# ## What
+#
+# ![Gosper's Glider Gun](gospers_glider_gun.gif)
+#
+#*(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefiniately.)*
+#
+# Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular automata written in [CoffeeScript][cs].
+# Cafe au Life runs on [Node.js][node], it is not designed to run as an interactive program in a browser window.
+#
+# [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
+# [cs]: http://jashkenas.github.com/coffee-script/
+# [node]: http://nodejs.org
+#
+# ### Conway's Life and other two-dimensional cellular automata
+#
+# The Life Universe is an infinite two-dimensional matrix of cells. Cells are indivisible and are in either of two states,
+# commonly called "alive" and "dead." Time is represented as discrete quanta called either "ticks" or "generations."
+# With each generation, a rule is applied to decide the state the cell will assume. The rules are decided simultaneously,
+# and there are only two considerations: The current state of the cell, and the states of the cells in its
+# [Moore Neighbourhood][moore], the eight cells adjacent horizontally, vertically, or diagonally.
+#
+# Cafe au Life implements Conway's Game of Life, as well as other "[life-like][ll]" games in the same family.
+#
+# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
+# [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
+
+# ---
+#
+# ## Why
+#
+# ![Period 24 Glider Gun](Trueperiod24gun.png)
+#
+# *(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
+# Life machines.)*
+#
+# Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm. HashLife is usually implemented in C and optimized
+# to run very long simulations with very large 'boards' stinking fast. The HashLife algorithm is, in a word,
+# **a beautiful design**, one that is "in the book." To read its description is to feel the desire to explore it on a computer.
+#
+# Broadly speaking, HashLife has two major components. The first is a high level algorithm that is implementation independent.
+# This algorithm exploits repetition and redundancy, aggressively 'caching' previously computed results for regions of the board.
+# The second component is the cache itself, which is normally implemented cleverly in C to exploit memory and CPU efficiency
+# in looking up precomputed results.
+#
+# Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the
+# performance in a JavaScript application will not be anything to write home about.
+#
+# [hl]: http://en.wikipedia.org/wiki/Hashlife
+
+# ---
+#
+# ## How
+#
+# ![Block laying seed](block_laying_seed.png)
+#
+# *(A small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
+
+# ### Baseline Setup
+
+# Cafe au Life uses [Underscore.js][u] extensively:
+#
+# [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
 
-root = this
+# Play with Node and some browsers
+exports ?= window or this
 
-######################################
-# Cells represent indivisible points #
-######################################
+# A handy function for generating quadrants that are the cartesian products of a collection
+# multiplied by itself once for each quadrant.
+cartesian_product = (collection) ->
+  _.reduce(
+    _.reduce(
+      _.reduce( {nw, ne, se, sw} for nw in collection for ne in collection for se in collection for sw in collection
+      , (x, y) -> x.concat(y))
+    , (x, y) -> x.concat(y))
+  , (x, y) -> x.concat(y))
 
+# A function for turning any array or object into a dictionary function
+#
+# (see also: [Reusable Abstractions in CoffeeScript][reuse])
+#
+# [reuse]: https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme
+dfunc = (dictionary) ->
+  (indices...) ->
+    _.reduce indices, (acc, index) ->
+      acc[index]
+    , dictionary
+
+# ### Cells
+
+# The smallest unit of Life is the Cell:
 class Cell
   constructor: (@hash) ->
   toValue: ->
@@ -16,21 +106,54 @@ class Cell
     0
   empty_copy: ->
     Cell.Dead
+  toString: ->
+    '' + @hash
 
-Cell.Alive = new Cell(1)
-Cell.Dead = new Cell(0)
+# ### Squares
+#
+# HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
+# (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Cells are not considered squares. Therefore, the smallest possible square
+# (of size `2^1`) has cells for each of its four quadrants, while all larger squares (of size `2^n`) have squares of one smaller
+# size (`2^(n-1)`) for each of their four quadrants.
+#
+# For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`) (The lines and crosses are part of
+# the quadrant squares):
+#
+#     nw        ne
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#     sw        se
+#
+# The squares of size four are in turn each composed of four squares of size two (`2^1`), which are each composed of four cells,
+# which cannot be subdivided. (For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife
+# algorithm can be used to handle any board shape by tiling it with squares.)
+#
+# [qt]: http://en.wikipedia.org/wiki/Quadtree
+#
+# ### Representing squares
+#
+# The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class `Square`. For example, there is exactly one representation of a cell of size two containing four empty cells:
+#
+#     nw  ne
+#       ..
+#       ..
+#     sw  sw
 
-###############################################################################
-# Square is the parent for Size two, four, and larger ("non-trivial") squares #
-###############################################################################
-
-id = 0
-
+# HashLife represents each unique square as a structure with four quadrants:
 class Square
-  constructor: (params) ->
-    {@nw, @ne, @se, @sw} = params
-    @id = (id += 1)
-    @hash = cache.hash(this)
+
+  # Squares are constructed from four quadrant squares or cells and store a hash used
+  # to locate the square in the cache
+  constructor: ({@nw, @ne, @se, @sw}) ->
+    @hash = Cache.hash(this)
+
+    # `to_json` is a memoized method
     @to_json = _.memoize( ->
       a =
         nw: @nw.to_json()
@@ -52,23 +175,32 @@ class Square
         )
       b.top.concat(b.bottom)
     )
+
+    # `toString` is a memoized method
     @toString = _.memoize( ->
       (_.map @to_json(), (row) ->
         ([' ', '*'][c] for c in row).join('')
       ).join('\n')
     )
+
+  # The level increases with the log2 of the length of the size.
+  # So level 1 is 2x2, level 2 is 4x4, level 3 is 8x8, and so on.
   level: ->
     @nw.level() + 1
+
+  # Find or create an empty square with teh same dimensions
   empty_copy: ->
     empty_quadrant = @nw.empty_copy()
-    cache.find_or_create_by_quadrant
+    Cache.find_or_create_by_quadrant
       nw: empty_quadrant
       ne: empty_quadrant
       se: empty_quadrant
       sw: empty_quadrant
+
+  # Find or create a smaller square centered on this square
   deflate_by: (extant) ->
     return this if extant is 0
-    cache.find_or_create_by_quadrant(
+    Cache.find_or_create_by_quadrant(
       _.reduce [0..(extant - 1)], (quadrants) ->
         nw: quadrants.nw.se
         ne: quadrants.ne.sw
@@ -76,167 +208,488 @@ class Square
         sw: quadrants.sw.ne
       , this
     )
+
+  # Find or create a larger square centered on this square with
+  # the excess composed of empty squares
   inflate_by: (extant) ->
     if extant is 0
       return this
     else
       empty_quadrant = @nw.empty_copy()
-      cache
+      Cache
         .find_or_create_by_quadrant
-          nw: cache.find_or_create_by_quadrant
+          nw: Cache.find_or_create_by_quadrant
             nw: empty_quadrant
             ne: empty_quadrant
             se: @nw
             sw: empty_quadrant
-          ne: cache.find_or_create_by_quadrant
+          ne: Cache.find_or_create_by_quadrant
             nw: empty_quadrant
             ne: empty_quadrant
             se: empty_quadrant
             sw: @ne
-          se: cache.find_or_create_by_quadrant
+          se: Cache.find_or_create_by_quadrant
             nw: @se
             ne: empty_quadrant
             se: empty_quadrant
             sw: empty_quadrant
-          sw: cache.find_or_create_by_quadrant
+          sw: Cache.find_or_create_by_quadrant
             nw: empty_quadrant
             ne: @sw
             se: empty_quadrant
             sw: empty_quadrant
         .inflate_by(extant - 1)
 
-################################################################
-# Recursively computable squares are eight and larger in size. #
-#                                                              #
-# Smaller squares (size two and four) must be seeded.          #
-################################################################
+# ### The Speed of Light
+#
+# In Life, the "Speed of Light" or "*c*" is one cell vertically, horizontally, or diagonally in any direction. Meaning, that cause and effect cannot travel faster than *c*.
+#
+# One consequence of this fundamental limit is that given a square of size `2^n | n > 1` at time `t`, HashLife has all the information it needs to calculate the alive and dead cells for the inner square of size `2^n - 2` at time `t+1`. For example, if HashLife has this square at time `t`:
+#
+#     nw        ne
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#     sw        se
+#
+# HashLife can calculate this square at time `t+1`:
+#
+#     nw        ne
+#
+#        +----+
+#        |....|
+#        |....|
+#        |....|
+#        |....|
+#        +----+
+#
+#     sw        se
+#
+# And this square at time `t+2`:
+#
+#     nw        ne
+#
+#
+#         +--+
+#         |..|
+#         |..|
+#         +--+
+#
+#
+#     sw        se
+#
+# And this square at time `t+3`:
+#
+#     nw        ne
+#
+#
+#
+#          ++
+#          ++
+#
+#
+#
+#     sw        se
+#
+#
+# This is because no matter what is in the cells surrounding our square, their effects cannot propagate
+# faster than the speed of light, one row inward from the edge every step in time.
+#
+# HashLife takes advantage of this by storing enough information to quickly look up the shrinking
+# 'future' for every square of size `2^n | n > 1`. The information is called a square's *result*.
+#
+# ### Computing the result for squares
+#
+# Let's revisit the obvious: Cells do not have results. Also, Squares ofsize two do not have results,
+# because at time `t+1`, cells outside of the square will affect every cell in the square.
+#
+# The smallest square that computes a result is of size four (`2^2`). Its result is a square of
+# size two (`2^1`) representing the state of those cells at time `t+1`:
+#
+#     ....
+#     .++.
+#     .++.
+#     ....
+#
+# The computation of the four inner `+` cells from their adjacent eight cells is straightforward and
+# is calculated from the basic 2-3 rules or looked up from a table with 65K entries.
 
+# ### Seeding Cafe au Life with squares of size four
+
+# `generate_seeds_from_rule` generates the size four "seed" squares that actually calculate their results
+# from the life-like game rules. ALl alrger squares decompose recursively into size four squares, and thus
+# do not need to know anything about the rules.
+#
+# The default, `generate_seeds_from_rule()`, is equivalent to `generate_seeds_from_rule([2,3],[3])`, which
+# invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
+# and birth counts, e.g. `generate_seeds_from_rule([1,3,5,7], [1,3,5,7])` invokes
+# [Replicator](http://www.conwaylife.com/wiki/Replicator_(CA))
+_.defaults exports,
+  generate_seeds_from_rule: (survival = [2,3], birth = [3]) ->
+
+    # The two canonical cells. No more should ever be created. In C++ terms, `new` is private.
+    Cell.Alive = new Cell(1)
+    Cell.Dead = new Cell(0)
+
+    # The rules expressed as a dictionary function
+    rule = dfunc [
+      (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+      (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+    ]
+
+    # successfor function for any cell
+    succ = (cells, row, col) ->
+      current_state = cells[row][col]
+      neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
+        cells[row-1][col+1] + cells[row][col-1] +
+        cells[row][col+1] + cells[row+1][col-1] +
+        cells[row+1][col] + cells[row+1][col+1]
+      rule(current_state, neighbour_count)
+
+    # A SeedSquare knows how to calculate its own result from
+    # the rules
+    class SeedSquare extends Square
+      constructor: (params) ->
+        super(params)
+
+        # Seed squares compute a result one generation into the future. (We will see later that
+        # larger squares results more generations into the future.)
+        @generations = 1
+
+        # `result` calculates the inner result square. The method
+        # is memoized.
+        @result = _.memoize(
+          ->
+            a = @to_json()
+            Cache.find_or_create
+              nw: succ(a, 1,1)
+              ne: succ(a, 1,2)
+              se: succ(a, 2,2)
+              sw: succ(a, 2,1)
+        )
+
+    # The sixteen canonical 2x2 squares. Each is added to the cache (see below)
+    all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
+      Cache.add new Square(quadrants)
+
+    # Now precompute all 65K SeedSquares so that the algorithm for recursively genrating results
+    # terminates when it reaches a size four square
+    cartesian_product(all_2x2_squares).forEach (quadrants) ->
+      Cache.add new SeedSquare(quadrants)
+
+# ---
+#
+# ## Recursively constructing squares of size eight (and larger)
+#
+# ![Lightweight Spaceship](LWSS.gif)
+#
+# *(A small pattern that moves.)*
+#
+# Now let's consider a square of size eight. For the moment, we can ignore the question of what happens
+# when a square is not in the cache, because when dealing with squares of size eight, we only ever need
+# to look up squares of size four, and they are all seeded in the cache. (Once we have established how
+# to construct the result for a square of size eight, including its result and velocity, we will be able
+# to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses'
+# by constructing a new square.)
+
+# Our class will be a `RecursivelyComputableSquare`. We'll isolate helpers:
 RecursivelyComputableSquare = do ->
 
+# We know how to obtain any square of size four using `cache.find`. So what we need is a way to compute
+# the result for any arbitrary square of size eight or larger from quadrant squares one level smaller.
+#
+
+# Our goal is to compute a result that looks like this (the lines and crosses are part of the result):
+#
+#     nw        ne
+#
+#         +--+
+#         |..|
+#         |..|
+#         +--+
+#
+#     sw        se
+#
+# Given that we know the result for each of those four squares, we can start building an intermediate result.
+
+# The class for intermediate results:
   class IntermediateResult
+
+    # We construct an intermediate result from a square of size eight or larger
     constructor: (square) ->
+
+      # For convenience, we'll use Underscore's `extend` rather than a lot of assignments
+      # to @nw, @se, et cetera.
       _.extend this,
+
+# First, Let's look at our square of size eight made up of four component squares of size four (the lines
+# and crosses are part of the components):
+#
+#     nw        ne
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#     sw        se
+
+# We can take the results of those four quadrants and add them to our intermediate square
+#
+#     nw        ne
+#
+#        nw..ne
+#        nw..ne
+#        ......
+#        ......
+#        sw..se
+#        sw..se
+#
+#     sw        se
         nw: square.nw.result()
         ne: square.ne.result()
         se: square.se.result()
         sw: square.sw.result()
-        nn: Square
+
+# We can also derive four overlapping squares, these representing `n`, `e`, `s`, and `w`:
+#
+#          nn
+#       ..+--+..        ..+--+..
+#       ..|..|..        ..|..|..
+#       +-|..|-+        +--++--+
+#       |.+--+.|      w |..||..| e
+#       |.+--+.|      w |..||..| e
+#       +-|..|-+        +--++--+
+#       ..|..|..        ..|..|..
+#       ..+--+..        ..+--+..
+#          ss
+
+# Deriving these from our four component squares is straightforward, and when we take their results,
+# we fill in four of the five missing blanks for our intermediate square:
+#
+#     nw        ne
+#
+#        ..nn..
+#        ..nn..
+#        ww..ee
+#        ww..ee
+#        ..ss..
+#        ..ss..
+#
+#     sw        se
+        nn: Cache
           .find_or_create_by_quadrant
             nw: square.nw.ne
             ne: square.ne.nw
             se: square.ne.sw
             sw: square.nw.se
           .result()
-        ee: Square
+        ee: Cache
           .find_or_create_by_quadrant
             nw: square.ne.sw
             ne: square.ne.se
             se: square.se.ne
             sw: square.se.nw
           .result()
-        ss: Square
+        ss: Cache
           .find_or_create_by_quadrant
             nw: square.sw.ne
             ne: square.se.nw
             se: square.se.sw
             sw: square.sw.se
           .result()
-        ww: Square
+        ww: Cache
           .find_or_create_by_quadrant
             nw: square.nw.sw
             ne: square.nw.se
             se: square.sw.ne
             sw: square.sw.nw
           .result()
-        cc: Square
+
+# We use a similar method to derive a center square:
+#
+#     nw        ne
+#
+#        ......
+#        .+--+.
+#        .|..|.
+#        .|..|.
+#        .+--+.
+#        ......
+#
+#     sw        se
+
+# And we extract its result square accordingly:
+#
+#     nw        ne
+#
+#        ......
+#        ......
+#        ..cc..
+#        ..cc..
+#        ......
+#        ......
+#
+#     sw        se
+        cc: Cache
           .find_or_create_by_quadrant
             nw: square.nw.se
             ne: square.ne.sw
             se: square.se.nw
             sw: square.sw.ne
           .result()
+
+# We have now derived nine squares of size `2^(n-1)`: Four component squares and five we have
+# derived from second-order components. The results we have extracted have all been cached, so
+# we are performing lookups rather than computations.
+#
+# These squares fit together to make a larger intermediate square, one that does not neatly fit
+# into our world of `2^n` quanta:
+#
+#     nw        ne
+#
+#        nwnnne
+#        nwnnne
+#        wwccee
+#        wwccee
+#        swssse
+#        swssse
+#
+#     sw        se
+
+# ### Obtaining a result from the intermediate square
     result: ->
-      Square.find_or_create_by_quadrant
-        nw: Square
+
+# From our nine squares, we can make four *overlapping* squares of size `2^(n-1)`:
+#
+#     nw        ne  nw        ne
+#
+#        nwnn..        ..nnne
+#        nwnn..        ..nnne
+#        wwcc..        ..ccee
+#        wwcc..        ..ccee
+#        ......        ......
+#        ......        ......
+#
+#     sw        se  sw        se
+#
+#     nw        ne  nw        ne
+#
+#        ......        ......
+#        ......        ......
+#        wwcc..        ..ccee
+#        wwcc..        ..ccee
+#        swss..        ..ssse
+#        swss..        ..ssse
+#
+#     sw        se  sw        se
+      overlapping_squares =
+        nw: Cache
           .find_or_create_by_quadrant
             nw: @nw
             ne: @nn
             se: @cc
             sw: @ww
-          .result()
-        ne: Square
+        ne: Cache
           .find_or_create_by_quadrant
             nw: @nn
             ne: @ne
             se: @ee
             sw: @cc
-          .result()
-        se: Square
+        se: Cache
           .find_or_create_by_quadrant
             nw: @cc
             ne: @ee
             se: @se
             sw: @ss
-          .result()
-        sw: Square
+        sw: Cache
           .find_or_create_by_quadrant
             nw: @ww
             ne: @cc
             se: @ss
             sw: @sw
-          .result()
-    to_json: ->
-      b =
-        top: _.map( _.zip(@nw.to_json(), @nn.to_json(), @ne.to_json()), (row) ->
-          _.reduce(row, (acc, cell) ->
-            acc.concat(cell)
-          , [])
-        )
-        mid: _.map( _.zip(@ww.to_json(), @cc.to_json(), @ee.to_json()), (row) ->
-          _.reduce(row, (acc, cell) ->
-            acc.concat(cell)
-          , [])
-        )
-        bot: _.map( _.zip(@sw.to_json(), @ss.to_json(), @sw.to_json()), (row) ->
-          _.reduce(row, (acc, cell) ->
-            acc.concat(cell)
-          , [])
-        )
-      b.top.concat(b.mid).concat(b.bot)
+# We can now make a square from the results from each of those quadrants:
+#
+#     nw        ne
+#
+#        ......
+#        .nwne.
+#        .nwne.
+#        .swse.
+#        .swse.
+#        ......
+#
+#     sw        se
+      Cache.find_or_create_by_quadrant
+        nw: overlapping_squares.nw.result()
+        ne: overlapping_squares.ne.result()
+        se: overlapping_squares.se.result()
+        sw: overlapping_squares.sw.result()
 
+  # A `RecursivelyComputableSquare` is a square of size eight or larger
   class RecursivelyComputableSquare extends Square
-    constructor: ({nw, ne, se, sw}) ->
-      super({nw: nw, ne:ne, se:se, sw:sw})
-      @generations = @nw.generations * 2
-      me = this
-      @intermediate_result = _.memoize( ->
-        new IntermediateResult(this)
-      )
+    constructor: (quadrants) ->
+      super(quadrants)
+
+  # When we fit the results of an intermediate square within our original square
+  # of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
+  #
+  #     nw        ne
+  #       ........
+  #       ........
+  #       ..nwne..
+  #       ..nwne..
+  #       ..swse..
+  #       ..swse..
+  #       ........
+  #       ........
+  #     sw        se
       @result = _.memoize( ->
-        @intermediate_result().result()
+        new IntermediateResult(this).result()
       )
 
-#############################################
-# Various hash and cache methods for Square #
-#############################################
+  # The number of generation is double the number of generations of any of its quadrants
+      @generations = @nw.generations * 2
 
-cache = do ->
+# ### Memoizing: The "Hash" in HashLife
+#
+# HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.
+# Any result, at any scale, that has been computed before is reused. This is extremely
+# efficient when dealing with patterns that contain a great deal of redundancy, such as
+# the kinds of patterns constructed for the purpose of emulating circuits or machines in Life.
+#
+# Once Cafe au Life has calculated the results for the 65K possible four-by-four
+# squares, the rules are no longer applied to any generation: Any pattern of any size is
+# recursively computed terminating in a four-by-four square that has already been computed and cached.
+
+# Isolate the cache's locals
+Cache = do ->
 
   num_buckets = 99991 # chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K
   buckets = []
 
+  # `hash` returns an integer for any square
   hash = (square_like) ->
     if square_like.hash?
       square_like.hash
     else
       ((3 *hash(square_like.nw)) + (37 * hash(square_like.ne))  + (79 * hash(square_like.se)) + (131 * hash(square_like.sw)))
 
+  # `find` locates a square in the cache if it exists
   find = (quadrants) ->
     bucket_number = hash(quadrants) % num_buckets
     if buckets[bucket_number]?
       _.find buckets[bucket_number], (sq) ->
         sq.nw is quadrants.nw and sq.ne is quadrants.ne and sq.se is quadrants.se and sq.sw is quadrants.sw
 
+  # `Like find`, but creates a `RecursivelyComputableSquare` if none is found
   find_or_create_by_quadrant = (quadrants) ->
     found = find(quadrants)
     if found
@@ -244,26 +697,8 @@ cache = do ->
     else
       add(new RecursivelyComputableSquare(quadrants))
 
-  add = (square) ->
-    bucket_number = square.hash % num_buckets
-    (buckets[bucket_number] ||= []).push(square)
-    square
-
-  bucketed = ->
-    _.reduce buckets, (sum, bucket) ->
-      sum + bucket.length
-    , 0
-
-  histogram = ->
-    _.reduce buckets, (histo, bucket) ->
-      _.tap histo, (h) ->
-        h[bucket.length] ||= 0
-        h[bucket.length] += 1
-    , []
-
-  find_or_create_by_json = (json) ->
-    find_or_create_by_quadrant json_to_quadrants(json)
-
+  # `Like find_or_create_by_quadrant`, but takes json as an argument. Useful
+  # for seeding teh world from a data file.
   find_or_create_by_json = (json) ->
     unless _.isArray(json[0]) and json[0].length is json.length
       throw 'must be a square'
@@ -296,6 +731,7 @@ cache = do ->
             row.slice(0, half_length)
         )
 
+  # An agnostic method that can find or create anything
   find_or_create = (params) ->
     if _.isArray(params)
       find_or_create_by_json(params)
@@ -306,8 +742,48 @@ cache = do ->
     else
       throw "Cache can't handle #{JSON.stringify(params)}"
 
+  # adds a square to the cache
+  add = (square) ->
+    bucket_number = square.hash % num_buckets
+    (buckets[bucket_number] ||= []).push(square)
+    square
+
+  # For debugging, it can be useful to count the number of squares in the cache
+  bucketed = ->
+    _.reduce buckets, (sum, bucket) ->
+      sum + bucket.length
+    , 0
+
+  # For debugging, it can be useful to get an idea of the relative sizes of the cache buckets
+  histogram = ->
+    _.reduce buckets, (histo, bucket) ->
+      _.tap histo, (h) ->
+        h[bucket.length] ||= 0
+        h[bucket.length] += 1
+    , []
+
+  # export the functions to the cache
   {hash, find, find_or_create, find_or_create_by_quadrant, add, bucketed, histogram}
 
-_.extend Square, cache
+# Expose `find_or_create` through Square
+Square.find_or_create = (params) ->
+  Cache.find_or_create(params)
 
-_.defaults root, {Square, Cell, RecursivelyComputableSquare}
+# Export Square for regular use and others for specs
+_.defaults exports, {Square, Cell, RecursivelyComputableSquare}
+
+# ---
+#
+# ## Whence
+#
+# ![Block laying seed](block_laying_seed_2.png)
+#
+# *(Another small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
+#
+# My understanding of HashLife was gleaned from the writings of:
+#
+# * [Tony Finch explains HashLife](http://fanf.livejournal.com/83709.html)
+# * [An Algorithm for Compressing Space and Time](http://drdobbs.com/jvm/184406478)
+# * [Golly][golly] is a fast Life simulator that contains, amongst other things, an implementation of HashLife written for raw speed.
+#
+# [golly]: http://golly.sourceforge.net/=

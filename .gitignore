@@ -3,3 +3,5 @@ node_modules/underscore/*
 cafeaulife.tmproj
 .gitignore
 cafeaulife.tmproj
+.DS_Store
+docs/.DS_Store
