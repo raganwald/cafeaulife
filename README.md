@@ -10,7 +10,7 @@ Cafe au Life's annotated source code is [here](http://raganwald.github.com/cafea
 
 ## What
 
-![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/doc/gospers_glider_gun.gif)
+![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
 
 *(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefiniately.)*
 
@@ -36,7 +36,7 @@ Cafe au Life implements Conway's Game of Life, as well as other "[life-like][ll]
 
 ## Why
 
-![Period 24 Glider Gun](http://raganwald.github.com/cafeaulife/doc/Trueperiod24gun.png)
+![Period 24 Glider Gun](http://raganwald.github.com/cafeaulife/docs/Trueperiod24gun.png)
 
 *(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
 Life machines.)*
