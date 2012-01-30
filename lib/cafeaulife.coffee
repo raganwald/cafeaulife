@@ -382,15 +382,31 @@ _.defaults exports,
     # Clear the cache out
     Square.cache.clear()
 
-    # The sixteen canonical 2x2 squares. Each is added to the cache (see below)
+    # The canonical 2x2 squares are initialized from the cartesian product
+    # of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
+    # possible 2x2 squares.
+    #
+    # 2x2 squares do not compute results
     all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
       Square.cache.add new Square(quadrants)
 
-    # Now precompute all 65K SeedSquares so that the algorithm for recursively genrating results
-    # terminates when it reaches a size four square
+    # The canonical 4x4 squares are initialized from the cartesian product of
+    # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
+    # gives 65,536 possible 4x4 squares.
+    #
+    # 4x4 squares know how to compute their 2x2 results, and as we saw above, they
+    # memoize those results so that they are only computed once. (A variation of
+    # memoizing the result computation is to compute it when generating the 4x4 square,
+    # thus "compiling" the supplied rules into a table of 65,536 rules taht is looked
+    # up at runtime.)
+    #
+    # We will see below that all larger squares compute their results by recursively
+    # combining the results of smaller squares, so therefore all such computations
+    # will terminate when they reach a square of size 4x4.
     cartesian_product(all_2x2_squares).forEach (quadrants) ->
       Square.cache.add new SeedSquare(quadrants)
 
+    # Put the rules in the cache and return them.
     Square.cache.current_rules = {survival, birth}
 
 # ---
