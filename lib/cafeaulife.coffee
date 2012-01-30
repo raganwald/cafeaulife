@@ -10,7 +10,12 @@
 #
 # Cafe au Life's Github project is [here](https://github.com/raganwald/cafeaulife/). This file,
 # [cafeaulife.coffee][source] contains the core engine for computing the future of any life universe
-# of size `2^n | n > 1`. Consult the project for applications.
+# of size `2^n | n > 1`. The algorithm is optimized for computing very large numbers of generations
+#  of very large and complex life patterns with a high degree of regularity such as implementing
+# Turing machines.
+#
+# As such, it is particularly poorly suited for animating displays a generation at a time. But it
+# is still a beautiful algorithm that touches on the soul of life’s “physics."
 #
 # ![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
 #
