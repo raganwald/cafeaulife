@@ -142,7 +142,7 @@ class Square
   level: ->
     @nw.level() + 1
 
-  # Find or create an empty square with teh same dimensions
+  # Find or create an empty square with the same dimensions
   empty_copy: ->
     empty_quadrant = @nw.empty_copy()
     Square.cache.find_or_create_by_quadrant
@@ -280,7 +280,7 @@ class Square
 # ### Seeding Cafe au Life with squares of size four
 
 # `generate_seeds_from_rule` generates the size four "seed" squares that actually calculate their results
-# from the life-like game rules. ALl alrger squares decompose recursively into size four squares, and thus
+# from the life-like game rules. All larger squares decompose recursively into size four squares, and thus
 # do not need to know anything about the rules.
 #
 # The default, `generate_seeds_from_rule()`, is equivalent to `generate_seeds_from_rule([2,3],[3])`, which
@@ -661,7 +661,7 @@ Square.cache =
       @add(new RecursivelyComputableSquare(quadrants))
 
   # `Like find_or_create_by_quadrant`, but takes json as an argument. Useful
-  # for seeding teh world from a data file.
+  # for seeding the world from a data file.
   find_or_create_by_json: (json) ->
     unless _.isArray(json[0]) and json[0].length is json.length
       throw 'must be a square'
