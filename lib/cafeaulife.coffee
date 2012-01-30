@@ -12,7 +12,8 @@
 # [cs]: http://jashkenas.github.com/coffee-script/
 # [node]: http://nodejs.org
 #
-# Cafe au Life's github project is [here](https://github.com/raganwald/cafeaulife/).
+# Cafe au Life's github project is [here](https://github.com/raganwald/cafeaulife/). This document
+# was generated from the source file using [Docco][docco].
 #
 # ![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
 #
@@ -30,6 +31,7 @@
 #
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 # [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
+# [docco]: http://jashkenas.github.com/docco/
 #
 # ## Why
 #
