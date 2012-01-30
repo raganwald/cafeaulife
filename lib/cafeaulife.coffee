@@ -8,12 +8,9 @@
 # written in [CoffeeScript][cs]. Cafe au Life runs on [Node.js][node], it is not designed
 # to run as an interactive program in a browser window.
 #
-# [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
-# [cs]: http://jashkenas.github.com/coffee-script/
-# [node]: http://nodejs.org
-#
-# Cafe au Life's github project is [here](https://github.com/raganwald/cafeaulife/). This document
-# was generated from the source file using [Docco][docco].
+# Cafe au Life's Github project is [here](https://github.com/raganwald/cafeaulife/). This file,
+# [cafeaulife.coffee][source] contains the core engine for computing the future of any life universe
+# of size `2^n | n > 1`. Consult the project for applications.
 #
 # ![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
 #
@@ -31,7 +28,10 @@
 #
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 # [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
-# [docco]: http://jashkenas.github.com/docco/
+# [source]: https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee
+# [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
+# [cs]: http://jashkenas.github.com/coffee-script/
+# [node]: http://nodejs.org
 #
 # ## Why
 #
@@ -802,3 +802,7 @@ Square.find_or_create = (params) ->
 
 # Export `Square` and `Cell` for regular use and specs
 _.defaults exports, {Square, Cell}
+
+# p.s. This document was generated from [cafeaulife.coffee][source] using [Docco][docco].
+# [source]: https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee
+# [docco]: http://jashkenas.github.com/docco/
