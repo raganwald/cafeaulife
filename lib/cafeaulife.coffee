@@ -339,6 +339,7 @@ class Square
 _.defaults exports,
   generate_seeds_from_rule: (survival = [2,3], birth = [3]) ->
 
+    # Bail if we are given the same rules and already have generated the expected number of seeds
     return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
 
     # The rules expressed as a dictionary function
@@ -781,12 +782,5 @@ Square.cache =
 Square.find_or_create = (params) ->
   @cache.find_or_create(params)
 
-# Export `Square` for regular use and others for specs
+# Export `Square` and `Cell` for regular use and specs
 _.defaults exports, {Square, Cell}
-
-# [hl]: http://en.wikipedia.org/wiki/Hashlife
-# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
-# [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
-# [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
-# [cs]: http://jashkenas.github.com/coffee-script/
-# [node]: http://nodejs.org
