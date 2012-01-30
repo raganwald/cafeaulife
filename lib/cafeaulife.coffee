@@ -49,6 +49,8 @@
 #
 # Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the
 # performance in a JavaScript application will not be anything to write home about.
+#
+# [hl]: http://en.wikipedia.org/wiki/Hashlife
 
 # ### Baseline Setup
 
