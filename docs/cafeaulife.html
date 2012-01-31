@@ -83,19 +83,19 @@ multiplied by itself once for each quadrant.</p>             </td>             <
 (of size <code>2^1</code>) has cells for each of its four quadrants, while all larger squares (of size <code>2^n</code>) have squares of one smaller
 size (<code>2^(n-1)</code>) for each of their four quadrants.</p>
 
-<p>For example, a square of size eight (<code>2^3</code>) is composed of four squares of size four (<code>2^2</code>) (The lines and crosses are part of
-the quadrant squares):</p>
+<p>For example, a square of size eight (<code>2^3</code>) is composed of four squares of size four (<code>2^2</code>):</p>
 
-<pre><code>nw        ne
-  +--++--+
-  |..||..|
-  |..||..|
-  +--++--+
-  +--++--+
-  |..||..|
-  |..||..|
-  +--++--+
-sw        se
+<pre><code>nw         ne
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+  ----+----
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+sw         se
 </code></pre>
 
 <p>The squares of size four are in turn each composed of four squares of size two (<code>2^1</code>), which are each composed of four cells,
@@ -128,7 +128,7 @@ sw     se
 <p>And likewise a square of size eight containing sixty-four empty cells is represented as four references to the exact same
 square of size four containing sixteen empty cells.</p>
 
-<pre><code>nw        ne
+<pre><code>nw         ne
   ....|....
   ....|....
   ....|....
@@ -138,7 +138,7 @@ square of size four containing sixteen empty cells.</p>
   ....|....
   ....|....
   ....|....
-sw        se
+sw         se
 </code></pre>
 
 <p>Obviously, the same goes for any configuration of alive and dead cells: There is one unique representation for any possible
@@ -224,43 +224,46 @@ the excess composed of empty squares</p>             </td>             <td class
 <p>One consequence of this fundamental limit is that given a square of size <code>2^n | n &gt; 1</code> at time <code>t</code>, HashLife has all the information it needs to calculate the alive and dead cells for the inner square of size <code>2^n - 2</code> at time <code>t+1</code>. For example, if HashLife has this square at time <code>t</code>:</p>
 
 <pre><code>nw        ne
-  +--++--+
-  |..||..|
-  |..||..|
-  +--++--+
-  +--++--+
-  |..||..|
-  |..||..|
-  +--++--+
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+  ----+----
+  ....|....
+  ....|....
+  ....|....
+  ....|....
 sw        se
 </code></pre>
 
 <p>HashLife can calculate this square at time <code>t+1</code>:</p>
 
-<pre><code>nw        ne
+<pre><code>nw         ne
 
-   +----+
-   |....|
-   |....|
-   |....|
-   |....|
-   +----+
+   ...|...
+   ...|...
+   ...|...
+   ---+---
+   ...|...
+   ...|...
+   ...|...
 
-sw        se
+sw         se
 </code></pre>
 
 <p>And this square at time <code>t+2</code>:</p>
 
-<pre><code>nw        ne
+<pre><code>nw         ne
 
 
-    +--+
-    |..|
-    |..|
-    +--+
+    ..|..
+    ..|..
+    --+--
+    ..|..
+    ..|..
 
 
-sw        se
+sw         se
 </code></pre>
 
 <p>And this square at time <code>t+3</code>:</p>
@@ -269,8 +272,8 @@ sw        se
 
 
 
-     ++
-     ++
+     ..
+     ..
 
 
 
@@ -593,24 +596,24 @@ the kinds of patterns constructed for the purpose of emulating circuits or machi
 
 <p>Once Cafe au Life has calculated the results for the 65K possible four-by-four
 squares, the rules are no longer applied to any generation: Any pattern of any size is
-recursively computed terminating in a four-by-four square that has already been computed and cached.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Square.cache =</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">num_buckets: </span><span class="mi">99991</span>
+recursively computed terminating in a four-by-four square that has already been computed and cached.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <h3>Representing the cache</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Square.cache =</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">num_buckets: </span><span class="mi">99991</span>
   <span class="nv">buckets: </span><span class="p">[]</span>
 
   <span class="nv">clear: </span><span class="o">-&gt;</span>
-    <span class="vi">@buckets = </span><span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p><code>hash</code> returns an integer for any square</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">hash: </span><span class="nf">(square_like) -&gt;</span>
+    <span class="vi">@buckets = </span><span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p><code>hash</code> returns an integer for any square</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">hash: </span><span class="nf">(square_like) -&gt;</span>
     <span class="k">if</span> <span class="nx">square_like</span><span class="p">.</span><span class="nx">hash</span><span class="o">?</span>
       <span class="nx">square_like</span><span class="p">.</span><span class="nx">hash</span>
     <span class="k">else</span>
-      <span class="p">((</span><span class="mi">3</span> <span class="o">*</span><span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">nw</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">37</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">ne</span><span class="p">))</span>  <span class="o">+</span> <span class="p">(</span><span class="mi">79</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">se</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">131</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">sw</span><span class="p">)))</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p><code>find</code> locates a square in the cache if it exists</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find: </span><span class="nf">(quadrants) -&gt;</span>
+      <span class="p">((</span><span class="mi">3</span> <span class="o">*</span><span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">nw</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">37</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">ne</span><span class="p">))</span>  <span class="o">+</span> <span class="p">(</span><span class="mi">79</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">se</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">131</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">sw</span><span class="p">)))</span></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p><code>find</code> locates a square in the cache if it exists</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find: </span><span class="nf">(quadrants) -&gt;</span>
     <span class="nv">bucket_number = </span><span class="nx">@hash</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span> <span class="o">%</span> <span class="nx">@num_buckets</span>
     <span class="k">if</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span><span class="o">?</span>
       <span class="nx">_</span><span class="p">.</span><span class="nx">find</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">],</span> <span class="nf">(sq) -&gt;</span>
-        <span class="nx">sq</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p><code>Like find</code>, but creates a <code>RecursivelyComputableSquare</code> if none is found</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find_or_create_by_quadrant: </span><span class="nf">(quadrants) -&gt;</span>
+        <span class="nx">sq</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span></pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <p><code>Like find</code>, but creates a <code>RecursivelyComputableSquare</code> if none is found</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find_or_create_by_quadrant: </span><span class="nf">(quadrants) -&gt;</span>
     <span class="nv">found = </span><span class="nx">@find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
     <span class="k">if</span> <span class="nx">found</span>
       <span class="nx">found</span>
     <span class="k">else</span>
-      <span class="nx">@add</span><span class="p">(</span><span class="k">new</span> <span class="nx">RecursivelyComputableSquare</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <p><code>Like find_or_create_by_quadrant</code>, but takes json as an argument. Useful
+      <span class="nx">@add</span><span class="p">(</span><span class="k">new</span> <span class="nx">RecursivelyComputableSquare</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <p><code>Like find_or_create_by_quadrant</code>, but takes json as an argument. Useful
 for seeding the world from a data file.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find_or_create_by_json: </span><span class="nf">(json) -&gt;</span>
     <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">and</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span> <span class="o">is</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span>
       <span class="k">throw</span> <span class="s1">&#39;must be a square&#39;</span>
@@ -641,7 +644,7 @@ for seeding the world from a data file.</p>             </td>             <td cl
         <span class="nv">sw: </span><span class="nx">@find_or_create_by_json</span><span class="p">(</span>
           <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
             <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
-        <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <p>An agnostic method that can find or create anything</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find_or_create: </span><span class="nf">(params) -&gt;</span>
+        <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <p>An agnostic method that can find or create anything</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find_or_create: </span><span class="nf">(params) -&gt;</span>
     <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
       <span class="nx">@find_or_create_by_json</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;nw&#39;</span><span class="p">,</span> <span class="s1">&#39;ne&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;sw&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nf">(quadrant) -&gt;</span> <span class="nx">params</span><span class="p">[</span><span class="nx">quadrant</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span><span class="p">)</span> <span class="p">)</span>
@@ -649,19 +652,19 @@ for seeding the world from a data file.</p>             </td>             <td cl
     <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;nw&#39;</span><span class="p">,</span> <span class="s1">&#39;ne&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;sw&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nf">(quadrant) -&gt;</span> <span class="nx">params</span><span class="p">[</span><span class="nx">quadrant</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Square</span><span class="p">)</span> <span class="p">)</span>
       <span class="nx">@find_or_create_by_quadrant</span> <span class="nx">params</span>
     <span class="k">else</span>
-      <span class="k">throw</span> <span class="s2">&quot;Cache can&#39;t handle #{JSON.stringify(params)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <p>adds a square to the cache if it doesn't already exist</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
+      <span class="k">throw</span> <span class="s2">&quot;Cache can&#39;t handle #{JSON.stringify(params)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>adds a square to the cache if it doesn't already exist</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
     <span class="nv">bucket_number = </span><span class="nx">square</span><span class="p">.</span><span class="nx">hash</span> <span class="o">%</span> <span class="nx">@num_buckets</span>
     <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span> <span class="o">||=</span> <span class="p">[]</span>
     <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reject</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">],</span> <span class="nf">(found) -&gt;</span>
       <span class="nx">found</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">sw</span>
     <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">square</span><span class="p">)</span>
-    <span class="nx">square</span></pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>For debugging, it can be useful to count the number of squares in the cache</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">bucketed: </span><span class="o">-&gt;</span>
+    <span class="nx">square</span></pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>For debugging, it can be useful to count the number of squares in the cache</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">bucketed: </span><span class="o">-&gt;</span>
     <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(sum, bucket) -&gt;</span>
       <span class="nx">sum</span> <span class="o">+</span> <span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span>
-    <span class="p">,</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>For debugging, it can be useful to get an idea of the relative sizes of the cache buckets</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">histogram: </span><span class="o">-&gt;</span>
+    <span class="p">,</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <p>For debugging, it can be useful to get an idea of the relative sizes of the cache buckets</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">histogram: </span><span class="o">-&gt;</span>
     <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(histo, bucket) -&gt;</span>
       <span class="nx">_</span><span class="p">.</span><span class="nx">tap</span> <span class="nx">histo</span><span class="p">,</span> <span class="nf">(h) -&gt;</span>
         <span class="nx">h</span><span class="p">[</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">||=</span> <span class="mi">0</span>
         <span class="nx">h</span><span class="p">[</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="p">,</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <p>Expose <code>find_or_create</code> through <code>Square</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Square.find_or_create = </span><span class="nf">(params) -&gt;</span>
-  <span class="nx">@cache</span><span class="p">.</span><span class="nx">find_or_create</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <p>Export <code>Square</code> and <code>Cell</code> for regular use and specs</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Square</span><span class="p">,</span> <span class="nx">Cell</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-66">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-66">&#182;</a>               </div>               <p>p.s. This document was generated from <a href="https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee">cafeaulife.coffee</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+    <span class="p">,</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <p>Expose <code>find_or_create</code> through <code>Square</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Square.find_or_create = </span><span class="nf">(params) -&gt;</span>
+  <span class="nx">@cache</span><span class="p">.</span><span class="nx">find_or_create</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-66">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-66">&#182;</a>               </div>               <p>Export <code>Square</code> and <code>Cell</code> for regular use and specs</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Square</span><span class="p">,</span> <span class="nx">Cell</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-67">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-67">&#182;</a>               </div>               <p>p.s. This document was generated from <a href="https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee">cafeaulife.coffee</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

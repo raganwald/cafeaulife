@@ -121,19 +121,19 @@ Cell.Dead = new Cell(0)
 # (of size `2^1`) has cells for each of its four quadrants, while all larger squares (of size `2^n`) have squares of one smaller
 # size (`2^(n-1)`) for each of their four quadrants.
 #
-# For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`) (The lines and crosses are part of
-# the quadrant squares):
+# For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`):
 #
-#     nw        ne
-#       +--++--+
-#       |..||..|
-#       |..||..|
-#       +--++--+
-#       +--++--+
-#       |..||..|
-#       |..||..|
-#       +--++--+
-#     sw        se
+#     nw         ne
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#       ----+----
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#     sw         se
 #
 # The squares of size four are in turn each composed of four squares of size two (`2^1`), which are each composed of four cells,
 # which cannot be subdivided. (For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife
@@ -165,7 +165,7 @@ Cell.Dead = new Cell(0)
 # And likewise a square of size eight containing sixty-four empty cells is represented as four references to the exact same
 # square of size four containing sixteen empty cells.
 #
-#     nw        ne
+#     nw         ne
 #       ....|....
 #       ....|....
 #       ....|....
@@ -175,7 +175,7 @@ Cell.Dead = new Cell(0)
 #       ....|....
 #       ....|....
 #       ....|....
-#     sw        se
+#     sw         se
 #
 # Obviously, the same goes for any configuration of alive and dead cells: There is one unique representation for any possible
 # square and each of its four quadrants is a reference to a unique representation of a smaller square or cell.
@@ -289,41 +289,44 @@ class Square
 # One consequence of this fundamental limit is that given a square of size `2^n | n > 1` at time `t`, HashLife has all the information it needs to calculate the alive and dead cells for the inner square of size `2^n - 2` at time `t+1`. For example, if HashLife has this square at time `t`:
 #
 #     nw        ne
-#       +--++--+
-#       |..||..|
-#       |..||..|
-#       +--++--+
-#       +--++--+
-#       |..||..|
-#       |..||..|
-#       +--++--+
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#       ----+----
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
 #     sw        se
 #
 # HashLife can calculate this square at time `t+1`:
 #
-#     nw        ne
+#     nw         ne
 #
-#        +----+
-#        |....|
-#        |....|
-#        |....|
-#        |....|
-#        +----+
+#        ...|...
+#        ...|...
+#        ...|...
+#        ---+---
+#        ...|...
+#        ...|...
+#        ...|...
 #
-#     sw        se
+#     sw         se
 #
 # And this square at time `t+2`:
 #
-#     nw        ne
+#     nw         ne
 #
 #
-#         +--+
-#         |..|
-#         |..|
-#         +--+
+#         ..|..
+#         ..|..
+#         --+--
+#         ..|..
+#         ..|..
 #
 #
-#     sw        se
+#     sw         se
 #
 # And this square at time `t+3`:
 #
@@ -331,8 +334,8 @@ class Square
 #
 #
 #
-#          ++
-#          ++
+#          ..
+#          ..
 #
 #
 #
@@ -734,6 +737,8 @@ RecursivelyComputableSquare = do ->
 # Once Cafe au Life has calculated the results for the 65K possible four-by-four
 # squares, the rules are no longer applied to any generation: Any pattern of any size is
 # recursively computed terminating in a four-by-four square that has already been computed and cached.
+
+# ### Representing the cache
 Square.cache =
 
   # chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K
