@@ -141,14 +141,46 @@ Cell.Dead = new Cell(0)
 #
 # [qt]: http://en.wikipedia.org/wiki/Quadtree
 #
-# ### Representing squares
-#
-# The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class `Square`. For example, there is exactly one representation of a cell of size two containing four empty cells:
+# The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells
+# are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares
+# idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same
+# instance of class `Square`. For example, there is exactly one representation of a square of size two containing four empty cells:
 #
 #     nw  ne
 #       ..
 #       ..
 #     sw  sw
+#
+# And thus, a square of size four containing sixteen empty cells is represented as four references to the exact same square of
+# size two containing four empty cells:
+#
+#     nw     ne
+#       ..|..
+#       ..|..
+#       --+--
+#       ..|..
+#       ..|..
+#     sw     se
+#
+# And likewise a square of size eight containing sixty-four empty cells is represented as four references to the exact same
+# square of size four containing sixteen empty cells.
+#
+#     nw        ne
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#       ----+----
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#     sw        se
+#
+# Obviously, the same goes for any configuration of alive and dead cells: There is one unique representation for any possible
+# square and each of its four quadrants is a reference to a unique representation of a smaller square or cell.
+#
+# ### Representing squares
 
 # An id for debugging purposes
 debug_id = 0

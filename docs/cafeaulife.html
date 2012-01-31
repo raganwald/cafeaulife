@@ -102,15 +102,49 @@ sw        se
 which cannot be subdivided. (For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife
 algorithm can be used to handle any board shape by tiling it with squares.)</p>
 
-<h3>Representing squares</h3>
-
-<p>The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same instance of class <code>Square</code>. For example, there is exactly one representation of a cell of size two containing four empty cells:</p>
+<p>The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells
+are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares
+idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same
+instance of class <code>Square</code>. For example, there is exactly one representation of a square of size two containing four empty cells:</p>
 
 <pre><code>nw  ne
   ..
   ..
 sw  sw
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>An id for debugging purposes</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">debug_id = </span><span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>HashLife represents each unique square as a structure with four quadrants:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Square</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Squares are constructed from four quadrant squares or cells and store a hash used
+</code></pre>
+
+<p>And thus, a square of size four containing sixteen empty cells is represented as four references to the exact same square of
+size two containing four empty cells:</p>
+
+<pre><code>nw     ne
+  ..|..
+  ..|..
+  --+--
+  ..|..
+  ..|..
+sw     se
+</code></pre>
+
+<p>And likewise a square of size eight containing sixty-four empty cells is represented as four references to the exact same
+square of size four containing sixteen empty cells.</p>
+
+<pre><code>nw        ne
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+  ----+----
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+sw        se
+</code></pre>
+
+<p>Obviously, the same goes for any configuration of alive and dead cells: There is one unique representation for any possible
+square and each of its four quadrants is a reference to a unique representation of a smaller square or cell.</p>
+
+<h3>Representing squares</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>An id for debugging purposes</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">debug_id = </span><span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>HashLife represents each unique square as a structure with four quadrants:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Square</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Squares are constructed from four quadrant squares or cells and store a hash used
 to locate the square in the cache</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">({@nw, @ne, @se, @sw}) -&gt;</span>
     <span class="vi">@hash = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
 
