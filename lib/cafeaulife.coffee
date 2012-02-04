@@ -115,32 +115,46 @@ Cell.Dead = new Cell(0)
 # ![Block laying seed](block_laying_seed.png)
 #
 # *(A small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)*
-#
+
 # HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
 # (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Cells are not considered squares. Therefore, the smallest possible square
 # (of size `2^1`) has cells for each of its four quadrants, while all larger squares (of size `2^n`) have squares of one smaller
 # size (`2^(n-1)`) for each of their four quadrants.
-#
+
 # For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`):
 #
 #     nw         ne
-#       ....|....
-#       ....|....
-#       ....|....
-#       ....|....
-#       ----+----
-#       ....|....
-#       ....|....
-#       ....|....
-#       ....|....
+#       ....*....
+#       ....*....
+#       ....*....
+#       ....*....
+#       ****@****
+#       ....*....
+#       ....*....
+#       ....*....
+#       ....*....
 #     sw         se
+
+# The squares of size four are in turn each composed of four squares of size two (`2^1`):
 #
-# The squares of size four are in turn each composed of four squares of size two (`2^1`), which are each composed of four cells,
-# which cannot be subdivided. (For simplicity, a Cafe au Life board is represented as one such large square, although the HashLife
+#     nw           ne
+#       ..|..*..|..
+#       ..|..*..|..
+#       --+--*--+--
+#       ..|..*..|..
+#       ..|..*..|..
+#       *****@*****
+#       ..|..*..|..
+#       ..|..*..|..
+#       --+--*--+--
+#       ..|..*..|..
+#       ..|..*..|..
+#     sw           se
+
+# And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
+# board is represented as one such large square, although the HashLife
 # algorithm can be used to handle any board shape by tiling it with squares.)
-#
-# [qt]: http://en.wikipedia.org/wiki/Quadtree
-#
+
 # The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells
 # are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares
 # idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same
