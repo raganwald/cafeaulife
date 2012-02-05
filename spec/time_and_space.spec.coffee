@@ -8,6 +8,25 @@ describe 'time and space', ->
   beforeEach ->
     Life.generate_seeds_from_rule()
 
+  describe 'time', ->
+
+    beforeEach ->
+      @still_life = Life.Square.find_or_create [
+        [1, 1]
+        [1, 1]
+      ]
+
+    # This test is wrong on the level of a square. It ight work for a game board, but it definitely
+    # doesn't work for a square.
+    it 'should move this one step into the future' #, ->
+
+      # expect( @still_life.future(1) ).toEqual( Life.Square.find_or_create [
+      #   [0, 0, 0, 0]
+      #   [0, 1, 1, 0]
+      #   [0, 1, 1, 0]
+      #   [0, 0, 0, 0]
+      # ])
+
   describe 'space', ->
 
     it 'should not change an r_pentomino from level 2', ->

@@ -90,6 +90,12 @@ dfunc = (dictionary) ->
       a[i]
     , dictionary
 
+# The [binary logarithm function](https://en.wikipedia.org/wiki/Logarithm#Change_of_base)
+log2 = do ->
+  base = Math.log(2)
+  (x) ->
+    Math.log(x) / base
+
 # ### Cells
 
 # The smallest unit of Life is the Cell:
@@ -99,7 +105,7 @@ class Cell
     @hash
   to_json: ->
     [@hash]
-  level: ->
+  level:
     0
   empty_copy: ->
     Cell.Dead
@@ -206,6 +212,7 @@ class Square
   # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
     @hash = Square.cache.hash(this)
+    @level = @nw.level + 1
 
     @debug_id = (debug_id += 1)
 
@@ -238,11 +245,6 @@ class Square
         ([' ', '*'][c] for c in row).join('')
       ).join('\n')
     )
-
-  # The level increases with the log2 of the length of the size.
-  # So level 1 is 2x2, level 2 is 4x4, level 3 is 8x8, and so on.
-  level: ->
-    @nw.level() + 1
 
   # Find or create an empty square with the same dimensions
   empty_copy: ->
@@ -298,7 +300,7 @@ class Square
 
   # Resize to a given level
   resize_to: (level) ->
-    this_level = @level()
+    this_level = @level
     if level > this_level
       @inflate_by(level - this_level)
     else if level < this_level
@@ -306,11 +308,25 @@ class Square
     else
       this
 
+  # Compute the future of this square. For the moment, only even powers of two are permissable and it must be at least
+  future: (generations) ->
+    generations_log2 = Math.floor(log2(generations))
+    minimum_log2 = @level - 1
+    if generations_log2 < minimum_log2
+      throw "This implementation cannot go fewer than #{Math.pow(2, minimum_log2)} generations into the future for this square"
+    else if Math.floor(generations) isnt Math.pow(2,generations_log2)
+      throw "This implementation can only go powers of two generations into the future (#{generations}, #{Math.pow(2, generations_log2)})"
+    else
+      throw "implement me!"
+
 # ### The Speed of Light
 #
-# In Life, the "Speed of Light" or "*c*" is one cell vertically, horizontally, or diagonally in any direction. Meaning, that cause and effect cannot travel faster than *c*.
+# In Life, the "Speed of Light" or "*c*" is one cell vertically, horizontally, or diagonally in any direction. Meaning,
+# that cause and effect cannot travel faster than *c*.
 #
-# One consequence of this fundamental limit is that given a square of size `2^n | n > 1` at time `t`, HashLife has all the information it needs to calculate the alive and dead cells for the inner square of size `2^n - 2` at time `t+1`. For example, if HashLife has this square at time `t`:
+# One consequence of this fundamental limit is that given a square of size `2^n | n > 1` at time `t`, HashLife has all
+# the information it needs to calculate the alive and dead cells for the inner square of size `2^n - 2` at time `t+1`.
+# For example, if HashLife has this square at time `t`:
 #
 #     nw        ne
 #       ....|....
@@ -520,32 +536,32 @@ RecursivelyComputableSquare = do ->
       # to @nw, @se, et cetera.
       _.extend this,
 
-# First, Let's look at our square of size eight made up of four component squares of size four (the lines
-# and crosses are part of the components):
-#
-#     nw        ne
-#       +--++--+
-#       |..||..|
-#       |..||..|
-#       +--++--+
-#       +--++--+
-#       |..||..|
-#       |..||..|
-#       +--++--+
-#     sw        se
+        # First, Let's look at our square of size eight made up of four component squares of size four (the lines
+        # and crosses are part of the components):
+        #
+        #     nw        ne
+        #       +--++--+
+        #       |..||..|
+        #       |..||..|
+        #       +--++--+
+        #       +--++--+
+        #       |..||..|
+        #       |..||..|
+        #       +--++--+
+        #     sw        se
 
-# We can take the results of those four quadrants and add them to our intermediate square
-#
-#     nw        ne
-#
-#        nw..ne
-#        nw..ne
-#        ......
-#        ......
-#        sw..se
-#        sw..se
-#
-#     sw        se
+        # We can take the results of those four quadrants and add them to our intermediate square
+        #
+        #     nw        ne
+        #
+        #        nw..ne
+        #        nw..ne
+        #        ......
+        #        ......
+        #        sw..se
+        #        sw..se
+        #
+        #     sw        se
         nw: square.nw.result()
         ne: square.ne.result()
         se: square.se.result()
@@ -564,19 +580,19 @@ RecursivelyComputableSquare = do ->
 #       ..+--+..        ..+--+..
 #          ss
 
-# Deriving these from our four component squares is straightforward, and when we take their results,
-# we fill in four of the five missing blanks for our intermediate square:
-#
-#     nw        ne
-#
-#        ..nn..
-#        ..nn..
-#        ww..ee
-#        ww..ee
-#        ..ss..
-#        ..ss..
-#
-#     sw        se
+        # Deriving these from our four component squares is straightforward, and when we take their results,
+        # we fill in four of the five missing blanks for our intermediate square:
+        #
+        #     nw        ne
+        #
+        #        ..nn..
+        #        ..nn..
+        #        ww..ee
+        #        ww..ee
+        #        ..ss..
+        #        ..ss..
+        #
+        #     sw        se
         nn: Square.cache
           .find_or_create_by_quadrant
             nw: square.nw.ne
@@ -606,31 +622,31 @@ RecursivelyComputableSquare = do ->
             sw: square.sw.nw
           .result()
 
-# We use a similar method to derive a center square:
-#
-#     nw        ne
-#
-#        ......
-#        .+--+.
-#        .|..|.
-#        .|..|.
-#        .+--+.
-#        ......
-#
-#     sw        se
+        # We use a similar method to derive a center square:
+        #
+        #     nw        ne
+        #
+        #        ......
+        #        .+--+.
+        #        .|..|.
+        #        .|..|.
+        #        .+--+.
+        #        ......
+        #
+        #     sw        se
 
-# And we extract its result square accordingly:
-#
-#     nw        ne
-#
-#        ......
-#        ......
-#        ..cc..
-#        ..cc..
-#        ......
-#        ......
-#
-#     sw        se
+        # And we extract its result square accordingly:
+        #
+        #     nw        ne
+        #
+        #        ......
+        #        ......
+        #        ..cc..
+        #        ..cc..
+        #        ......
+        #        ......
+        #
+        #     sw        se
         cc: Square.cache
           .find_or_create_by_quadrant
             nw: square.nw.se
@@ -639,50 +655,50 @@ RecursivelyComputableSquare = do ->
             sw: square.sw.ne
           .result()
 
-# We have now derived nine squares of size `2^(n-1)`: Four component squares and five we have
-# derived from second-order components. The results we have extracted have all been cached, so
-# we are performing lookups rather than computations.
-#
-# These squares fit together to make a larger intermediate square, one that does not neatly fit
-# into our world of `2^n` quanta:
-#
-#     nw        ne
-#
-#        nwnnne
-#        nwnnne
-#        wwccee
-#        wwccee
-#        swssse
-#        swssse
-#
-#     sw        se
+    # We have now derived nine squares of size `2^(n-1)`: Four component squares and five we have
+    # derived from second-order components. The results we have extracted have all been cached, so
+    # we are performing lookups rather than computations.
+    #
+    # These squares fit together to make a larger intermediate square, one that does not neatly fit
+    # into our world of `2^n` quanta:
+    #
+    #     nw        ne
+    #
+    #        nwnnne
+    #        nwnnne
+    #        wwccee
+    #        wwccee
+    #        swssse
+    #        swssse
+    #
+    #     sw        se
 
-# ### Obtaining a result from the intermediate square
+    # ### Obtaining a result from the intermediate square
     result: ->
 
-# From our nine squares, we can make four *overlapping* squares of size `2^(n-1)`:
-#
-#     nw        ne  nw        ne
-#
-#        nwnn..        ..nnne
-#        nwnn..        ..nnne
-#        wwcc..        ..ccee
-#        wwcc..        ..ccee
-#        ......        ......
-#        ......        ......
-#
-#     sw        se  sw        se
-#
-#     nw        ne  nw        ne
-#
-#        ......        ......
-#        ......        ......
-#        wwcc..        ..ccee
-#        wwcc..        ..ccee
-#        swss..        ..ssse
-#        swss..        ..ssse
-#
-#     sw        se  sw        se
+      # From our nine squares, we can make four *overlapping* squares of size `2^(n-1)`:
+      #
+      #     nw        ne  nw        ne
+      #
+      #        nwnn..        ..nnne
+      #        nwnn..        ..nnne
+      #        wwcc..        ..ccee
+      #        wwcc..        ..ccee
+      #        ......        ......
+      #        ......        ......
+      #
+      #     sw        se  sw        se
+      #
+      #     nw        ne  nw        ne
+      #
+      #        ......        ......
+      #        ......        ......
+      #        wwcc..        ..ccee
+      #        wwcc..        ..ccee
+      #        swss..        ..ssse
+      #        swss..        ..ssse
+      #
+      #     sw        se  sw        se
       overlapping_squares =
         nw: Square.cache
           .find_or_create_by_quadrant
@@ -708,18 +724,18 @@ RecursivelyComputableSquare = do ->
             ne: @cc
             se: @ss
             sw: @sw
-# We can now make a square from the results from each of those quadrants:
-#
-#     nw        ne
-#
-#        ......
-#        .nwne.
-#        .nwne.
-#        .swse.
-#        .swse.
-#        ......
-#
-#     sw        se
+      # We can now make a square from the results from each of those quadrants:
+      #
+      #     nw        ne
+      #
+      #        ......
+      #        .nwne.
+      #        .nwne.
+      #        .swse.
+      #        .swse.
+      #        ......
+      #
+      #     sw        se
       Square.cache.find_or_create_by_quadrant
         nw: overlapping_squares.nw.result()
         ne: overlapping_squares.ne.result()
@@ -731,24 +747,25 @@ RecursivelyComputableSquare = do ->
     constructor: (quadrants) ->
       super(quadrants)
 
-  # When we fit the results of an intermediate square within our original square
-  # of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
-  #
-  #     nw        ne
-  #       ........
-  #       ........
-  #       ..nwne..
-  #       ..nwne..
-  #       ..swse..
-  #       ..swse..
-  #       ........
-  #       ........
-  #     sw        se
+      # When we fit the results of an intermediate square within our original square
+      # of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
+      #
+      #     nw        ne
+      #       ........
+      #       ........
+      #       ..nwne..
+      #       ..nwne..
+      #       ..swse..
+      #       ..swse..
+      #       ........
+      #       ........
+      #     sw        se
       @result = _.memoize( ->
         new IntermediateResult(this).result()
       )
 
-  # The number of generation is double the number of generations of any of its quadrants
+      # The number of generation is double the number of generations of any of its quadrants.
+      # This can also be derived mathematically from the level: `math.pow(2, @level - 1)`
       @generations = @nw.generations * 2
 
 # ### Memoizing: The "Hash" in HashLife
