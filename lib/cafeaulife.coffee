@@ -106,7 +106,7 @@ class Cell
   toString: ->
     '' + @hash
 
-# The two canonical cells. No more should ever be created. In C++ terms, `new` is private.
+# The two canonical cells.
 Cell.Alive = new Cell(1)
 Cell.Dead = new Cell(0)
 
@@ -295,6 +295,16 @@ class Square
             se: empty_quadrant
             sw: empty_quadrant
         .inflate_by(extant - 1)
+
+  # Resize to a given level
+  resize_to: (level) ->
+    this_level = @level()
+    if level > this_level
+      @inflate_by(level - this_level)
+    else if level < this_level
+      @deflate_by(this_level - level)
+    else
+      this
 
 # ### The Speed of Light
 #
