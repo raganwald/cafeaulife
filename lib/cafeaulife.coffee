@@ -66,6 +66,9 @@
 # [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
 
+# YouAreDaChef provides a nice clean set of semantics for AOP
+YouAreDaChef = require('YouAreDaChef').YouAreDaChef
+
 # Play with Node and some browsers
 exports ?= window or this
 
@@ -100,21 +103,23 @@ log2 = do ->
 
 # The smallest unit of Life is the Cell:
 class Cell
-  constructor: (@hash) ->
+  constructor: (@value) ->
+
+    # A simple point-cut that allows us to apply advice to contructors.
+    @initialize.apply(this, arguments)
+
+  # By default, do nothing
+  initialize: ->
   toValue: ->
-    @hash
+    @value
   to_json: ->
-    [@hash]
+    [@value]
   level:
     0
   empty_copy: ->
     Cell.Dead
   toString: ->
-    '' + @hash
-
-# The two canonical cells.
-Cell.Alive = new Cell(1)
-Cell.Dead = new Cell(0)
+    '' + @value
 
 # ### Squares
 #
@@ -211,7 +216,10 @@ class Square
   # Squares are constructed from four quadrant squares or cells and store a hash used
   # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
-    @hash = Square.cache.hash(this)
+
+    # A simple point-cut that allows us to apply advice to contructors.
+    @initialize.apply(this, arguments)
+
     @level = @nw.level + 1
 
     @debug_id = (debug_id += 1)
@@ -245,6 +253,9 @@ class Square
         ([' ', '*'][c] for c in row).join('')
       ).join('\n')
     )
+
+  # By default, do nothing
+  initialize: ->
 
   # Find or create an empty square with the same dimensions
   empty_copy: ->
@@ -420,6 +431,10 @@ class Square
 # [Replicator](http://www.conwaylife.com/wiki/Replicator_(CA))
 _.defaults exports,
   generate_seeds_from_rule: (survival = [2,3], birth = [3]) ->
+
+    # The two canonical cells.
+    Cell.Alive ?= new Cell(1)
+    Cell.Dead  ?= new Cell(0)
 
     # Bail if we are given the same rules and already have generated the expected number of seeds
     return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
@@ -778,6 +793,20 @@ RecursivelyComputableSquare = do ->
 # Once Cafe au Life has calculated the results for the 65K possible four-by-four
 # squares, the rules are no longer applied to any generation: Any pattern of any size is
 # recursively computed terminating in a four-by-four square that has already been computed and cached.
+
+# ### Extending Cell and Square
+#
+# We add some support for hashing to cells and squares.
+
+# Initialize a cell's hash property to the cell's numeric value
+YouAreDaChef(Cell)
+  .after 'initialize', ->
+    @hash = @value
+
+# Initialize a square's hash property to the cache's has function
+YouAreDaChef(Square)
+  .after 'initialize', ->
+    @hash = Square.cache.hash(this)
 
 # ### Representing the cache
 Square.cache =
