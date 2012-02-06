@@ -114,8 +114,6 @@ class Cell
     [@value]
   toValue: ->
     @value
-  level:
-    0
 
 # Export `Cell`
 _.defaults exports, {Cell}
@@ -212,8 +210,6 @@ class Square
   # Squares are constructed from four quadrant squares or cells and store a hash used
   # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
-
-    @level = @nw.level + 1
 
     # A simple point-cut that allows us to apply advice to contructors.
     @initialize.apply(this, arguments)
@@ -765,6 +761,17 @@ YouAreDaChef(Square)
 # For calculating the future of a square containing a pattern, we often need to make a larger square with the
 # current square centered surrounded by empty squares. We also need to trim such a square to a smaller size,
 # discarding the borders.
+
+# We start keeping track of the *level* of squares. The length of a square's side is `2^level`. Cells have
+# a level of zero.
+_.extend Cell.prototype,
+  level:
+    0
+
+# Squares have a level one larger than the level of their quadrants.
+YouAreDaChef(Square)
+  .after 'initialize', ->
+    @level = @nw.level + 1
 
 # A core requirement is to make an empty copy of a cell or square. In effect, we are making an empty
 # square of the same size.
