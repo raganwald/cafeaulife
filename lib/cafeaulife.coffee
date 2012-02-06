@@ -110,16 +110,14 @@ class Cell
 
   # By default, do nothing
   initialize: ->
-  toValue: ->
-    @value
   to_json: ->
     [@value]
+  toValue: ->
+    @value
   level:
     0
   empty_copy: ->
     Cell.Dead
-  toString: ->
-    '' + @value
 
 # ### Squares
 #
@@ -223,36 +221,6 @@ class Square
     @level = @nw.level + 1
 
     @debug_id = (debug_id += 1)
-
-    # `to_json` is a memoized method
-    @to_json = _.memoize( ->
-      a =
-        nw: @nw.to_json()
-        ne: @ne.to_json()
-        se: @se.to_json()
-        sw: @sw.to_json()
-      b =
-        top: _.map( _.zip(a.nw, a.ne), ([left, right]) ->
-          if _.isArray(left)
-            left.concat(right)
-          else
-            [left, right]
-        )
-        bottom: _.map( _.zip(a.sw, a.se), ([left, right]) ->
-          if _.isArray(left)
-            left.concat(right)
-          else
-            [left, right]
-        )
-      b.top.concat(b.bottom)
-    )
-
-    # `toString` is a memoized method
-    @toString = _.memoize( ->
-      (_.map @to_json(), (row) ->
-        ([' ', '*'][c] for c in row).join('')
-      ).join('\n')
-    )
 
   # By default, do nothing
   initialize: ->
@@ -419,7 +387,7 @@ class Square
 # The computation of the four inner `+` cells from their adjacent eight cells is straightforward and
 # is calculated from the basic 2-3 rules or looked up from a table with 65K entries.
 
-# ### Seeding Cafe au Life with squares of size four
+# ## Seeding Cafe au Life with squares of size four
 
 # `generate_seeds_from_rule` generates the size four "seed" squares that actually calculate their results
 # from the life-like game rules. All larger squares decompose recursively into size four squares, and thus
@@ -783,7 +751,7 @@ RecursivelyComputableSquare = do ->
       # This can also be derived mathematically from the level: `math.pow(2, @level - 1)`
       @generations = @nw.generations * 2
 
-# ### Memoizing: The "Hash" in HashLife
+# ## Memoizing: The "Hash" in HashLife
 #
 # HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.
 # Any result, at any scale, that has been computed before is reused. This is extremely
@@ -911,6 +879,49 @@ Square.cache =
 # Expose `find_or_create` through `Square`
 Square.find_or_create = (params) ->
   @cache.find_or_create(params)
+
+# ## The Life "Universe"
+#
+# Creating squares, displaying them, and displaying their future for a specific number of generations.
+
+# ### Import and export
+
+# `to_json` and `toString` are simple methods for cells.
+_.extend Cell.prototype,
+  to_json: ->
+    [@value]
+  toString: ->
+    '' + @value
+
+# `to_json` and `toString` are memoized methods for squares
+YouAreDaChef(Square)
+  .after 'initialize', ->
+    @to_json = _.memoize( ->
+      a =
+        nw: @nw.to_json()
+        ne: @ne.to_json()
+        se: @se.to_json()
+        sw: @sw.to_json()
+      b =
+        top: _.map( _.zip(a.nw, a.ne), ([left, right]) ->
+          if _.isArray(left)
+            left.concat(right)
+          else
+            [left, right]
+        )
+        bottom: _.map( _.zip(a.sw, a.se), ([left, right]) ->
+          if _.isArray(left)
+            left.concat(right)
+          else
+            [left, right]
+        )
+      b.top.concat(b.bottom)
+    )
+    @toString = _.memoize( ->
+      (_.map @to_json(), (row) ->
+        ([' ', '*'][c] for c in row).join('')
+      ).join('\n')
+    )
 
 # Export `Square` and `Cell` for regular use and specs
 _.defaults exports, {Square, Cell}
