@@ -1,7 +1,7 @@
-C = require('../../lib/cafeaulife')
-C.set_universe_rules [1..5],[3]
+Life = require('../../lib/cafeaulife')
+Life.set_universe_rules [1..5],[3]
 
-random = C.Square.find_or_create [
+random = Life.Square.find_or_create [
   Math.floor(Math.random()*2) for x in [1..8]
   Math.floor(Math.random()*2) for x in [1..8]
   Math.floor(Math.random()*2) for x in [1..8]

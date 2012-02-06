@@ -1,7 +1,7 @@
-C = require('../../lib/cafeaulife')
-C.set_universe_rules [1..5],[3]
+Life = require('../../lib/cafeaulife')
+Life.set_universe_rules [1..5],[3]
 
-wickstretcher = C.Square.find_or_create [
+wickstretcher = Life.Square.find_or_create [
   [0, 1, 1, 0, 0, 0, 0, 0]
   [0, 0, 1, 1, 1, 0, 0, 0]
   [0, 0, 1, 0, 1, 1, 0, 0]
