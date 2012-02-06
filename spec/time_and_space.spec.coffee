@@ -16,16 +16,36 @@ describe 'time and space', ->
         [1, 1]
       ]
 
-    # This test is wrong on the level of a square. It ight work for a game board, but it definitely
-    # doesn't work for a square.
-    it 'should move this one step into the future' #, ->
+      @r_pentomino = Life.Square.find_or_create [
+        [0, 0, 0, 0]
+        [0, 1, 0, 0]
+        [1, 1, 1, 0]
+        [0, 0, 1, 0]
+      ]
 
-      # expect( @still_life.future(1) ).toEqual( Life.Square.find_or_create [
-      #   [0, 0, 0, 0]
-      #   [0, 1, 1, 0]
-      #   [0, 1, 1, 0]
-      #   [0, 0, 0, 0]
-      # ])
+    it 'should move a block one step into the future', ->
+
+      expect( @still_life.future() ).toEqual( Life.Square.find_or_create [
+        [0, 0, 0, 0]
+        [0, 1, 1, 0]
+        [0, 1, 1, 0]
+        [0, 0, 0, 0]
+      ] )
+
+    # TODO: Double-check this result!
+    it 'should move an r-pentomino two steps into the future', ->
+
+      expect( @r_pentomino.future() ).toEqual( Life.Square.find_or_create [
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+        [ 0, 0, 0, 1, 0, 0, 0, 0 ]
+        [ 0, 0, 1, 0, 1, 0, 0, 0 ]
+        [ 0, 0, 1, 0, 1, 1, 0, 0 ]
+        [ 0, 0, 0, 1, 0, 0, 0, 0 ]
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ] )
+
 
   describe 'space', ->
 

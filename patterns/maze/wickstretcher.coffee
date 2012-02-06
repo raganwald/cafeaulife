@@ -14,8 +14,8 @@ wickstretcher = C.Square.find_or_create [
 
 ( (start = wickstretcher, inflation = 6) ->
 
-  board = start.inflate_by(inflation)
+  board = start.pad_by(inflation)
 
-  console?.log "#{board.generations} generations:\n\n#{board.result().deflate_by(1)}"
+  console?.log "#{board.generations} generations:\n\n#{board.result().crop_by(1)}"
 
 )()

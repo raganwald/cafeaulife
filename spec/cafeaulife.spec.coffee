@@ -34,7 +34,7 @@ describe 'cafe au life', ->
 
     it 'should be a resulting square after inflation', ->
 
-      expect(@foursq.inflate_by(1)).toRespondTo('result')
+      expect(@foursq.pad_by(1)).toRespondTo('result')
 
 
   describe '_.memoize', ->
@@ -42,7 +42,7 @@ describe 'cafe au life', ->
     it 'gratuitously re-result the same thing many times', ->
 
       sq = Life.Square.find_or_create([[1, 0], [0, 1]])
-        .inflate_by(2)
+        .pad_by(2)
       sq.result()
 
       number_bucketed = Life.Square.cache.bucketed()
@@ -126,18 +126,18 @@ describe 'cafe au life', ->
 
       it 'should not inflate cells', ->
 
-        expect(Life.Cell.Alive).not.toRespondTo('inflate_by')
+        expect(Life.Cell.Alive).not.toRespondTo('pad_by')
 
       it 'should inflate 2x2 at zero level to itself', ->
 
-        expect(@two_by_two.inflate_by(0)).toEqual(Life.Square.find_or_create [
+        expect(@two_by_two.pad_by(0)).toEqual(Life.Square.find_or_create [
           [1, 0]
           [0, 1]
         ])
 
       it 'should inflate 2x2 at one level to double itself', ->
 
-        expect(@two_by_two.inflate_by(1).to_json()).toEqual([
+        expect(@two_by_two.pad_by(1).to_json()).toEqual([
           [0, 0, 0, 0]
           [0, 1, 0, 0]
           [0, 0, 1, 0]
@@ -146,7 +146,7 @@ describe 'cafe au life', ->
 
       it 'should inflate 2x2 at two levels to quadruple itself', ->
 
-        expect(@two_by_two.inflate_by(2).to_json()).toEqual([
+        expect(@two_by_two.pad_by(2).to_json()).toEqual([
           [0, 0, 0, 0, 0, 0, 0, 0]
           [0, 0, 0, 0, 0, 0, 0, 0]
           [0, 0, 0, 0, 0, 0, 0, 0]
@@ -173,7 +173,7 @@ describe 'cafe au life', ->
 
       it 'should have a zero deflation', ->
 
-        expect( @square.deflate_by(0) ).toEqual(
+        expect( @square.crop_by(0) ).toEqual(
           Life.Square.find_or_create [
             [0, 0, 0, 0, 0, 0, 0, 1]
             [0, 1, 0, 0, 0, 0, 0, 0]
@@ -188,7 +188,7 @@ describe 'cafe au life', ->
 
       it 'should deflate by one', ->
 
-        expect( @square.deflate_by(1) ).toEqual(
+        expect( @square.crop_by(1) ).toEqual(
           Life.Square.find_or_create [
             [0, 0, 0, 1]
             [0, 1, 0, 0]
@@ -199,7 +199,7 @@ describe 'cafe au life', ->
 
       it 'should deflate by two', ->
 
-        expect( @square.deflate_by(2) ).toEqual(
+        expect( @square.crop_by(2) ).toEqual(
           Life.Square.find_or_create [
             [1, 0]
             [0, 1]
@@ -215,11 +215,11 @@ describe 'cafe au life', ->
           [1, 1]
         ]
 
-        inflated = still_life.inflate_by(3)
+        inflated = still_life.pad_by(3)
 
-        expect(inflated.result().to_json()).toEqual(still_life.inflate_by(2).to_json())
+        expect(inflated.result().to_json()).toEqual(still_life.pad_by(2).to_json())
 
-        expect(inflated.result()).toEqual(still_life.inflate_by(2))
+        expect(inflated.result()).toEqual(still_life.pad_by(2))
 
       it 'should kill orphans', ->
 
@@ -228,11 +228,11 @@ describe 'cafe au life', ->
           [1, 1]
         ]
 
-        inflated = orphans.inflate_by(3)
+        inflated = orphans.pad_by(3)
 
-        expect(inflated.result().to_json()).not.toEqual(orphans.inflate_by(2).to_json())
+        expect(inflated.result().to_json()).not.toEqual(orphans.pad_by(2).to_json())
 
-        expect(inflated.result().to_json()).toEqual(orphans.inflate_by(2).empty_copy().to_json())
+        expect(inflated.result().to_json()).toEqual(orphans.pad_by(2).empty_copy().to_json())
 
       it 'should birth a square with three neighbours', ->
 
@@ -246,7 +246,7 @@ describe 'cafe au life', ->
           [1, 1]
         ]
 
-        inflated = parents.inflate_by(1)
+        inflated = parents.pad_by(1)
 
         expect( inflated.result() ).toEqual(block)
 
@@ -321,8 +321,8 @@ describe 'cafe au life', ->
       }, (examples, name) ->
         _.each examples, (square) ->
           it "Should not change a #{name}", ->
-            console?.log square.debug_id, square.inflate_by(1).result().debug_id
-            expect( square.inflate_by(1).result() ).toEqual(square)
+            console?.log square.debug_id, square.pad_by(1).result().debug_id
+            expect( square.pad_by(1).result() ).toEqual(square)
 
     describe 'to_json', ->
 
