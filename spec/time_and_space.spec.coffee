@@ -32,7 +32,6 @@ describe 'time and space', ->
         [0, 0, 0, 0]
       ] )
 
-    # TODO: Double-check this result!
     it 'should move an r-pentomino two steps into the future', ->
 
       expect( @r_pentomino.future() ).toEqual( Life.Square.find_or_create [
