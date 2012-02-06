@@ -1,5 +1,5 @@
 C = require('../../lib/cafeaulife')
-C.generate_seeds_from_rule [1..5],[3]
+C.set_universe_rules [1..5],[3]
 
 random = C.Square.find_or_create [
   Math.floor(Math.random()*2) for x in [1..8]

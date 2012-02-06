@@ -1,13 +1,22 @@
 _ = require('underscore')
 require 'UnderscoreMatchersForJasmine'
 
+# YouAreDaChef provides a nice clean set of semantics for AOP
+YouAreDaChef = require('YouAreDaChef').YouAreDaChef
+
 Life = require('../lib/cafeaulife')
-Life.generate_seeds_from_rule()
+Life.set_universe_rules()
+
+# An id for debugging purposes
+debug_id = 0
+YouAreDaChef(Life.Square)
+  .after 'initialize', ->
+    @debug_id = (debug_id += 1)
 
 describe 'cafe au life', ->
 
   beforeEach ->
-    Life.generate_seeds_from_rule()
+    Life.set_universe_rules()
 
   describe '.empty', ->
 

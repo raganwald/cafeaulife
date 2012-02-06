@@ -6,7 +6,7 @@ Life = require('../lib/cafeaulife')
 describe 'from_json', ->
   
   beforeEach ->
-    Life.generate_seeds_from_rule()
+    Life.set_universe_rules()
 
   describe 'cells', ->
 

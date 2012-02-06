@@ -116,8 +116,9 @@ class Cell
     @value
   level:
     0
-  empty_copy: ->
-    Cell.Dead
+
+# Export `Cell`
+_.defaults exports, {Cell}
 
 # ### Squares
 #
@@ -205,9 +206,6 @@ class Cell
 #
 # ### Representing squares
 
-# An id for debugging purposes
-debug_id = 0
-
 # HashLife represents each unique square as a structure with four quadrants:
 class Square
 
@@ -215,88 +213,16 @@ class Square
   # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
 
-    # A simple point-cut that allows us to apply advice to contructors.
-    @initialize.apply(this, arguments)
-
     @level = @nw.level + 1
 
-    @debug_id = (debug_id += 1)
+    # A simple point-cut that allows us to apply advice to contructors.
+    @initialize.apply(this, arguments)
 
   # By default, do nothing
   initialize: ->
 
-  # Find or create an empty square with the same dimensions
-  empty_copy: ->
-    empty_quadrant = @nw.empty_copy()
-    Square.cache.find_or_create_by_quadrant
-      nw: empty_quadrant
-      ne: empty_quadrant
-      se: empty_quadrant
-      sw: empty_quadrant
-
-  # Find or create a smaller square centered on this square
-  deflate_by: (extant) ->
-    return this if extant is 0
-    Square.cache.find_or_create_by_quadrant(
-      _.reduce [0..(extant - 1)], (quadrants) ->
-        nw: quadrants.nw.se
-        ne: quadrants.ne.sw
-        se: quadrants.se.nw
-        sw: quadrants.sw.ne
-      , this
-    )
-
-  # Find or create a larger square centered on this square with
-  # the excess composed of empty squares
-  inflate_by: (extant) ->
-    if extant is 0
-      return this
-    else
-      empty_quadrant = @nw.empty_copy()
-      Square.cache
-        .find_or_create_by_quadrant
-          nw: Square.cache.find_or_create_by_quadrant
-            nw: empty_quadrant
-            ne: empty_quadrant
-            se: @nw
-            sw: empty_quadrant
-          ne: Square.cache.find_or_create_by_quadrant
-            nw: empty_quadrant
-            ne: empty_quadrant
-            se: empty_quadrant
-            sw: @ne
-          se: Square.cache.find_or_create_by_quadrant
-            nw: @se
-            ne: empty_quadrant
-            se: empty_quadrant
-            sw: empty_quadrant
-          sw: Square.cache.find_or_create_by_quadrant
-            nw: empty_quadrant
-            ne: @sw
-            se: empty_quadrant
-            sw: empty_quadrant
-        .inflate_by(extant - 1)
-
-  # Resize to a given level
-  resize_to: (level) ->
-    this_level = @level
-    if level > this_level
-      @inflate_by(level - this_level)
-    else if level < this_level
-      @deflate_by(this_level - level)
-    else
-      this
-
-  # Compute the future of this square. For the moment, only even powers of two are permissable and it must be at least
-  future: (generations) ->
-    generations_log2 = Math.floor(log2(generations))
-    minimum_log2 = @level - 1
-    if generations_log2 < minimum_log2
-      throw "This implementation cannot go fewer than #{Math.pow(2, minimum_log2)} generations into the future for this square"
-    else if Math.floor(generations) isnt Math.pow(2,generations_log2)
-      throw "This implementation can only go powers of two generations into the future (#{generations}, #{Math.pow(2, generations_log2)})"
-    else
-      throw "implement me!"
+# Export `Square`
+_.defaults exports, {Square}
 
 # ### The Speed of Light
 #
@@ -387,95 +313,6 @@ class Square
 # The computation of the four inner `+` cells from their adjacent eight cells is straightforward and
 # is calculated from the basic 2-3 rules or looked up from a table with 65K entries.
 
-# ## Seeding Cafe au Life with squares of size four
-
-# `generate_seeds_from_rule` generates the size four "seed" squares that actually calculate their results
-# from the life-like game rules. All larger squares decompose recursively into size four squares, and thus
-# do not need to know anything about the rules.
-#
-# The default, `generate_seeds_from_rule()`, is equivalent to `generate_seeds_from_rule([2,3],[3])`, which
-# invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
-# and birth counts, e.g. `generate_seeds_from_rule([1,3,5,7], [1,3,5,7])` invokes
-# [Replicator](http://www.conwaylife.com/wiki/Replicator_(CA))
-_.defaults exports,
-  generate_seeds_from_rule: (survival = [2,3], birth = [3]) ->
-
-    # The two canonical cells.
-    Cell.Alive ?= new Cell(1)
-    Cell.Dead  ?= new Cell(0)
-
-    # Bail if we are given the same rules and already have generated the expected number of seeds
-    return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
-
-    # The rules expressed as a dictionary function
-    rule = dfunc [
-      (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
-      (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
-    ]
-
-    # successfor function for any cell
-    succ = (cells, row, col) ->
-      current_state = cells[row][col]
-      neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
-        cells[row-1][col+1] + cells[row][col-1] +
-        cells[row][col+1] + cells[row+1][col-1] +
-        cells[row+1][col] + cells[row+1][col+1]
-      rule(current_state, neighbour_count)
-
-    # A SeedSquare knows how to calculate its own result from
-    # the rules
-    class SeedSquare extends Square
-      constructor: (params) ->
-        super(params)
-
-        # Seed squares compute a result one generation into the future. (We will see later that
-        # larger squares results more generations into the future.)
-        @generations = 1
-
-        # `result` calculates the inner result square. The method
-        # is memoized.
-        @result = _.memoize(
-          ->
-            a = @to_json()
-            Square.cache.find
-              nw: succ(a, 1,1)
-              ne: succ(a, 1,2)
-              se: succ(a, 2,2)
-              sw: succ(a, 2,1)
-        )
-
-    # Clear the cache out
-    Square.cache.clear()
-
-    # The canonical 2x2 squares are initialized from the cartesian product
-    # of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
-    # possible 2x2 squares.
-    #
-    # 2x2 squares do not compute results
-    all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
-      Square.cache.add new Square(quadrants)
-
-    # The canonical 4x4 squares are initialized from the cartesian product of
-    # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
-    # gives 65,536 possible 4x4 squares.
-    #
-    # 4x4 squares know how to compute their 2x2 results, and as we saw above, they
-    # memoize those results so that they are only computed once. (A variation of
-    # memoizing the result computation is to compute it when generating the 4x4 square,
-    # thus "compiling" the supplied rules into a table of 65,536 rules taht is looked
-    # up at runtime.)
-    #
-    # We will see below that all larger squares compute their results by recursively
-    # combining the results of smaller squares, so therefore all such computations
-    # will terminate when they reach a square of size 4x4.
-    cartesian_product(all_2x2_squares).forEach (quadrants) ->
-      Square.cache.add new SeedSquare(quadrants)
-
-    # Put the rules in the cache and return them.
-    Square.cache.current_rules = {survival, birth}
-
-# ---
-#
 # ## Recursively constructing squares of size eight (and larger)
 #
 # ![Lightweight Spaceship](LWSS.gif)
@@ -550,18 +387,18 @@ RecursivelyComputableSquare = do ->
         se: square.se.result()
         sw: square.sw.result()
 
-# We can also derive four overlapping squares, these representing `n`, `e`, `s`, and `w`:
-#
-#          nn
-#       ..+--+..        ..+--+..
-#       ..|..|..        ..|..|..
-#       +-|..|-+        +--++--+
-#       |.+--+.|      w |..||..| e
-#       |.+--+.|      w |..||..| e
-#       +-|..|-+        +--++--+
-#       ..|..|..        ..|..|..
-#       ..+--+..        ..+--+..
-#          ss
+        # We can also derive four overlapping squares, these representing `n`, `e`, `s`, and `w`:
+        #
+        #          nn
+        #       ..+--+..        ..+--+..
+        #       ..|..|..        ..|..|..
+        #       +-|..|-+        +--++--+
+        #       |.+--+.|      w |..||..| e
+        #       |.+--+.|      w |..||..| e
+        #       +-|..|-+        +--++--+
+        #       ..|..|..        ..|..|..
+        #       ..+--+..        ..+--+..
+        #          ss
 
         # Deriving these from our four component squares is straightforward, and when we take their results,
         # we fill in four of the five missing blanks for our intermediate square:
@@ -923,8 +760,191 @@ YouAreDaChef(Square)
       ).join('\n')
     )
 
-# Export `Square` and `Cell` for regular use and specs
-_.defaults exports, {Square, Cell}
+# ### Making copies of squares
+#
+# For calculating the future of a square containing a pattern, we often need to make a larger square with the
+# current square centered surrounded by empty squares. We also need to trim such a square to a smaller size,
+# discarding the borders.
+
+# A core requirement is to make an empty copy of a cell or square. In effect, we are making an empty
+# square of the same size.
+_.extend Cell.prototype,
+  empty_copy: ->
+    Cell.Dead
+
+# We don't bother memozing this method for squares, we are already taking advantage of redundancy.
+_.extend Square.prototype,
+  empty_copy: ->
+    empty_quadrant = @nw.empty_copy()
+    Square.cache.find_or_create_by_quadrant
+      nw: empty_quadrant
+      ne: empty_quadrant
+      se: empty_quadrant
+      sw: empty_quadrant
+
+  # Given the ability to make an empty copy, we can now resize squares to any size. We start with methods to inflte and deflate
+  # squares, and implement resizing a square with them.
+
+  # Find or create a smaller square centered on this square
+  deflate_by: (extant) ->
+    return this if extant is 0
+    Square.cache.find_or_create_by_quadrant(
+      _.reduce [0..(extant - 1)], (quadrants) ->
+        nw: quadrants.nw.se
+        ne: quadrants.ne.sw
+        se: quadrants.se.nw
+        sw: quadrants.sw.ne
+      , this
+    )
+
+  # Find or create a larger square centered on this square with
+  # the excess composed of empty squares
+  inflate_by: (extant) ->
+    if extant is 0
+      return this
+    else
+      empty_quadrant = @nw.empty_copy()
+      Square.cache
+        .find_or_create_by_quadrant
+          nw: Square.cache.find_or_create_by_quadrant
+            nw: empty_quadrant
+            ne: empty_quadrant
+            se: @nw
+            sw: empty_quadrant
+          ne: Square.cache.find_or_create_by_quadrant
+            nw: empty_quadrant
+            ne: empty_quadrant
+            se: empty_quadrant
+            sw: @ne
+          se: Square.cache.find_or_create_by_quadrant
+            nw: @se
+            ne: empty_quadrant
+            se: empty_quadrant
+            sw: empty_quadrant
+          sw: Square.cache.find_or_create_by_quadrant
+            nw: empty_quadrant
+            ne: @sw
+            se: empty_quadrant
+            sw: empty_quadrant
+        .inflate_by(extant - 1)
+
+  # Resize to a given level
+  resize_to: (level) ->
+    this_level = @level
+    if level > this_level
+      @inflate_by(level - this_level)
+    else if level < this_level
+      @deflate_by(this_level - level)
+    else
+      this
+
+  # **Work in progress!**
+  future: (generations) ->
+    generations_log2 = Math.floor(log2(generations))
+    minimum_log2 = @level - 1
+    if generations_log2 < minimum_log2
+      throw "This implementation cannot go fewer than #{Math.pow(2, minimum_log2)} generations into the future for this square"
+    else if Math.floor(generations) isnt Math.pow(2,generations_log2)
+      throw "This implementation can only go powers of two generations into the future (#{generations}, #{Math.pow(2, generations_log2)})"
+    else
+      throw "implement me!"
+
+# ## Setting the rules for this game's "Universe"
+#
+# There many, many are different possible "games" consisting of cellular automata arranged in a two-dimensional
+# matrix. Cafe au Life handles the "life-like" ones, roughly those that have:
+#
+# * A stable 'quiescent' state. A universe full of empty cells will stay empty.
+# * Rules based only on the population of a cell's Moore Neighborhood: Every cell is affected by the population of its eight neighbours, and all eight neighbours are treated identically.
+# * Two states.
+#
+# Given a definition of the state machine for each cell, Cafe au Life performs all the necessary initialization to compute
+# the future of a pattern.
+
+# `set_universe_rules` generates the size four "seed" squares that actually calculate their results
+# from the life-like game rules. All larger squares decompose recursively into size four squares, and thus
+# do not need to know anything about the rules.
+#
+# The default, `set_universe_rules()`, is equivalent to `set_universe_rules([2,3],[3])`, which
+# invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
+# and birth counts, e.g. `set_universe_rules([1,3,5,7], [1,3,5,7])` invokes
+# [Replicator](http://www.conwaylife.com/wiki/Replicator_(CA))
+_.defaults exports,
+  set_universe_rules: (survival = [2,3], birth = [3]) ->
+
+    # The two canonical cells.
+    Cell.Alive ?= new Cell(1)
+    Cell.Dead  ?= new Cell(0)
+
+    # Bail if we are given the same rules and already have generated the expected number of seeds
+    return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
+
+    # The rules expressed as a dictionary function
+    rule = dfunc [
+      (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+      (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+    ]
+
+    # successfor function for any cell
+    succ = (cells, row, col) ->
+      current_state = cells[row][col]
+      neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
+        cells[row-1][col+1] + cells[row][col-1] +
+        cells[row][col+1] + cells[row+1][col-1] +
+        cells[row+1][col] + cells[row+1][col+1]
+      rule(current_state, neighbour_count)
+
+    # A SeedSquare knows how to calculate its own result from
+    # the rules
+    class SeedSquare extends Square
+      constructor: (params) ->
+        super(params)
+
+        # Seed squares compute a result one generation into the future. (We will see later that
+        # larger squares results more generations into the future.)
+        @generations = 1
+
+        # `result` calculates the inner result square. The method
+        # is memoized.
+        @result = _.memoize(
+          ->
+            a = @to_json()
+            Square.cache.find
+              nw: succ(a, 1,1)
+              ne: succ(a, 1,2)
+              se: succ(a, 2,2)
+              sw: succ(a, 2,1)
+        )
+
+    # Clear the cache out
+    Square.cache.clear()
+
+    # The canonical 2x2 squares are initialized from the cartesian product
+    # of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
+    # possible 2x2 squares.
+    #
+    # 2x2 squares do not compute results
+    all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
+      Square.cache.add new Square(quadrants)
+
+    # The canonical 4x4 squares are initialized from the cartesian product of
+    # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
+    # gives 65,536 possible 4x4 squares.
+    #
+    # 4x4 squares know how to compute their 2x2 results, and as we saw above, they
+    # memoize those results so that they are only computed once. (A variation of
+    # memoizing the result computation is to compute it when generating the 4x4 square,
+    # thus "compiling" the supplied rules into a table of 65,536 rules taht is looked
+    # up at runtime.)
+    #
+    # We will see below that all larger squares compute their results by recursively
+    # combining the results of smaller squares, so therefore all such computations
+    # will terminate when they reach a square of size 4x4.
+    cartesian_product(all_2x2_squares).forEach (quadrants) ->
+      Square.cache.add new SeedSquare(quadrants)
+
+    # Put the rules in the cache and return them.
+    Square.cache.current_rules = {survival, birth}
 
 # p.s. This document was generated from [cafeaulife.coffee][source] using [Docco][docco].
 # [source]: https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee
