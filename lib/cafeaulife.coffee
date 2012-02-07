@@ -98,9 +98,12 @@ require('./future').mixInto(module.exports)
 # [Reg "Raganwald" Braithwaite](http://reginald.braythwayt.com) has authored libraries for Javascript and Ruby programming
 # such as [Katy](https://github.com/raganwald/Katy), [JQuery Combinators](http://github.com/raganwald/JQuery-Combinators),
 # [YouAreDaChef](https://github.com/raganwald/YouAreDaChef), [andand](http://github.com/raganwald/andand),
-# and [more you can find on Github](https://github.com/raganwald).
+# and more you can find on [Github](https://github.com/raganwald).
 #
-# He has written two books: [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators) *Raganwald's collected adventures in Combinatory Logic and Ruby Meta-Programming*; and [What I've Learned From Failure](http://leanpub.com/shippingsoftware) *A quarter-century of experience shipping software, distilled into fixnum bittersweet essays*.
+# He has written two books:
+#
+# * [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators): *Raganwald's collected adventures in Combinatory Logic and Ruby Meta-Programming*
+# * [What I've Learned From Failure](http://leanpub.com/shippingsoftware): *A quarter-century of experience shipping software, distilled into fixnum bittersweet essays*
 #
 # His hands-on coding blog [Homoiconic](https://github.com/raganwald/homoiconic) frequently lights up the Hackerverse,
 # and he also writes about [project management and other subjects](http://raganwald.posterous.com/).
