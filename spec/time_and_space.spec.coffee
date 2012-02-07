@@ -6,7 +6,7 @@ Life = require('../lib/cafeaulife')
 describe 'time and space', ->
 
   beforeEach ->
-    Life.set_universe_rules()
+    Life.Square.set_universe_rules()
 
   describe 'time', ->
 

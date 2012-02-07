@@ -1,5 +1,5 @@
 Life = require('../../lib/cafeaulife')
-Life.set_universe_rules [2,3],[3]
+Life.Square.set_universe_rules [2,3],[3]
 
 r_pentomino = Life.Square.find_or_create [
   [0, 0, 0, 0]

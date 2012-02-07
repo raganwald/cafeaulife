@@ -5,7 +5,7 @@ require 'UnderscoreMatchersForJasmine'
 YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 
 Life = require('../lib/cafeaulife')
-Life.set_universe_rules()
+Life.Square.set_universe_rules()
 
 # An id for debugging purposes
 debug_id = 0
@@ -16,7 +16,7 @@ YouAreDaChef(Life.Square)
 describe 'cafe au life', ->
 
   beforeEach ->
-    Life.set_universe_rules()
+    Life.Square.set_universe_rules()
 
   describe '.empty', ->
 
