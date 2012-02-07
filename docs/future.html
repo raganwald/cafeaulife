@@ -228,6 +228,19 @@ our function repeatedly to the future of our pattern. Given some
 number <code>T</code> where <code>T &gt;= L</code>, by applying <code>future(...)</code> <code>(T-L)</code> times,
 we move <code>2^(T+1) - 2^(L-1)</code> generations:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">future: </span><span class="nf">(t = @level)-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="err">@</span><span class="p">.</span><span class="nx">level</span><span class="p">..</span><span class="nx">t</span><span class="p">],</span> <span class="nx">future</span><span class="p">,</span> <span class="k">this</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="err">@</span><span class="p">.</span><span class="nx">level</span><span class="p">..</span><span class="nx">t</span><span class="p">],</span> <span class="nx">future</span><span class="p">,</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <hr />
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+<p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
+
+<p>Cafe au Life is freely distributable under the terms of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.</p>
+
+<p>The annotated source code was generated directly from the <a href="https://github.com/raganwald/cafeaulife/blob/master/lib">original source</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>
+
+<p>Recent work:</p>
+
+<ul>
+<li><a href="http://leanpub.com/combinators">Kestrels, Quirky Birds, and Hopeless Egocentricity</a>, all of my writing about combinators, collected into one e-book.</li>
+<li><a href="http://leanpub.com/shippingsoftware">What I've Learned From Failure</a>, my very best essays about getting software from ideas to shipping products, collected into one e-book.</li>
+<li><a href="http://github.com/raganwald/Katy">Katy</a>, a library for writing fluent CoffeeScript and JavaScript using combinators.</li>
+<li><a href="http://github.com/raganwald/YouAreDaChef">YouAreDaChef</a>, a library for writing method combinations for CoffeeScript and JavaScript projects.</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

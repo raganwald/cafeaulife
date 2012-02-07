@@ -1,8 +1,4 @@
 # # Cafe au Life
-# **(c) 2012 Reginald Braithwaite**
-#
-# Cafe au Life is freely distributable under the terms of the
-# [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 
 ## What
 
@@ -96,7 +92,20 @@ require('./api').mixInto(module.exports)
 # [future]: http:future.html
 require('./future').mixInto(module.exports)
 
-# p.s. These documents were generated directly from the [commented source code][source] using [Docco][docco].
+# ---
+#
+# **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
+#
+# Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+#
+# The annotated source code was generated directly from the [original source][source] using [Docco][docco].
 #
 # [source]: https://github.com/raganwald/cafeaulife/blob/master/lib
 # [docco]: http://jashkenas.github.com/docco/
+#
+# Recent work:
+#
+# * [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators), all of my writing about combinators, collected into one e-book.
+# * [What I've Learned From Failure](http://leanpub.com/shippingsoftware), my very best essays about getting software from ideas to shipping products, collected into one e-book.
+# * [Katy](http://github.com/raganwald/Katy), a library for writing fluent CoffeeScript and JavaScript using combinators.
+# * [YouAreDaChef](http://github.com/raganwald/YouAreDaChef), a library for writing method combinations for CoffeeScript and JavaScript projects.
