@@ -11,12 +11,12 @@ describe 'time and space', ->
   describe 'time', ->
 
     beforeEach ->
-      @still_life = Life.Square.find_or_create [
+      @still_life = Life.Square.canonicalize [
         [1, 1]
         [1, 1]
       ]
 
-      @r_pentomino = Life.Square.find_or_create [
+      @r_pentomino = Life.Square.canonicalize [
         [0, 0, 0, 0]
         [0, 1, 0, 0]
         [1, 1, 1, 0]
@@ -25,7 +25,7 @@ describe 'time and space', ->
 
     it 'should move a block one step into the future', ->
 
-      expect( @still_life.future() ).toEqual( Life.Square.find_or_create [
+      expect( @still_life.future() ).toEqual( Life.Square.canonicalize [
         [0, 0, 0, 0]
         [0, 1, 1, 0]
         [0, 1, 1, 0]
@@ -34,7 +34,7 @@ describe 'time and space', ->
 
     it 'should move an r-pentomino two steps into the future', ->
 
-      expect( @r_pentomino.future() ).toEqual( Life.Square.find_or_create [
+      expect( @r_pentomino.future() ).toEqual( Life.Square.canonicalize [
         [ 0, 0, 0, 0, 0, 0, 0, 0 ]
         [ 0, 0, 0, 0, 0, 0, 0, 0 ]
         [ 0, 0, 0, 1, 0, 0, 0, 0 ]
@@ -50,12 +50,12 @@ describe 'time and space', ->
 
     it 'should not change an r_pentomino from level 2', ->
 
-      expect( (Life.Square.find_or_create [
+      expect( (Life.Square.canonicalize [
         [0, 0, 0, 0]
         [0, 1, 0, 0]
         [1, 1, 1, 0]
         [0, 0, 1, 0]
-      ]).resize_to(2) ).toEqual( Life.Square.find_or_create [
+      ]).resize_to(2) ).toEqual( Life.Square.canonicalize [
         [0, 0, 0, 0]
         [0, 1, 0, 0]
         [1, 1, 1, 0]
@@ -64,22 +64,22 @@ describe 'time and space', ->
 
     it 'should downsize an r_pentomino to level 1', ->
 
-      expect( (Life.Square.find_or_create [
+      expect( (Life.Square.canonicalize [
         [0, 0, 0, 0]
         [0, 1, 0, 0]
         [1, 1, 1, 0]
         [0, 0, 1, 0]
-      ]).resize_to(1) ).toEqual( Life.Square.find_or_create [
+      ]).resize_to(1) ).toEqual( Life.Square.canonicalize [
         [1, 0]
         [1, 1]
       ] )
 
     it 'should upsize an r_pentomino to level 3', ->
 
-      expect( (Life.Square.find_or_create [
+      expect( (Life.Square.canonicalize [
         [1, 0]
         [0, 1]
-      ]).resize_to(3) ).toEqual( Life.Square.find_or_create [
+      ]).resize_to(3) ).toEqual( Life.Square.canonicalize [
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]

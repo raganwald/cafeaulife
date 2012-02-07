@@ -1,7 +1,7 @@
 Life = require('../../lib/cafeaulife')
 Life.Square.set_universe_rules [1..5],[3]
 
-wickstretcher = Life.Square.find_or_create [
+wickstretcher = Life.Square.canonicalize [
   [0, 1, 1, 0, 0, 0, 0, 0]
   [0, 0, 1, 1, 1, 0, 0, 0]
   [0, 0, 1, 0, 1, 1, 0, 0]

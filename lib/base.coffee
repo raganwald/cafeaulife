@@ -5,9 +5,6 @@
 # [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
 
-# YouAreDaChef provides a nice clean set of semantics for AOP
-YouAreDaChef = require('YouAreDaChef').YouAreDaChef
-
 # Play with Node and some browsers
 exports ?= window or this
 
@@ -322,28 +319,28 @@ RecursivelyComputableSquare = do ->
         #
         #     sw        se
         nn: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: square.nw.ne
             ne: square.ne.nw
             se: square.ne.sw
             sw: square.nw.se
           .result()
         ee: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: square.ne.sw
             ne: square.ne.se
             se: square.se.ne
             sw: square.se.nw
           .result()
         ss: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: square.sw.ne
             ne: square.se.nw
             se: square.se.sw
             sw: square.sw.se
           .result()
         ww: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: square.nw.sw
             ne: square.nw.se
             se: square.sw.ne
@@ -376,7 +373,7 @@ RecursivelyComputableSquare = do ->
         #
         #     sw        se
         cc: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: square.nw.se
             ne: square.ne.sw
             se: square.se.nw
@@ -429,25 +426,25 @@ RecursivelyComputableSquare = do ->
       #     sw        se  sw        se
       overlapping_squares =
         nw: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: @nw
             ne: @nn
             se: @cc
             sw: @ww
         ne: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: @nn
             ne: @ne
             se: @ee
             sw: @cc
         se: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: @cc
             ne: @ee
             se: @se
             sw: @ss
         sw: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: @ww
             ne: @cc
             se: @ss
@@ -464,7 +461,7 @@ RecursivelyComputableSquare = do ->
       #        ......
       #
       #     sw        se
-      Square.cache.find_or_create_by_quadrant
+      Square.cache.canonicalize_by_quadrant
         nw: overlapping_squares.nw.result()
         ne: overlapping_squares.ne.result()
         se: overlapping_squares.se.result()

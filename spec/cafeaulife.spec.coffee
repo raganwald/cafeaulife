@@ -21,7 +21,7 @@ describe 'cafe au life', ->
   describe '.empty', ->
 
     beforeEach ->
-      @foursq = Life.Square.find_or_create([
+      @foursq = Life.Square.canonicalize([
         [0, 0, 0, 0]
         [0, 1, 0, 0]
         [0, 0, 1, 0]
@@ -41,7 +41,7 @@ describe 'cafe au life', ->
 
     it 'gratuitously re-result the same thing many times', ->
 
-      sq = Life.Square.find_or_create([[1, 0], [0, 1]])
+      sq = Life.Square.canonicalize([[1, 0], [0, 1]])
         .pad_by(2)
       sq.result()
 
@@ -85,19 +85,19 @@ describe 'cafe au life', ->
     describe 'non-trivial squares', ->
 
       beforeEach ->
-        @size_four_empties = Life.Square.find_or_create
+        @size_four_empties = Life.Square.canonicalize
           nw: @size_two_empties
           ne: @size_two_empties
           se: @size_two_empties
           sw: @size_two_empties
 
-        @size_four_fulls = Life.Square.find_or_create
+        @size_four_fulls = Life.Square.canonicalize
           nw: @size_two_fulls
           ne: @size_two_fulls
           se: @size_two_fulls
           sw: @size_two_fulls
 
-        @size_eight_empties = Life.Square.find_or_create
+        @size_eight_empties = Life.Square.canonicalize
           nw: @size_four_empties
           ne: @size_four_empties
           se: @size_four_empties
@@ -119,7 +119,7 @@ describe 'cafe au life', ->
     describe 'inflation', ->
 
       beforeEach ->
-        @two_by_two = Life.Square.find_or_create [
+        @two_by_two = Life.Square.canonicalize [
           [1, 0]
           [0, 1]
         ]
@@ -130,7 +130,7 @@ describe 'cafe au life', ->
 
       it 'should inflate 2x2 at zero level to itself', ->
 
-        expect(@two_by_two.pad_by(0)).toEqual(Life.Square.find_or_create [
+        expect(@two_by_two.pad_by(0)).toEqual(Life.Square.canonicalize [
           [1, 0]
           [0, 1]
         ])
@@ -160,7 +160,7 @@ describe 'cafe au life', ->
     describe 'deflation', ->
 
       beforeEach ->
-        @square = Life.Square.find_or_create [
+        @square = Life.Square.canonicalize [
           [0, 0, 0, 0, 0, 0, 0, 1]
           [0, 1, 0, 0, 0, 0, 0, 0]
           [0, 0, 0, 0, 0, 1, 0, 0]
@@ -174,7 +174,7 @@ describe 'cafe au life', ->
       it 'should have a zero deflation', ->
 
         expect( @square.crop_by(0) ).toEqual(
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [0, 0, 0, 0, 0, 0, 0, 1]
             [0, 1, 0, 0, 0, 0, 0, 0]
             [0, 0, 0, 0, 0, 1, 0, 0]
@@ -189,7 +189,7 @@ describe 'cafe au life', ->
       it 'should deflate by one', ->
 
         expect( @square.crop_by(1) ).toEqual(
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [0, 0, 0, 1]
             [0, 1, 0, 0]
             [1, 0, 1, 1]
@@ -200,7 +200,7 @@ describe 'cafe au life', ->
       it 'should deflate by two', ->
 
         expect( @square.crop_by(2) ).toEqual(
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [1, 0]
             [0, 1]
           ]
@@ -210,7 +210,7 @@ describe 'cafe au life', ->
 
       it 'should persist a block', ->
 
-        still_life = Life.Square.find_or_create [
+        still_life = Life.Square.canonicalize [
           [1, 1]
           [1, 1]
         ]
@@ -223,7 +223,7 @@ describe 'cafe au life', ->
 
       it 'should kill orphans', ->
 
-        orphans = Life.Square.find_or_create [
+        orphans = Life.Square.canonicalize [
           [0, 0]
           [1, 1]
         ]
@@ -236,12 +236,12 @@ describe 'cafe au life', ->
 
       it 'should birth a square with three neighbours', ->
 
-        parents = Life.Square.find_or_create [
+        parents = Life.Square.canonicalize [
           [0, 1]
           [1, 1]
         ]
 
-        block = Life.Square.find_or_create [
+        block = Life.Square.canonicalize [
           [1, 1]
           [1, 1]
         ]
@@ -254,32 +254,32 @@ describe 'cafe au life', ->
 
       beforeEach ->
         @blocks = [
-          Life.Square.cache.find_or_create [
+          Life.Square.cache.canonicalize [
             [1, 1]
             [1, 1]
           ]
         ]
 
         @boats = [
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [0, 1, 0, 0]
             [1, 0, 1, 0]
             [0, 1, 1, 0]
             [0, 0, 0, 0]
           ]
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [0, 0, 1, 0]
             [0, 1, 0, 1]
             [0, 1, 1, 0]
             [0, 0, 0, 0]
           ]
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [0, 0, 0, 0]
             [0, 1, 1, 0]
             [0, 1, 0, 1]
             [0, 0, 1, 0]
           ]
-          Life.Square.find_or_create [
+          Life.Square.canonicalize [
             [0, 0, 0, 0]
             [0, 1, 1, 0]
             [1, 0, 1, 0]
@@ -288,10 +288,10 @@ describe 'cafe au life', ->
         ]
 
       it 'should find identical blocks by number', ->
-        expect(Life.Square.cache.find_or_create [
+        expect(Life.Square.cache.canonicalize [
           [1, 1]
           [1, 1]
-        ]).toEqual(Life.Square.cache.find_or_create [
+        ]).toEqual(Life.Square.cache.canonicalize [
           [1, 1]
           [1, 1]
         ])
@@ -310,7 +310,7 @@ describe 'cafe au life', ->
           ne: Life.Cell.Alive
           se: Life.Cell.Alive
           sw: Life.Cell.Alive
-        ).toEqual(Life.Square.cache.find_or_create [
+        ).toEqual(Life.Square.cache.canonicalize [
           [1, 1]
           [1, 1]
         ])

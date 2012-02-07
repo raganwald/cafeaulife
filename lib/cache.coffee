@@ -64,16 +64,16 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
           sq.nw is quadrants.nw and sq.ne is quadrants.ne and sq.se is quadrants.se and sq.sw is quadrants.sw
 
     # `Like find`, but creates a `RecursivelyComputableSquare` if none is found
-    find_or_create_by_quadrant: (quadrants) ->
+    canonicalize_by_quadrant: (quadrants) ->
       found = @find(quadrants)
       if found
         found
       else
         @add(new RecursivelyComputableSquare(quadrants))
 
-    # `Like find_or_create_by_quadrant`, but takes json as an argument. Useful
+    # `Like canonicalize_by_quadrant`, but takes json as an argument. Useful
     # for seeding the world from a data file.
-    find_or_create_by_json: (json) ->
+    canonicalize_by_json: (json) ->
       unless _.isArray(json[0]) and json[0].length is json.length
         throw 'must be a square'
       if json.length is 1
@@ -87,32 +87,32 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
           throw 'a 1x1 square must contain a zero, one, or Cell'
       else
         half_length = json.length / 2
-        @find_or_create_by_quadrant
-          nw: @find_or_create_by_json(
+        @canonicalize_by_quadrant
+          nw: @canonicalize_by_json(
             json.slice(0, half_length).map (row) ->
               row.slice(0, half_length)
           )
-          ne: @find_or_create_by_json(
+          ne: @canonicalize_by_json(
             json.slice(0, half_length).map (row) ->
               row.slice(half_length)
           )
-          se: @find_or_create_by_json(
+          se: @canonicalize_by_json(
             json.slice(half_length).map (row) ->
               row.slice(half_length)
           )
-          sw: @find_or_create_by_json(
+          sw: @canonicalize_by_json(
             json.slice(half_length).map (row) ->
               row.slice(0, half_length)
           )
 
     # An agnostic method that can find or create anything
-    find_or_create: (params) ->
+    canonicalize: (params) ->
       if _.isArray(params)
-        @find_or_create_by_json(params)
+        @canonicalize_by_json(params)
       else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Cell) )
-        @find_or_create_by_quadrant params
+        @canonicalize_by_quadrant params
       else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Square) )
-        @find_or_create_by_quadrant params
+        @canonicalize_by_quadrant params
       else
         throw "Cache can't handle #{JSON.stringify(params)}"
 
@@ -139,6 +139,6 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
           h[bucket.length] += 1
       , []
 
-  # Expose `find_or_create` through `Square`
-  Square.find_or_create = (params) ->
-    @cache.find_or_create(params)
+  # Expose `canonicalize` through `Square`
+  Square.canonicalize = (params) ->
+    @cache.canonicalize(params)

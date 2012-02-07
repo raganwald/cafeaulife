@@ -65,9 +65,16 @@
 
 # Cafe au Life is divided into three modules:
 
+# The Base module provides the `Cell` and `Square` classes, including `RecursivelyComputableSquare`, the foundation of the
+# HashLife implementation.
 module.exports = require('./base')
 
+# HashLife uses extensive [canonicalization][canonical] to optimize teh storage of very large patterns with repetitive
+# components. The Cache module implementss a very naive hash-table for canoncial representations of squares.
+#
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 require('./cache').mixInto(module.exports)
+
 
 require('./future').mixInto(module.exports)
 

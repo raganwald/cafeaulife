@@ -155,7 +155,7 @@ exports.mixInto = ({Square, Cell}) ->
   _.extend Square.prototype,
     empty_copy: ->
       empty_quadrant = @nw.empty_copy()
-      Square.cache.find_or_create_by_quadrant
+      Square.cache.canonicalize_by_quadrant
         nw: empty_quadrant
         ne: empty_quadrant
         se: empty_quadrant
@@ -175,25 +175,25 @@ exports.mixInto = ({Square, Cell}) ->
       # Let's make the four squares diagrammed above
       four_squares =
         nw: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: vacant
             ne: vacant
             se: this
             sw: vacant
         ne: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: vacant
             ne: vacant
             se: vacant
             sw: this
         se: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: this
             ne: vacant
             se: vacant
             sw: vacant
         sw: Square.cache
-          .find_or_create_by_quadrant
+          .canonicalize_by_quadrant
             nw: vacant
             ne: this
             se: vacant
@@ -254,7 +254,7 @@ exports.mixInto = ({Square, Cell}) ->
 
       # Presto! Our four results are the future square we're after!
       Square.cache
-        .find_or_create_by_quadrant(four_results)
+        .canonicalize_by_quadrant(four_results)
 
 
   # ### Import and export
@@ -312,7 +312,7 @@ exports.mixInto = ({Square, Cell}) ->
   _.extend Square.prototype,
     empty_copy: ->
       empty_quadrant = @nw.empty_copy()
-      Square.cache.find_or_create_by_quadrant
+      Square.cache.canonicalize_by_quadrant
         nw: empty_quadrant
         ne: empty_quadrant
         se: empty_quadrant
@@ -324,7 +324,7 @@ exports.mixInto = ({Square, Cell}) ->
     # Find or create a smaller square centered on this square
     crop_by: (extant) ->
       return this if extant is 0
-      Square.cache.find_or_create_by_quadrant(
+      Square.cache.canonicalize_by_quadrant(
         _.reduce [0..(extant - 1)], (quadrants) ->
           nw: quadrants.nw.se
           ne: quadrants.ne.sw
@@ -341,23 +341,23 @@ exports.mixInto = ({Square, Cell}) ->
       else
         empty_quadrant = @nw.empty_copy()
         Square.cache
-          .find_or_create_by_quadrant
-            nw: Square.cache.find_or_create_by_quadrant
+          .canonicalize_by_quadrant
+            nw: Square.cache.canonicalize_by_quadrant
               nw: empty_quadrant
               ne: empty_quadrant
               se: @nw
               sw: empty_quadrant
-            ne: Square.cache.find_or_create_by_quadrant
+            ne: Square.cache.canonicalize_by_quadrant
               nw: empty_quadrant
               ne: empty_quadrant
               se: empty_quadrant
               sw: @ne
-            se: Square.cache.find_or_create_by_quadrant
+            se: Square.cache.canonicalize_by_quadrant
               nw: @se
               ne: empty_quadrant
               se: empty_quadrant
               sw: empty_quadrant
-            sw: Square.cache.find_or_create_by_quadrant
+            sw: Square.cache.canonicalize_by_quadrant
               nw: empty_quadrant
               ne: @sw
               se: empty_quadrant
