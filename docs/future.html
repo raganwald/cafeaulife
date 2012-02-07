@@ -138,7 +138,7 @@ sw         se
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>We're redy to use this diagram to write our method. First, here's our code for making empty squares:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
       <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
         <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
         <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
         <span class="nv">se: </span><span class="nx">empty_quadrant</span>
@@ -148,26 +148,26 @@ sw         se
     <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
       <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Here's our method:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">future: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>an empty copy of our square</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">vacant = </span><span class="nx">@empty_copy</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Let's make the four squares diagrammed above</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">four_squares =</span>
-        <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">nw: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">vacant</span>
             <span class="nv">ne: </span><span class="nx">vacant</span>
             <span class="nv">se: </span><span class="k">this</span>
             <span class="nv">sw: </span><span class="nx">vacant</span>
-        <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">ne: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">vacant</span>
             <span class="nv">ne: </span><span class="nx">vacant</span>
             <span class="nv">se: </span><span class="nx">vacant</span>
             <span class="nv">sw: </span><span class="k">this</span>
-        <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">se: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="k">this</span>
             <span class="nv">ne: </span><span class="nx">vacant</span>
             <span class="nv">se: </span><span class="nx">vacant</span>
             <span class="nv">sw: </span><span class="nx">vacant</span>
-        <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">sw: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">vacant</span>
             <span class="nv">ne: </span><span class="k">this</span>
             <span class="nv">se: </span><span class="nx">vacant</span>
@@ -265,14 +265,14 @@ square of the same size.</p>             </td>             <td class="code">    
       <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>We don't bother memoizing this method for squares, we are already taking advantage of redundancy.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
       <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
         <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
         <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
         <span class="nv">se: </span><span class="nx">empty_quadrant</span>
         <span class="nv">sw: </span><span class="nx">empty_quadrant</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Given the ability to make an empty copy, we can now resize squares to any size. We start with methods to inflte and deflate
 squares, and implement resizing a square with them.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Find or create a smaller square centered on this square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">crop_by: </span><span class="nf">(extant) -&gt;</span>
       <span class="k">return</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span><span class="p">(</span>
+      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
         <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="mi">0</span><span class="p">..(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span> <span class="nf">(quadrants) -&gt;</span>
           <span class="nv">nw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
           <span class="nv">ne: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
@@ -285,24 +285,24 @@ the excess composed of empty squares</p>             </td>             <td class
         <span class="k">return</span> <span class="k">this</span>
       <span class="k">else</span>
         <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-        <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-            <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
               <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
               <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
               <span class="nv">se: </span><span class="nx">@nw</span>
               <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+            <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
               <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
               <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
               <span class="nv">se: </span><span class="nx">empty_quadrant</span>
               <span class="nv">sw: </span><span class="nx">@ne</span>
-            <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+            <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
               <span class="nv">nw: </span><span class="nx">@se</span>
               <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
               <span class="nv">se: </span><span class="nx">empty_quadrant</span>
               <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+            <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
               <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
               <span class="nv">ne: </span><span class="nx">@sw</span>
               <span class="nv">se: </span><span class="nx">empty_quadrant</span>

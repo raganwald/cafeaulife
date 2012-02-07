@@ -257,29 +257,29 @@ we fill in four of the five missing blanks for our intermediate square:</p>
    ..ss..
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">nn: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">nn: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">ne</span>
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">nw</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
           <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ee: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">ee: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">se</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">ne</span>
             <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
           <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ss: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">ss: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">se</span>
           <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ww: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">ww: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
@@ -308,8 +308,8 @@ sw        se
    ......
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">cc: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">cc: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
@@ -355,26 +355,26 @@ nw        ne  nw        ne
 
 sw        se  sw        se
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">overlapping_squares =</span>
-        <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">nw: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">@nw</span>
             <span class="nv">ne: </span><span class="nx">@nn</span>
             <span class="nv">se: </span><span class="nx">@cc</span>
             <span class="nv">sw: </span><span class="nx">@ww</span>
-        <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">ne: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">@nn</span>
             <span class="nv">ne: </span><span class="nx">@ne</span>
             <span class="nv">se: </span><span class="nx">@ee</span>
             <span class="nv">sw: </span><span class="nx">@cc</span>
-        <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">se: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">@cc</span>
             <span class="nv">ne: </span><span class="nx">@ee</span>
             <span class="nv">se: </span><span class="nx">@se</span>
             <span class="nv">sw: </span><span class="nx">@ss</span>
-        <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+        <span class="nv">sw: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
             <span class="nv">nw: </span><span class="nx">@ww</span>
             <span class="nv">ne: </span><span class="nx">@cc</span>
             <span class="nv">se: </span><span class="nx">@ss</span>
@@ -390,7 +390,7 @@ sw        se  sw        se
    ......
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
         <span class="nv">nw: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
         <span class="nv">ne: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
         <span class="nv">se: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>

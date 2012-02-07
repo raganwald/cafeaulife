@@ -254,7 +254,7 @@ describe 'cafe au life', ->
 
       beforeEach ->
         @blocks = [
-          Life.Square.cache.canonicalize [
+          Life.Square.canonicalize [
             [1, 1]
             [1, 1]
           ]
@@ -288,10 +288,10 @@ describe 'cafe au life', ->
         ]
 
       it 'should find identical blocks by number', ->
-        expect(Life.Square.cache.canonicalize [
+        expect(Life.Square.canonicalize [
           [1, 1]
           [1, 1]
-        ]).toEqual(Life.Square.cache.canonicalize [
+        ]).toEqual(Life.Square.canonicalize [
           [1, 1]
           [1, 1]
         ])
@@ -310,7 +310,7 @@ describe 'cafe au life', ->
           ne: Life.Cell.Alive
           se: Life.Cell.Alive
           sw: Life.Cell.Alive
-        ).toEqual(Life.Square.cache.canonicalize [
+        ).toEqual(Life.Square.canonicalize [
           [1, 1]
           [1, 1]
         ])
