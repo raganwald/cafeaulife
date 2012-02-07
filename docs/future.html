@@ -1,4 +1,4 @@
-<!DOCTYPE html>  <html> <head>   <title>future.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="base.html">                 base.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               future.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http:cafeaulife.html">cafeaulife.coffee</a>.</p>
+<!DOCTYPE html>  <html> <head>   <title>future.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="base.html">                 base.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               future.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http:cafeaulife.html">cafeaulife.coffee</a>.</p>
 
 <h2>Future Module</h2>
 
@@ -135,7 +135,7 @@ our square in one of its corners and filled the remainder with empty squares the
   ....|....
   ....|....
 sw         se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>We're redy to use this diagram to write our method. First, here's our code for making empty squares:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>We're ready to use this diagram to write a function for computing the future of a square. First, here're methods for making empty squares:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
       <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
       <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
@@ -146,32 +146,32 @@ sw         se
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-      <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Here's our method:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">future: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>an empty copy of our square</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">vacant = </span><span class="nx">@empty_copy</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Let's make the four squares diagrammed above</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">four_squares =</span>
-        <span class="nv">nw: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">vacant</span>
-            <span class="nv">ne: </span><span class="nx">vacant</span>
-            <span class="nv">se: </span><span class="k">this</span>
-            <span class="nv">sw: </span><span class="nx">vacant</span>
-        <span class="nv">ne: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">vacant</span>
-            <span class="nv">ne: </span><span class="nx">vacant</span>
-            <span class="nv">se: </span><span class="nx">vacant</span>
-            <span class="nv">sw: </span><span class="k">this</span>
-        <span class="nv">se: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="k">this</span>
-            <span class="nv">ne: </span><span class="nx">vacant</span>
-            <span class="nv">se: </span><span class="nx">vacant</span>
-            <span class="nv">sw: </span><span class="nx">vacant</span>
-        <span class="nv">sw: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">vacant</span>
-            <span class="nv">ne: </span><span class="k">this</span>
-            <span class="nv">se: </span><span class="nx">vacant</span>
-            <span class="nv">sw: </span><span class="nx">vacant</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Let's take their results:</p>
+      <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Now a function. It takes a square and calculates its future 2^(L-1) generations forward in time and
+at level L+1:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">future = </span><span class="nf">(square) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>an empty copy of our square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">vacant = </span><span class="nx">square</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Let's make the four squares diagrammed above</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">four_squares =</span>
+      <span class="nv">nw: </span><span class="nx">Square</span>
+        <span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">vacant</span>
+          <span class="nv">ne: </span><span class="nx">vacant</span>
+          <span class="nv">se: </span><span class="nx">square</span>
+          <span class="nv">sw: </span><span class="nx">vacant</span>
+      <span class="nv">ne: </span><span class="nx">Square</span>
+        <span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">vacant</span>
+          <span class="nv">ne: </span><span class="nx">vacant</span>
+          <span class="nv">se: </span><span class="nx">vacant</span>
+          <span class="nv">sw: </span><span class="nx">square</span>
+      <span class="nv">se: </span><span class="nx">Square</span>
+        <span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">square</span>
+          <span class="nv">ne: </span><span class="nx">vacant</span>
+          <span class="nv">se: </span><span class="nx">vacant</span>
+          <span class="nv">sw: </span><span class="nx">vacant</span>
+      <span class="nv">sw: </span><span class="nx">Square</span>
+        <span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">vacant</span>
+          <span class="nv">ne: </span><span class="nx">square</span>
+          <span class="nv">se: </span><span class="nx">vacant</span>
+          <span class="nv">sw: </span><span class="nx">vacant</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Let's take their results:</p>
 
 <pre><code>nw         ne
   ....|....
@@ -184,11 +184,11 @@ sw         se
   .++.|.++.
   ....|....
 sw         se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">four_results =</span>
-        <span class="nv">nw: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ne: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">se: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Consider those results relative to the original square.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">four_results =</span>
+      <span class="nv">nw: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+      <span class="nv">ne: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+      <span class="nv">se: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+      <span class="nv">sw: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Consider those results relative to the original square.
 let's redraw the diagram, but this time we'll have everything overlap.</p>
 
 <p>Here're the four squares again in two diagrams:</p>
@@ -223,97 +223,11 @@ sw      se  sw      se
   swse
   swse
 sw    se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Presto! Our four results are the future square we're after!</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-        <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span><span class="p">(</span><span class="nx">four_results</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h3>Import and export</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p><code>to_json</code> and <code>toString</code> are simple methods for cells.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">to_json: </span><span class="o">-&gt;</span>
-      <span class="p">[</span><span class="nx">@value</span><span class="p">]</span>
-    <span class="nv">toString: </span><span class="o">-&gt;</span>
-      <span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="nx">@value</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p><code>to_json</code> and <code>toString</code> are memoized methods for squares</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@to_json = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-        <span class="nv">a =</span>
-          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-          <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-        <span class="nv">b =</span>
-          <span class="nv">top: </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">zip</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">ne</span><span class="p">),</span> <span class="nf">([left, right]) -&gt;</span>
-            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span>
-              <span class="nx">left</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span>
-            <span class="k">else</span>
-              <span class="p">[</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">]</span>
-          <span class="p">)</span>
-          <span class="nv">bottom: </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">zip</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">sw</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">se</span><span class="p">),</span> <span class="nf">([left, right]) -&gt;</span>
-            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span>
-              <span class="nx">left</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span>
-            <span class="k">else</span>
-              <span class="p">[</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">]</span>
-          <span class="p">)</span>
-        <span class="nx">b</span><span class="p">.</span><span class="nx">top</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">bottom</span><span class="p">)</span>
-      <span class="p">)</span>
-      <span class="vi">@toString = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-        <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">@to_json</span><span class="p">(),</span> <span class="nf">(row) -&gt;</span>
-          <span class="p">([</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">][</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">row</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <h3>Making copies of squares</h3>
-
-<p>For calculating the future of a square containing a pattern, we often need to make a larger square with the
-current square centered surrounded by empty squares. We also need to trim such a square to a smaller size,
-discarding the borders.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>A core requirement is to make an empty copy of a cell or square. In effect, we are making an empty
-square of the same size.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-      <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>We don't bother memoizing this method for squares, we are already taking advantage of redundancy.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-      <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-        <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-        <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-        <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-        <span class="nv">sw: </span><span class="nx">empty_quadrant</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Given the ability to make an empty copy, we can now resize squares to any size. We start with methods to inflte and deflate
-squares, and implement resizing a square with them.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Find or create a smaller square centered on this square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">crop_by: </span><span class="nf">(extant) -&gt;</span>
-      <span class="k">return</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="mi">0</span><span class="p">..(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span> <span class="nf">(quadrants) -&gt;</span>
-          <span class="nv">nw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="p">,</span> <span class="k">this</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Find or create a larger square centered on this square with
-the excess composed of empty squares</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">pad_by: </span><span class="nf">(extant) -&gt;</span>
-      <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="k">this</span>
-      <span class="k">else</span>
-        <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-        <span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">@nw</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">@ne</span>
-            <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">@se</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">@sw</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-          <span class="p">.</span><span class="nx">pad_by</span><span class="p">(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>Resize to a given level</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">resize_to: </span><span class="nf">(level) -&gt;</span>
-      <span class="nv">this_level = </span><span class="nx">@level</span>
-      <span class="k">if</span> <span class="nx">level</span> <span class="o">&gt;</span> <span class="nx">this_level</span>
-        <span class="nx">@pad_by</span><span class="p">(</span><span class="nx">level</span> <span class="o">-</span> <span class="nx">this_level</span><span class="p">)</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">level</span> <span class="o">&lt;</span> <span class="nx">this_level</span>
-        <span class="nx">@crop_by</span><span class="p">(</span><span class="nx">this_level</span> <span class="o">-</span> <span class="nx">level</span><span class="p">)</span>
-      <span class="k">else</span>
-        <span class="k">this</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Presto! Our four results are the future square we're after!</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">four_results</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Given the function that computes a square's future, we can apply
+our function repeatedly to the future of our pattern. Given some
+number <code>T</code> where <code>T &gt;= L</code>, by applying <code>future(...)</code> <code>(T-L)</code> times,
+we move <code>2^(T+1) - 2^(L-1)</code> generations:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">future: </span><span class="nf">(t = @level)-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="err">@</span><span class="p">.</span><span class="nx">level</span><span class="p">..</span><span class="nx">t</span><span class="p">],</span> <span class="nx">future</span><span class="p">,</span> <span class="k">this</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
