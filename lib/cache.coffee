@@ -1,4 +1,14 @@
-# ## Memoizing: The "Hash" in HashLife
+# This module is part of [cafeaulife.coffee](http:cafeaulife.html).
+#
+# ## Cache Module
+#
+# HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
+# components. The Cache Module implementss a very naive hash-table for canoncial representations of squares.
+#
+# [cache]: http:cache.html
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
+
+# ### Canoncialization: The "Hash" in HashLife
 #
 # HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.
 # Any result, at any scale, that has been computed before is reused. This is extremely

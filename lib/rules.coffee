@@ -1,4 +1,12 @@
-# ## Setting the rules for this game's "Universe"
+# This module is part of [cafeaulife.coffee](http:cafeaulife.html).
+#
+# ## Rules Module
+#
+# The Rules Module provides a method for setting up the [rules][ll] of the Life universe.
+#
+# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
+
+# ### Setting the rules for this game's "Universe"
 #
 # There many, many are different possible "games" consisting of cellular automata arranged in a two-dimensional
 # matrix. Cafe au Life handles the "life-like" ones, roughly those that have:

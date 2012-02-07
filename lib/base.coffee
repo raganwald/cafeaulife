@@ -1,3 +1,10 @@
+# This module is part of [cafeaulife.coffee](http:cafeaulife.html).
+#
+# ## Base Module
+#
+# The Base Module provides the `Cell` and `Square` classes, including `RecursivelyComputableSquare`, the foundation of the
+# HashLife implementation.
+
 # ### Baseline Setup
 
 # Cafe au Life uses [Underscore.js][u] extensively:

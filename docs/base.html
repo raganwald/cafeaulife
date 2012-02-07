@@ -1,32 +1,21 @@
-<!DOCTYPE html>  <html> <head>   <title>base.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="base.html">                 base.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               base.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Cafe au Life uses <a href="http://documentcloud.github.com/underscore/">Underscore.js</a> extensively:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>YouAreDaChef provides a nice clean set of semantics for AOP</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Play with Node and some browsers</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>A handy function for generating quadrants that are the cartesian products of a collection
-multiplied by itself once for each quadrant.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">cartesian_product = </span><span class="nf">(collection) -&gt;</span>
-  <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="k">for</span> <span class="nx">nw</span> <span class="k">in</span> <span class="nx">collection</span> <span class="k">for</span> <span class="nx">ne</span> <span class="k">in</span> <span class="nx">collection</span> <span class="k">for</span> <span class="nx">se</span> <span class="k">in</span> <span class="nx">collection</span> <span class="k">for</span> <span class="nx">sw</span> <span class="k">in</span> <span class="nx">collection</span>
-      <span class="p">,</span> <span class="nf">(x, y) -&gt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">y</span><span class="p">))</span>
-    <span class="p">,</span> <span class="nf">(x, y) -&gt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">y</span><span class="p">))</span>
-  <span class="p">,</span> <span class="nf">(x, y) -&gt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">y</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>A function for turning any array or object into a dictionary function</p>
+<!DOCTYPE html>  <html> <head>   <title>base.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="base.html">                 base.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               base.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http:cafeaulife.html">cafeaulife.coffee</a>.</p>
 
-<p>(see also: <a href="https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme">Reusable Abstractions in CoffeeScript</a>)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">dfunc = </span><span class="nf">(dictionary) -&gt;</span>
-  <span class="nf">(indices...) -&gt;</span>
-    <span class="nx">indices</span><span class="p">.</span><span class="nx">reduce</span> <span class="nf">(a, i) -&gt;</span>
-      <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
-    <span class="p">,</span> <span class="nx">dictionary</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>The <a href="https://en.wikipedia.org/wiki/Logarithm#Change_of_base">binary logarithm function</a></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">log2 = </span><span class="nx">do</span> <span class="o">-&gt;</span>
-  <span class="nv">base = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-  <span class="nf">(x) -&gt;</span>
-    <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">/</span> <span class="nx">base</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>Cells</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>The smallest unit of Life is the Cell:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Cell</span>
-  <span class="nv">constructor: </span><span class="nf">(@value) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>A simple point-cut that allows us to apply advice to contructors.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>By default, do nothing</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">initialize: </span><span class="o">-&gt;</span>
+<h2>Base Module</h2>
+
+<p>The Base Module provides the <code>Cell</code> and <code>Square</code> classes, including <code>RecursivelyComputableSquare</code>, the foundation of the
+HashLife implementation.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Cafe au Life uses <a href="http://documentcloud.github.com/underscore/">Underscore.js</a> extensively:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Play with Node and some browsers</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Cells</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>The smallest unit of Life is the Cell:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Cell</span>
+  <span class="nv">constructor: </span><span class="nf">(@value) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>A simple point-cut that allows us to apply advice to contructors.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>By default, do nothing</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">initialize: </span><span class="o">-&gt;</span>
   <span class="nv">to_json: </span><span class="o">-&gt;</span>
     <span class="p">[</span><span class="nx">@value</span><span class="p">]</span>
   <span class="nv">toValue: </span><span class="o">-&gt;</span>
-    <span class="nx">@value</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Export <code>Cell</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Cell</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3>Squares</h3>
+    <span class="nx">@value</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Export <code>Cell</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Cell</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Squares</h3>
 
 <p><img src="block_laying_seed.png" alt="Block laying seed" title="" /></p>
 
-<p><em>(A small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)</em></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
+<p><em>(A small pattern that creates a block-laying switch engine, a "puffer train" that grows forever.)</em></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
 (<code>2^1 -&gt; 2</code>, <code>2^2 -&gt; 4</code>, <code>2^3 -&gt; 8</code>...). Cells are not considered squares. Therefore, the smallest possible square
 (of size <code>2^1</code>) has cells for each of its four quadrants, while all larger squares (of size <code>2^n</code>) have squares of one smaller
-size (<code>2^(n-1)</code>) for each of their four quadrants.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>For example, a square of size eight (<code>2^3</code>) is composed of four squares of size four (<code>2^2</code>):</p>
+size (<code>2^(n-1)</code>) for each of their four quadrants.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>For example, a square of size eight (<code>2^3</code>) is composed of four squares of size four (<code>2^2</code>):</p>
 
 <pre><code>nw         ne
   ....|....
@@ -39,7 +28,7 @@ size (<code>2^(n-1)</code>) for each of their four quadrants.</p>             </
   ....|....
   ....|....
 sw         se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>The squares of size four are in turn each composed of four squares of size two (<code>2^1</code>):</p>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>The squares of size four are in turn each composed of four squares of size two (<code>2^1</code>):</p>
 
 <pre><code>nw           ne
   ..|..|..|..
@@ -54,9 +43,9 @@ sw         se
   ..|..|..|..
   ..|..|..|..
 sw           se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
 board is represented as one such large square, although the HashLife
-algorithm can be used to handle any board shape by tiling it with squares.)</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells
+algorithm can be used to handle any board shape by tiling it with squares.)</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>The key principle behind HashLife is taking advantage of redundancy. Therefore, two squares with the same alive and dead cells
 are always represented by the same, immutable square objects. HashLife exploits repetition and redundancy by making all squares
 idempotent and unique. In other words, if two squares contain the same sequence of cells, they are represented by the same
 instance of class <code>Square</code>. For example, there is exactly one representation of a square of size two containing four empty cells:</p>
@@ -98,8 +87,8 @@ sw         se
 <p>Obviously, the same goes for any configuration of alive and dead cells: There is one unique representation for any possible
 square and each of its four quadrants is a reference to a unique representation of a smaller square or cell.</p>
 
-<h3>Representing squares</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>HashLife represents each unique square as a structure with four quadrants:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Square</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Squares are constructed from four quadrant squares or cells and store a hash used
-to locate the square in the cache</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">({@nw, @ne, @se, @sw}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>A simple point-cut that allows us to apply advice to contructors.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>By default, do nothing</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">initialize: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Export <code>Square</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Square</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h3>The Speed of Light</h3>
+<h3>Representing squares</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>HashLife represents each unique square as a structure with four quadrants:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Square</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Squares are constructed from four quadrant squares or cells and store a hash used
+to locate the square in the cache</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">({@nw, @ne, @se, @sw}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>A simple point-cut that allows us to apply advice to contructors.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>By default, do nothing</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">initialize: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Export <code>Square</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Square</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h3>The Speed of Light</h3>
 
 <p>In Life, the "Speed of Light" or "<em>c</em>" is one cell vertically, horizontally, or diagonally in any direction. Meaning,
 that cause and effect cannot travel faster than <em>c</em>.</p>
@@ -190,7 +179,7 @@ size two (<code>2^1</code>) representing the state of those cells at time <code>
 </code></pre>
 
 <p>The computation of the four inner <code>+</code> cells from their adjacent eight cells is straightforward and
-is calculated from the basic 2-3 rules or looked up from a table with 65K entries.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h2>Recursively constructing squares of size eight (and larger)</h2>
+is calculated from the basic 2-3 rules or looked up from a table with 65K entries.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <h2>Recursively constructing squares of size eight (and larger)</h2>
 
 <p><img src="LWSS.gif" alt="Lightweight Spaceship" title="" /></p>
 
@@ -201,8 +190,8 @@ when a square is not in the cache, because when dealing with squares of size eig
 to look up squares of size four, and they are all seeded in the cache. (Once we have established how
 to construct the result for a square of size eight, including its result and velocity, we will be able
 to write out <code>.find</code> method to handle looking up squares of size eight and dealing with cache 'misses'
-by constructing a new square.)</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Our class will be a <code>RecursivelyComputableSquare</code>. We'll isolate helpers:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">RecursivelyComputableSquare = </span><span class="nx">do</span> <span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>We know how to obtain any square of size four using <code>cache.find</code>. So what we need is a way to compute
-the result for any arbitrary square of size eight or larger from quadrant squares one level smaller.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Our goal is to compute a result that looks like this (the lines and crosses are part of the result):</p>
+by constructing a new square.)</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Our class will be a <code>RecursivelyComputableSquare</code>. We'll isolate helpers:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">RecursivelyComputableSquare = </span><span class="nx">do</span> <span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>We know how to obtain any square of size four using <code>cache.find</code>. So what we need is a way to compute
+the result for any arbitrary square of size eight or larger from quadrant squares one level smaller.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Our goal is to compute a result that looks like this (the lines and crosses are part of the result):</p>
 
 <pre><code>nw        ne
 
@@ -214,8 +203,8 @@ the result for any arbitrary square of size eight or larger from quadrant square
 sw        se
 </code></pre>
 
-<p>Given that we know the result for each of those four squares, we can start building an intermediate result.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>The class for intermediate results:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">IntermediateResult</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>We construct an intermediate result from a square of size eight or larger</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">constructor: </span><span class="nf">(square) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>For convenience, we'll use Underscore's <code>extend</code> rather than a lot of assignments
-to @nw, @se, et cetera.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="k">this</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>First, Let's look at our square of size eight made up of four component squares of size four (the lines
+<p>Given that we know the result for each of those four squares, we can start building an intermediate result.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>The class for intermediate results:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">IntermediateResult</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>We construct an intermediate result from a square of size eight or larger</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">constructor: </span><span class="nf">(square) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>For convenience, we'll use Underscore's <code>extend</code> rather than a lot of assignments
+to @nw, @se, et cetera.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="k">this</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>First, Let's look at our square of size eight made up of four component squares of size four (the lines
 and crosses are part of the components):</p>
 
 <pre><code>nw        ne
@@ -228,7 +217,7 @@ and crosses are part of the components):</p>
   |..||..|
   +--++--+
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>We can take the results of those four quadrants and add them to our intermediate square</p>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>We can take the results of those four quadrants and add them to our intermediate square</p>
 
 <pre><code>nw        ne
 
@@ -243,7 +232,7 @@ sw        se
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
         <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
         <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>We can also derive four overlapping squares, these representing <code>n</code>, <code>e</code>, <code>s</code>, and <code>w</code>:</p>
+        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>We can also derive four overlapping squares, these representing <code>n</code>, <code>e</code>, <code>s</code>, and <code>w</code>:</p>
 
 <pre><code>     nn
   ..+--+..        ..+--+..
@@ -255,7 +244,7 @@ sw        se
   ..|..|..        ..|..|..
   ..+--+..        ..+--+..
      ss
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>Deriving these from our four component squares is straightforward, and when we take their results,
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>Deriving these from our four component squares is straightforward, and when we take their results,
 we fill in four of the five missing blanks for our intermediate square:</p>
 
 <pre><code>nw        ne
@@ -295,7 +284,7 @@ sw        se
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
             <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>We use a similar method to derive a center square:</p>
+          <span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>We use a similar method to derive a center square:</p>
 
 <pre><code>nw        ne
 
@@ -307,7 +296,7 @@ sw        se
    ......
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>And we extract its result square accordingly:</p>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>And we extract its result square accordingly:</p>
 
 <pre><code>nw        ne
 
@@ -325,7 +314,7 @@ sw        se
             <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
             <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>We have now derived nine squares of size <code>2^(n-1)</code>: Four component squares and five we have
+          <span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>We have now derived nine squares of size <code>2^(n-1)</code>: Four component squares and five we have
 derived from second-order components. The results we have extracted have all been cached, so
 we are performing lookups rather than computations.</p>
 
@@ -342,7 +331,7 @@ into our world of <code>2^n</code> quanta:</p>
    swssse
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <h3>Obtaining a result from the intermediate square</h3>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">result: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>From our nine squares, we can make four <em>overlapping</em> squares of size <code>2^(n-1)</code>:</p>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <h3>Obtaining a result from the intermediate square</h3>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">result: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>From our nine squares, we can make four <em>overlapping</em> squares of size <code>2^(n-1)</code>:</p>
 
 <pre><code>nw        ne  nw        ne
 
@@ -389,7 +378,7 @@ sw        se  sw        se
             <span class="nv">nw: </span><span class="nx">@ww</span>
             <span class="nv">ne: </span><span class="nx">@cc</span>
             <span class="nv">se: </span><span class="nx">@ss</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>We can now make a square from the results from each of those quadrants:</p>
+            <span class="nv">sw: </span><span class="nx">@sw</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>We can now make a square from the results from each of those quadrants:</p>
 
 <pre><code>nw        ne
 
@@ -405,9 +394,9 @@ sw        se
         <span class="nv">nw: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
         <span class="nv">ne: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
         <span class="nv">se: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>A <code>RecursivelyComputableSquare</code> is a square of size eight or larger</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">RecursivelyComputableSquare</span> <span class="k">extends</span> <span class="nx">Square</span>
+        <span class="nv">sw: </span><span class="nx">overlapping_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>A <code>RecursivelyComputableSquare</code> is a square of size eight or larger</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">RecursivelyComputableSquare</span> <span class="k">extends</span> <span class="nx">Square</span>
     <span class="nv">constructor: </span><span class="nf">(quadrants) -&gt;</span>
-      <span class="k">super</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>When we fit the results of an intermediate square within our original square
+      <span class="k">super</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>When we fit the results of an intermediate square within our original square
 of size eight, we reveal we have a square of size four, <code>2^(n-1)</code> as we wanted</p>
 
 <pre><code>nw        ne
@@ -422,454 +411,5 @@ of size eight, we reveal we have a square of size four, <code>2^(n-1)</code> as 
 sw        se
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="vi">@result = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
         <span class="k">new</span> <span class="nx">IntermediateResult</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">result</span><span class="p">()</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>The number of generation is double the number of generations of any of its quadrants.
-This can also be derived mathematically from the level: <code>math.pow(2, @level - 1)</code></p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="vi">@generations = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">generations</span> <span class="o">*</span> <span class="mi">2</span></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <h2>Memoizing: The "Hash" in HashLife</h2>
-
-<p>HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.
-Any result, at any scale, that has been computed before is reused. This is extremely
-efficient when dealing with patterns that contain a great deal of redundancy, such as
-the kinds of patterns constructed for the purpose of emulating circuits or machines in Life.</p>
-
-<p>Once Cafe au Life has calculated the results for the 65K possible four-by-four
-squares, the rules are no longer applied to any generation: Any pattern of any size is
-recursively computed terminating in a four-by-four square that has already been computed and cached.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <h3>Extending Cell and Square</h3>
-
-<p>We add some support for hashing to cells and squares.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <p>Initialize a cell's hash property to the cell's numeric value</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
-  <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-    <span class="vi">@hash = </span><span class="nx">@value</span></pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Initialize a square's hash property to the cache's has function</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-  <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-    <span class="vi">@hash = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="k">this</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <h3>Representing the cache</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Square.cache =</span></pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <p>chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">num_buckets: </span><span class="mi">99991</span>
-  <span class="nv">buckets: </span><span class="p">[]</span>
-
-  <span class="nv">clear: </span><span class="o">-&gt;</span>
-    <span class="vi">@buckets = </span><span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p><code>hash</code> returns an integer for any square</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">hash: </span><span class="nf">(square_like) -&gt;</span>
-    <span class="k">if</span> <span class="nx">square_like</span><span class="p">.</span><span class="nx">hash</span><span class="o">?</span>
-      <span class="nx">square_like</span><span class="p">.</span><span class="nx">hash</span>
-    <span class="k">else</span>
-      <span class="p">((</span><span class="mi">3</span> <span class="o">*</span><span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">nw</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">37</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">ne</span><span class="p">))</span>  <span class="o">+</span> <span class="p">(</span><span class="mi">79</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">se</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">131</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">sw</span><span class="p">)))</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p><code>find</code> locates a square in the cache if it exists</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">find: </span><span class="nf">(quadrants) -&gt;</span>
-    <span class="nv">bucket_number = </span><span class="nx">@hash</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span> <span class="o">%</span> <span class="nx">@num_buckets</span>
-    <span class="k">if</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span><span class="o">?</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">find</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">],</span> <span class="nf">(sq) -&gt;</span>
-        <span class="nx">sq</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <p><code>Like find</code>, but creates a <code>RecursivelyComputableSquare</code> if none is found</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">canonicalize_by_quadrant: </span><span class="nf">(quadrants) -&gt;</span>
-    <span class="nv">found = </span><span class="nx">@find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nx">found</span>
-      <span class="nx">found</span>
-    <span class="k">else</span>
-      <span class="nx">@add</span><span class="p">(</span><span class="k">new</span> <span class="nx">RecursivelyComputableSquare</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p><code>Like canonicalize_by_quadrant</code>, but takes json as an argument. Useful
-for seeding the world from a data file.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">canonicalize_by_json: </span><span class="nf">(json) -&gt;</span>
-    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">and</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span> <span class="o">is</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span>
-      <span class="k">throw</span> <span class="s1">&#39;must be a square&#39;</span>
-    <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
-      <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span>
-        <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">0</span>
-        <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">1</span>
-        <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span>
-      <span class="k">else</span>
-        <span class="k">throw</span> <span class="s1">&#39;a 1x1 square must contain a zero, one, or Cell&#39;</span>
-    <span class="k">else</span>
-      <span class="nv">half_length = </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="err">/ 2</span>
-      <span class="nx">@canonicalize_by_quadrant</span>
-        <span class="nv">nw: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-          <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-            <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="nv">ne: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-          <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-            <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="nv">se: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-          <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-            <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="nv">sw: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-          <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-            <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
-        <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>An agnostic method that can find or create anything</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">canonicalize: </span><span class="nf">(params) -&gt;</span>
-    <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
-      <span class="nx">@canonicalize_by_json</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;nw&#39;</span><span class="p">,</span> <span class="s1">&#39;ne&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;sw&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nf">(quadrant) -&gt;</span> <span class="nx">params</span><span class="p">[</span><span class="nx">quadrant</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span><span class="p">)</span> <span class="p">)</span>
-      <span class="nx">@canonicalize_by_quadrant</span> <span class="nx">params</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;nw&#39;</span><span class="p">,</span> <span class="s1">&#39;ne&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;sw&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nf">(quadrant) -&gt;</span> <span class="nx">params</span><span class="p">[</span><span class="nx">quadrant</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Square</span><span class="p">)</span> <span class="p">)</span>
-      <span class="nx">@canonicalize_by_quadrant</span> <span class="nx">params</span>
-    <span class="k">else</span>
-      <span class="k">throw</span> <span class="s2">&quot;Cache can&#39;t handle #{JSON.stringify(params)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>adds a square to the cache if it doesn't already exist</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
-    <span class="nv">bucket_number = </span><span class="nx">square</span><span class="p">.</span><span class="nx">hash</span> <span class="o">%</span> <span class="nx">@num_buckets</span>
-    <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span> <span class="o">||=</span> <span class="p">[]</span>
-    <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reject</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">],</span> <span class="nf">(found) -&gt;</span>
-      <span class="nx">found</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">sw</span>
-    <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">square</span><span class="p">)</span>
-    <span class="nx">square</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p>For debugging, it can be useful to count the number of squares in the cache</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">bucketed: </span><span class="o">-&gt;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(sum, bucket) -&gt;</span>
-      <span class="nx">sum</span> <span class="o">+</span> <span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span>
-    <span class="p">,</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p>For debugging, it can be useful to get an idea of the relative sizes of the cache buckets</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">histogram: </span><span class="o">-&gt;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(histo, bucket) -&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">tap</span> <span class="nx">histo</span><span class="p">,</span> <span class="nf">(h) -&gt;</span>
-        <span class="nx">h</span><span class="p">[</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">||=</span> <span class="mi">0</span>
-        <span class="nx">h</span><span class="p">[</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="p">,</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <p>Expose <code>canonicalize</code> through <code>Square</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Square.canonicalize = </span><span class="nf">(params) -&gt;</span>
-  <span class="nx">@cache</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <h2>The Life "Universe"</h2>
-
-<p>The <code>result</code> given for squares is handy, but not directly useful for computing the future of a pattern,
-because it computes the future of the <em>center</em> of a square, not the future of a square. If we imagine
-a square sitting in the middle of an infinite, empty Life universe, the future of the pattern within
-the square is going to be larger than the square, it will expand one cell in each direction for every
-generation into the future.</p>
-
-<p>For example, if we start with:</p>
-
-<pre><code>nw  ne
-  ??
-  ??
-sw  sw
-</code></pre>
-
-<p>After <code>2^0</code> generations we double its size:</p>
-
-<pre><code>nw    ne
-  ????
-  ????
-  ????
-  ????
-sw    se
-</code></pre>
-
-<p>After <code>2^1</code> more generations we double again:</p>
-
-<pre><code>nw        ne
-  ????????
-  ????????
-  ????????
-  ????????
-  ????????
-  ????????
-  ????????
-  ????????
-sw        se
-</code></pre>
-
-<p>After <code>2^2</code> additional generations on top of that we double yet again:</p>
-
-<pre><code>nw                ne
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-  ????????????????
-sw                se
-</code></pre>
-
-<p>And so it goes. The relationship becomes clear if we stop thinking about generations and sizes and
-start thinking about the binary logarithm of generations and sizes. For historical reasons, the binary
-logarithm of the length of a side of a square is called its <strong>level</strong>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <p>2x2 squares are level 1. 4x4 squares are level 2. In other words, the level of a square is the level of
-its component quadrants plus one. This sets up a recursion which amounts to counting the squares in a
-path from our subject square to its component cells.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-  <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-    <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span></pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>Cells are level zero, which terminates the recursion.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">level:</span>
-    <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>In a moment we'll give the method for doubling the size of a square and moving it forward into the future,
-very much in the style of obtaining a cell's <code>result</code>, and not suprisingly using results to compute its future.
-But first, let's determine how far forward in time doubling a square moves it.</p>
-
-<p>A square of size two moves one generation forward. A square of size four moves two generations forward. A
-square of size eight moves four generations forward. More simply:</p>
-
-<p><strong>A square of level <code>L</code> moves 2^(L-1) generations forward in time and doubles in size</strong>.</p>
-
-<p>This is exactly the same relationship a square has to its <code>result</code>: The result of a square is 2^(L-1)
-generations forward in time.</p>
-
-<p>Results and futures are inverses of each other. The result of a square is a smaller square forward in time that
-we can know regardless of what lies outside of the square. The future of a square is a larger square forward
-in time that we can know given that only empty space lies outside the square.</p>
-
-<p>The difference is that a result square has a level of <code>L-1</code> and a future has a level of <code>L+1</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <h3>Calculating the immediate future</h3>
-
-<p>Let's start with a diagram for determining the future of a square:</p>
-
-<p>Given (the <code>?</code> stands for a cell or square):</p>
-
-<pre><code>nw  ne
-  ??
-  ??
-sw  se
-</code></pre>
-
-<p>We want:</p>
-
-<pre><code>nw    ne
-  ????
-  ????
-  ????
-  ????
-sw    se
-</code></pre>
-
-<p>Borrowing from our technique for computing results, we want to find some squares with results we can stitch together
-to make our future square. So let's build our future square. Consider these four squares. In each one, we have duplicated
-our square in one of its corners and filled the remainder with empty squares the same size as our square:</p>
-
-<pre><code>nw         ne
-  ....|....
-  ....|....
-  ..??|??..
-  ..??|??..
-  ----+----
-  ..??|??..
-  ..??|??..
-  ....|....
-  ....|....
-sw         se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <p>We're redy to use this diagram to write our method. First, here's our code for making empty squares:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-    <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-    <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-      <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-      <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-      <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-      <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-
-<span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-    <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-66">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-66">&#182;</a>               </div>               <p>Here's our method:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">future: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-67">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-67">&#182;</a>               </div>               <p>an empty copy of our square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">vacant = </span><span class="nx">@empty_copy</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-68">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-68">&#182;</a>               </div>               <p>Let's make the four squares diagrammed above</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">four_squares =</span>
-      <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-        <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-          <span class="nv">nw: </span><span class="nx">vacant</span>
-          <span class="nv">ne: </span><span class="nx">vacant</span>
-          <span class="nv">se: </span><span class="k">this</span>
-          <span class="nv">sw: </span><span class="nx">vacant</span>
-      <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-        <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-          <span class="nv">nw: </span><span class="nx">vacant</span>
-          <span class="nv">ne: </span><span class="nx">vacant</span>
-          <span class="nv">se: </span><span class="nx">vacant</span>
-          <span class="nv">sw: </span><span class="k">this</span>
-      <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-        <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-          <span class="nv">nw: </span><span class="k">this</span>
-          <span class="nv">ne: </span><span class="nx">vacant</span>
-          <span class="nv">se: </span><span class="nx">vacant</span>
-          <span class="nv">sw: </span><span class="nx">vacant</span>
-      <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-        <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-          <span class="nv">nw: </span><span class="nx">vacant</span>
-          <span class="nv">ne: </span><span class="k">this</span>
-          <span class="nv">se: </span><span class="nx">vacant</span>
-          <span class="nv">sw: </span><span class="nx">vacant</span></pre></div>             </td>           </tr>                               <tr id="section-69">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-69">&#182;</a>               </div>               <p>Let's take their results:</p>
-
-<pre><code>nw         ne
-  ....|....
-  .++.|.++.
-  .++.|.++.
-  ....|....
-  ----+----
-  ....|....
-  .++.|.++.
-  .++.|.++.
-  ....|....
-sw         se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">four_results =</span>
-      <span class="nv">nw: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="nv">ne: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="nv">se: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="nv">sw: </span><span class="nx">four_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-70">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-70">&#182;</a>               </div>               <p>Consider those results relative to the original square.
-let's redraw the diagram, but this time we'll have everything overlap.</p>
-
-<p>Here're the four squares again in two diagrams:</p>
-
-<pre><code>nw      ne  nw      ne
-  ....          ....
-  ....          ....
-  ..??..      ..??..
-  ..??..      ..??..
-    ....      ....
-    ....      ....
-sw      se  sw      se
-</code></pre>
-
-<p>Now we draw the results of those four:</p>
-
-<pre><code>nw      ne  nw      ne
-  ....          ....
-  .nw.          .ne.
-  .nw...      ...ne.
-  ...se.      .sw...
-    .se.      .sw.
-    ....      ....
-sw      se  sw      se
-</code></pre>
-
-<p>And superimpose those results:</p>
-
-<pre><code>nw    ne
-  nwne
-  nwne
-  swse
-  swse
-sw    se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-71">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-71">&#182;</a>               </div>               <p>Presto! Our four results are the future square we're after!</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-      <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span><span class="p">(</span><span class="nx">four_results</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-72">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-72">&#182;</a>               </div>               <h3>Import and export</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-73">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-73">&#182;</a>               </div>               <p><code>to_json</code> and <code>toString</code> are simple methods for cells.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">to_json: </span><span class="o">-&gt;</span>
-    <span class="p">[</span><span class="nx">@value</span><span class="p">]</span>
-  <span class="nv">toString: </span><span class="o">-&gt;</span>
-    <span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="nx">@value</span></pre></div>             </td>           </tr>                               <tr id="section-74">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-74">&#182;</a>               </div>               <p><code>to_json</code> and <code>toString</code> are memoized methods for squares</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-  <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-    <span class="vi">@to_json = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-      <span class="nv">a =</span>
-        <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-        <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-        <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
-      <span class="nv">b =</span>
-        <span class="nv">top: </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">zip</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">ne</span><span class="p">),</span> <span class="nf">([left, right]) -&gt;</span>
-          <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span>
-            <span class="nx">left</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span>
-          <span class="k">else</span>
-            <span class="p">[</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="nv">bottom: </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">zip</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">sw</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">se</span><span class="p">),</span> <span class="nf">([left, right]) -&gt;</span>
-          <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span>
-            <span class="nx">left</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span>
-          <span class="k">else</span>
-            <span class="p">[</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">]</span>
-        <span class="p">)</span>
-      <span class="nx">b</span><span class="p">.</span><span class="nx">top</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">bottom</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="vi">@toString = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-      <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">@to_json</span><span class="p">(),</span> <span class="nf">(row) -&gt;</span>
-        <span class="p">([</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">][</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">row</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-      <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span>
-    <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-75">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-75">&#182;</a>               </div>               <h3>Making copies of squares</h3>
-
-<p>For calculating the future of a square containing a pattern, we often need to make a larger square with the
-current square centered surrounded by empty squares. We also need to trim such a square to a smaller size,
-discarding the borders.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-76">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-76">&#182;</a>               </div>               <p>A core requirement is to make an empty copy of a cell or square. In effect, we are making an empty
-square of the same size.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-    <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span></pre></div>             </td>           </tr>                               <tr id="section-77">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-77">&#182;</a>               </div>               <p>We don't bother memozing this method for squares, we are already taking advantage of redundancy.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-  <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
-    <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-    <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-      <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-      <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-      <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-      <span class="nv">sw: </span><span class="nx">empty_quadrant</span></pre></div>             </td>           </tr>                               <tr id="section-78">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-78">&#182;</a>               </div>               <p>Given the ability to make an empty copy, we can now resize squares to any size. We start with methods to inflte and deflate
-squares, and implement resizing a square with them.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-79">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-79">&#182;</a>               </div>               <p>Find or create a smaller square centered on this square</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">crop_by: </span><span class="nf">(extant) -&gt;</span>
-    <span class="k">return</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-    <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span><span class="p">(</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="mi">0</span><span class="p">..(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span> <span class="nf">(quadrants) -&gt;</span>
-        <span class="nv">nw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-        <span class="nv">ne: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
-        <span class="nv">se: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-        <span class="nv">sw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-      <span class="p">,</span> <span class="k">this</span>
-    <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-80">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-80">&#182;</a>               </div>               <p>Find or create a larger square centered on this square with
-the excess composed of empty squares</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">pad_by: </span><span class="nf">(extant) -&gt;</span>
-    <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-      <span class="k">return</span> <span class="k">this</span>
-    <span class="k">else</span>
-      <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-        <span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-          <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-            <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">se: </span><span class="nx">@nw</span>
-            <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-          <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-            <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">@ne</span>
-          <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-            <span class="nv">nw: </span><span class="nx">@se</span>
-            <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-          <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize_by_quadrant</span>
-            <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">@sw</span>
-            <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-        <span class="p">.</span><span class="nx">pad_by</span><span class="p">(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-81">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-81">&#182;</a>               </div>               <p>Resize to a given level</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">resize_to: </span><span class="nf">(level) -&gt;</span>
-    <span class="nv">this_level = </span><span class="nx">@level</span>
-    <span class="k">if</span> <span class="nx">level</span> <span class="o">&gt;</span> <span class="nx">this_level</span>
-      <span class="nx">@pad_by</span><span class="p">(</span><span class="nx">level</span> <span class="o">-</span> <span class="nx">this_level</span><span class="p">)</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="nx">level</span> <span class="o">&lt;</span> <span class="nx">this_level</span>
-      <span class="nx">@crop_by</span><span class="p">(</span><span class="nx">this_level</span> <span class="o">-</span> <span class="nx">level</span><span class="p">)</span>
-    <span class="k">else</span>
-      <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-82">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-82">&#182;</a>               </div>               <h2>Setting the rules for this game's "Universe"</h2>
-
-<p>There many, many are different possible "games" consisting of cellular automata arranged in a two-dimensional
-matrix. Cafe au Life handles the "life-like" ones, roughly those that have:</p>
-
-<ul>
-<li>A stable 'quiescent' state. A universe full of empty cells will stay empty.</li>
-<li>Rules based only on the population of a cell's Moore Neighborhood: Every cell is affected by the population of its eight neighbours, and all eight neighbours are treated identically.</li>
-<li>Two states.</li>
-</ul>
-
-<p>Given a definition of the state machine for each cell, Cafe au Life performs all the necessary initialization to compute
-the future of a pattern.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-83">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-83">&#182;</a>               </div>               <p><code>set_universe_rules</code> generates the size four "seed" squares that actually calculate their results
-from the life-like game rules. All larger squares decompose recursively into size four squares, and thus
-do not need to know anything about the rules.</p>
-
-<p>The default, <code>set_universe_rules()</code>, is equivalent to <code>set_universe_rules([2,3],[3])</code>, which
-invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
-and birth counts, e.g. <code>set_universe_rules([1,3,5,7], [1,3,5,7])</code> invokes
-<a href="http://www.conwaylife.com/wiki/Replicator_(CA">Replicator</a>)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span>
-  <span class="nv">set_universe_rules: </span><span class="nf">(survival = [2,3], birth = [3]) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-84">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-84">&#182;</a>               </div>               <p>The two canonical cells.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span> <span class="o">?=</span> <span class="k">new</span> <span class="nx">Cell</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>  <span class="o">?=</span> <span class="k">new</span> <span class="nx">Cell</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-85">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-85">&#182;</a>               </div>               <p>Bail if we are given the same rules and already have generated the expected number of seeds</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">return</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">current_rules</span> <span class="k">if</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">current_rules</span><span class="o">?</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">is</span> <span class="p">{</span><span class="nx">survival</span><span class="p">,</span> <span class="nx">birth</span><span class="p">}.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">and</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">bucketed</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">65552</span></pre></div>             </td>           </tr>                               <tr id="section-86">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-86">&#182;</a>               </div>               <p>The rules expressed as a dictionary function</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">rule = </span><span class="nx">dfunc</span> <span class="p">[</span>
-      <span class="p">(</span><span class="k">if</span> <span class="nx">birth</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span> <span class="k">else</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">9</span><span class="p">]</span>
-      <span class="p">(</span><span class="k">if</span> <span class="nx">survival</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span> <span class="k">else</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">9</span><span class="p">]</span>
-    <span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-87">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-87">&#182;</a>               </div>               <p>successfor function for any cell</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">succ = </span><span class="nf">(cells, row, col) -&gt;</span>
-      <span class="nv">current_state = </span><span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="p">][</span><span class="nx">col</span><span class="p">]</span>
-      <span class="nv">neighbour_count = </span><span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="p">]</span> <span class="o">+</span>
-        <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="p">][</span><span class="nx">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
-        <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="p">][</span><span class="nx">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
-        <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-      <span class="nx">rule</span><span class="p">(</span><span class="nx">current_state</span><span class="p">,</span> <span class="nx">neighbour_count</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-88">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-88">&#182;</a>               </div>               <p>A SeedSquare knows how to calculate its own result from
-the rules</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">class</span> <span class="nx">SeedSquare</span> <span class="k">extends</span> <span class="nx">Square</span>
-      <span class="nv">constructor: </span><span class="nf">(params) -&gt;</span>
-        <span class="k">super</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-89">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-89">&#182;</a>               </div>               <p>Seed squares compute a result one generation into the future. (We will see later that
-larger squares results more generations into the future.)</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="vi">@generations = </span><span class="mi">1</span></pre></div>             </td>           </tr>                               <tr id="section-90">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-90">&#182;</a>               </div>               <p><code>result</code> calculates the inner result square. The method
-is memoized.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="vi">@result = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span>
-          <span class="o">-&gt;</span>
-            <span class="nv">a = </span><span class="nx">@to_json</span><span class="p">()</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">find</span>
-              <span class="nv">nw: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-              <span class="nv">ne: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-              <span class="nv">se: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-              <span class="nv">sw: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-        <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-91">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-91">&#182;</a>               </div>               <p>Clear the cache out</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">clear</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-92">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-92">&#182;</a>               </div>               <p>The canonical 2x2 squares are initialized from the cartesian product
-of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
-possible 2x2 squares.</p>
-
-<p>2x2 squares do not compute results</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">all_2x2_squares = </span><span class="nx">cartesian_product</span><span class="p">([</span><span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="p">,</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span><span class="p">]).</span><span class="nx">map</span> <span class="nf">(quadrants) -&gt;</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span> <span class="k">new</span> <span class="nx">Square</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-93">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-93">&#182;</a>               </div>               <p>The canonical 4x4 squares are initialized from the cartesian product of
-every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
-gives 65,536 possible 4x4 squares.</p>
-
-<p>4x4 squares know how to compute their 2x2 results, and as we saw above, they
-memoize those results so that they are only computed once. (A variation of
-memoizing the result computation is to compute it when generating the 4x4 square,
-thus "compiling" the supplied rules into a table of 65,536 rules taht is looked
-up at runtime.)</p>
-
-<p>We will see below that all larger squares compute their results by recursively
-combining the results of smaller squares, so therefore all such computations
-will terminate when they reach a square of size 4x4.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">cartesian_product</span><span class="p">(</span><span class="nx">all_2x2_squares</span><span class="p">).</span><span class="nx">forEach</span> <span class="nf">(quadrants) -&gt;</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span> <span class="k">new</span> <span class="nx">SeedSquare</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-94">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-94">&#182;</a>               </div>               <p>Put the rules in the cache and return them.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">Square.cache.current_rules = </span><span class="p">{</span><span class="nx">survival</span><span class="p">,</span> <span class="nx">birth</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-95">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-95">&#182;</a>               </div>               <p>p.s. This document was generated from <a href="https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee">cafeaulife.coffee</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>The number of generation is double the number of generations of any of its quadrants.
+This can also be derived mathematically from the level: <code>math.pow(2, @level - 1)</code></p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="vi">@generations = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">generations</span> <span class="o">*</span> <span class="mi">2</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>Export <code>RecursivelyComputableSquare</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">RecursivelyComputableSquare</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>p.s. This document was generated from <a href="https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee">cafeaulife.coffee</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

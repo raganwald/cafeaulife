@@ -1,4 +1,11 @@
-# ## The Life "Universe"
+# This module is part of [cafeaulife.coffee](http:cafeaulife.html).
+#
+# ## Future Module
+#
+# The Future Module provides methods for computing the future of a pattern, taking into account its ability to grow beyond
+# the size of its container square.
+
+# ### The Life "Universe"
 #
 # The `result` given for class `Square` is handy, but not directly useful for computing the future of a pattern,
 # because it computes the future of the *center* of a square, not the future of a square. Of course, the future of
