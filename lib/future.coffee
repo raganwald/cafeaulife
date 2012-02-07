@@ -161,7 +161,7 @@ exports.mixInto = ({Square, Cell}) ->
   #       ....|....
   #     sw         se
 
-  # We're redy to use this diagram to write our method. First, here's our code for making empty squares:
+  # We're ready to use this diagram to write a function for computing the future of a square. First, here're methods for making empty squares:
   _.extend Square.prototype,
     empty_copy: ->
       empty_quadrant = @nw.empty_copy()
@@ -175,211 +175,100 @@ exports.mixInto = ({Square, Cell}) ->
     empty_copy: ->
       Cell.Dead
 
-  # Here's our method:
+  # Now a function. It takes a square and calculates its future 2^(L-1) generations forward in time and
+  # at level L+1:
+  future = (square) ->
+
+    # an empty copy of our square
+    vacant = square.empty_copy()
+
+    # Let's make the four squares diagrammed above
+    four_squares =
+      nw: Square
+        .canonicalize
+          nw: vacant
+          ne: vacant
+          se: square
+          sw: vacant
+      ne: Square
+        .canonicalize
+          nw: vacant
+          ne: vacant
+          se: vacant
+          sw: square
+      se: Square
+        .canonicalize
+          nw: square
+          ne: vacant
+          se: vacant
+          sw: vacant
+      sw: Square
+        .canonicalize
+          nw: vacant
+          ne: square
+          se: vacant
+          sw: vacant
+
+    # Let's take their results:
+    #
+    #     nw         ne
+    #       ....|....
+    #       .++.|.++.
+    #       .++.|.++.
+    #       ....|....
+    #       ----+----
+    #       ....|....
+    #       .++.|.++.
+    #       .++.|.++.
+    #       ....|....
+    #     sw         se
+    four_results =
+      nw: four_squares.nw.result()
+      ne: four_squares.ne.result()
+      se: four_squares.se.result()
+      sw: four_squares.sw.result()
+
+    # Consider those results relative to the original square.
+    # let's redraw the diagram, but this time we'll have everything overlap.
+    #
+    # Here're the four squares again in two diagrams:
+    #
+    #     nw      ne  nw      ne
+    #       ....          ....
+    #       ....          ....
+    #       ..??..      ..??..
+    #       ..??..      ..??..
+    #         ....      ....
+    #         ....      ....
+    #     sw      se  sw      se
+    #
+    # Now we draw the results of those four:
+    #
+    #     nw      ne  nw      ne
+    #       ....          ....
+    #       .nw.          .ne.
+    #       .nw...      ...ne.
+    #       ...se.      .sw...
+    #         .se.      .sw.
+    #         ....      ....
+    #     sw      se  sw      se
+    #
+    # And superimpose those results:
+    #
+    #     nw    ne
+    #       nwne
+    #       nwne
+    #       swse
+    #       swse
+    #     sw    se
+
+    # Presto! Our four results are the future square we're after!
+    Square.canonicalize(four_results)
+
+  # Given the function that computes a square's future, we can apply
+  # our function repeatedly to the future of our pattern. Given some
+  # number `T` where `T >= L`, by applying `future(...)` `(T-L)` times,
+  # we move `2^(T+1) - 2^(L-1)` generations:
   _.extend Square.prototype,
-    future: ->
-
-      # an empty copy of our square
-      vacant = @empty_copy()
-
-      # Let's make the four squares diagrammed above
-      four_squares =
-        nw: Square
-          .canonicalize
-            nw: vacant
-            ne: vacant
-            se: this
-            sw: vacant
-        ne: Square
-          .canonicalize
-            nw: vacant
-            ne: vacant
-            se: vacant
-            sw: this
-        se: Square
-          .canonicalize
-            nw: this
-            ne: vacant
-            se: vacant
-            sw: vacant
-        sw: Square
-          .canonicalize
-            nw: vacant
-            ne: this
-            se: vacant
-            sw: vacant
-
-      # Let's take their results:
-      #
-      #     nw         ne
-      #       ....|....
-      #       .++.|.++.
-      #       .++.|.++.
-      #       ....|....
-      #       ----+----
-      #       ....|....
-      #       .++.|.++.
-      #       .++.|.++.
-      #       ....|....
-      #     sw         se
-      four_results =
-        nw: four_squares.nw.result()
-        ne: four_squares.ne.result()
-        se: four_squares.se.result()
-        sw: four_squares.sw.result()
-
-      # Consider those results relative to the original square.
-      # let's redraw the diagram, but this time we'll have everything overlap.
-      #
-      # Here're the four squares again in two diagrams:
-      #
-      #     nw      ne  nw      ne
-      #       ....          ....
-      #       ....          ....
-      #       ..??..      ..??..
-      #       ..??..      ..??..
-      #         ....      ....
-      #         ....      ....
-      #     sw      se  sw      se
-      #
-      # Now we draw the results of those four:
-      #
-      #     nw      ne  nw      ne
-      #       ....          ....
-      #       .nw.          .ne.
-      #       .nw...      ...ne.
-      #       ...se.      .sw...
-      #         .se.      .sw.
-      #         ....      ....
-      #     sw      se  sw      se
-      #
-      # And superimpose those results:
-      #
-      #     nw    ne
-      #       nwne
-      #       nwne
-      #       swse
-      #       swse
-      #     sw    se
-
-      # Presto! Our four results are the future square we're after!
-      Square.cache
-        .canonicalize_by_quadrant(four_results)
-
-
-  # ### Import and export
-
-  # `to_json` and `toString` are simple methods for cells.
-  _.extend Cell.prototype,
-    to_json: ->
-      [@value]
-    toString: ->
-      '' + @value
-
-  # `to_json` and `toString` are memoized methods for squares
-  YouAreDaChef(Square)
-    .after 'initialize', ->
-      @to_json = _.memoize( ->
-        a =
-          nw: @nw.to_json()
-          ne: @ne.to_json()
-          se: @se.to_json()
-          sw: @sw.to_json()
-        b =
-          top: _.map( _.zip(a.nw, a.ne), ([left, right]) ->
-            if _.isArray(left)
-              left.concat(right)
-            else
-              [left, right]
-          )
-          bottom: _.map( _.zip(a.sw, a.se), ([left, right]) ->
-            if _.isArray(left)
-              left.concat(right)
-            else
-              [left, right]
-          )
-        b.top.concat(b.bottom)
-      )
-      @toString = _.memoize( ->
-        (_.map @to_json(), (row) ->
-          ([' ', '*'][c] for c in row).join('')
-        ).join('\n')
-      )
-
-  # ### Making copies of squares
-  #
-  # For calculating the future of a square containing a pattern, we often need to make a larger square with the
-  # current square centered surrounded by empty squares. We also need to trim such a square to a smaller size,
-  # discarding the borders.
-
-  # A core requirement is to make an empty copy of a cell or square. In effect, we are making an empty
-  # square of the same size.
-  _.extend Cell.prototype,
-    empty_copy: ->
-      Cell.Dead
-
-  # We don't bother memoizing this method for squares, we are already taking advantage of redundancy.
-  _.extend Square.prototype,
-    empty_copy: ->
-      empty_quadrant = @nw.empty_copy()
-      Square.canonicalize
-        nw: empty_quadrant
-        ne: empty_quadrant
-        se: empty_quadrant
-        sw: empty_quadrant
-
-    # Given the ability to make an empty copy, we can now resize squares to any size. We start with methods to inflte and deflate
-    # squares, and implement resizing a square with them.
-
-    # Find or create a smaller square centered on this square
-    crop_by: (extant) ->
-      return this if extant is 0
-      Square.canonicalize(
-        _.reduce [0..(extant - 1)], (quadrants) ->
-          nw: quadrants.nw.se
-          ne: quadrants.ne.sw
-          se: quadrants.se.nw
-          sw: quadrants.sw.ne
-        , this
-      )
-
-    # Find or create a larger square centered on this square with
-    # the excess composed of empty squares
-    pad_by: (extant) ->
-      if extant is 0
-        return this
-      else
-        empty_quadrant = @nw.empty_copy()
-        Square
-          .canonicalize
-            nw: Square.canonicalize
-              nw: empty_quadrant
-              ne: empty_quadrant
-              se: @nw
-              sw: empty_quadrant
-            ne: Square.canonicalize
-              nw: empty_quadrant
-              ne: empty_quadrant
-              se: empty_quadrant
-              sw: @ne
-            se: Square.canonicalize
-              nw: @se
-              ne: empty_quadrant
-              se: empty_quadrant
-              sw: empty_quadrant
-            sw: Square.canonicalize
-              nw: empty_quadrant
-              ne: @sw
-              se: empty_quadrant
-              sw: empty_quadrant
-          .pad_by(extant - 1)
-
-    # Resize to a given level
-    resize_to: (level) ->
-      this_level = @level
-      if level > this_level
-        @pad_by(level - this_level)
-      else if level < this_level
-        @crop_by(this_level - level)
-      else
-        this
+    future: (t = @level)->
+      _.reduce [@.level..t], future, this

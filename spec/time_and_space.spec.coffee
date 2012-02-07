@@ -74,7 +74,7 @@ describe 'time and space', ->
         [1, 1]
       ] )
 
-    it 'should upsize an r_pentomino to level 3', ->
+    it 'should upsize a 2x2 to level 3', ->
 
       expect( (Life.Square.canonicalize [
         [1, 0]
@@ -88,4 +88,14 @@ describe 'time and space', ->
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]
+      ] )
+
+    it 'should trim a 2x2 back to its original size', ->
+
+      expect( (Life.Square.canonicalize [
+        [1, 0]
+        [0, 1]
+      ]).resize_to(3).trim() ).toEqual(Life.Square.canonicalize [
+        [1, 0]
+        [0, 1]
       ] )

@@ -8,9 +8,9 @@ r_pentomino = Life.Square.canonicalize [
   [0, 0, 1, 0]
 ]
 
-( (start = r_pentomino, inflation = 8) ->
+( (start = r_pentomino, time = 8) ->
 
-  board = start.pad_by(inflation)
+  board = start.future(time).trim()
 
   console?.log "#{board.generations} generations:\n\n#{board.result().crop_by(2)}"
 

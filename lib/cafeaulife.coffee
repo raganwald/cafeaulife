@@ -84,6 +84,12 @@ require('./rules').mixInto(module.exports)
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 require('./cache').mixInto(module.exports)
 
+# The [API Module][api] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
+# the size of its container square.
+#
+# [api]: http:api.html
+require('./api').mixInto(module.exports)
+
 # The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
 # the size of its container square.
 #
