@@ -34,6 +34,9 @@
 # [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
 
+# Play with Node and some browsers
+exports ?= window or this
+
 # A handy function for generating quadrants that are the cartesian products of a collection
 # multiplied by itself once for each quadrant.
 cartesian_product = (collection) ->

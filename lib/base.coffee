@@ -502,7 +502,3 @@ RecursivelyComputableSquare = do ->
 
 # Export `RecursivelyComputableSquare`
 _.defaults exports, {RecursivelyComputableSquare}
-
-# p.s. This document was generated from [cafeaulife.coffee][source] using [Docco][docco].
-# [source]: https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee
-# [docco]: http://jashkenas.github.com/docco/

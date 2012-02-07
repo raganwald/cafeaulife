@@ -28,6 +28,9 @@ _ = require('underscore')
 # YouAreDaChef provides a nice clean set of semantics for AOP
 YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 
+# Play with Node and some browsers
+exports ?= window or this
+
 # ### Mix the functionality into `Square` and `Cell`
 
 exports.mixInto = ({Square, Cell}) ->

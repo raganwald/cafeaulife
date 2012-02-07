@@ -90,4 +90,7 @@ require('./cache').mixInto(module.exports)
 # [future]: http:future.html
 require('./future').mixInto(module.exports)
 
-
+# p.s. These documents were generated directly from the [commented source code][source] using [Docco][docco].
+#
+# [source]: https://github.com/raganwald/cafeaulife/blob/master/lib
+# [docco]: http://jashkenas.github.com/docco/
