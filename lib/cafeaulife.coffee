@@ -92,6 +92,24 @@ require('./api').mixInto(module.exports)
 # [future]: http:future.html
 require('./future').mixInto(module.exports)
 
+# ## Who
+#
+# When he's not shipping Ruby, Javascript and Java applications scaling out to millions of users,
+# [Reg "Raganwald" Braithwaite][raganwald] has authored libraries for Javascript and Ruby programming
+# such as [Katy](https://github.com/raganwald/Katy), [JQuery Combinators](http://github.com/raganwald/JQuery-Combinators),
+# [YouAreDaChef](https://github.com/raganwald/YouAreDaChef), [andand](http://github.com/raganwald/andand),
+# and [more you can find on Github](https://github.com/raganwald).
+#
+# His hands-on coding blog [Homoiconic](https://github.com/raganwald/homoiconic) frequently lights up the Hackerverse,
+# and he also writes about [project management and other subjects](http://raganwald.posterous.com/).
+#
+# His recent work includes:
+#
+# * [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators), all of my writing about combinators, collected into one e-book.
+# * [What I've Learned From Failure](http://leanpub.com/shippingsoftware), my very best essays about getting software from ideas to shipping products, collected into one e-book.
+# * [Katy](http://github.com/raganwald/Katy), a library for writing fluent CoffeeScript and JavaScript using combinators.
+# * [YouAreDaChef](http://github.com/raganwald/YouAreDaChef), a library for writing method combinations for CoffeeScript and JavaScript projects.
+
 # ---
 #
 # **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
@@ -102,10 +120,3 @@ require('./future').mixInto(module.exports)
 #
 # [source]: https://github.com/raganwald/cafeaulife/blob/master/lib
 # [docco]: http://jashkenas.github.com/docco/
-#
-# Recent work:
-#
-# * [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators), all of my writing about combinators, collected into one e-book.
-# * [What I've Learned From Failure](http://leanpub.com/shippingsoftware), my very best essays about getting software from ideas to shipping products, collected into one e-book.
-# * [Katy](http://github.com/raganwald/Katy), a library for writing fluent CoffeeScript and JavaScript using combinators.
-# * [YouAreDaChef](http://github.com/raganwald/YouAreDaChef), a library for writing method combinations for CoffeeScript and JavaScript projects.
