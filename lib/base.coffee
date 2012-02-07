@@ -325,29 +325,29 @@ RecursivelyComputableSquare = do ->
         #        ..ss..
         #
         #     sw        se
-        nn: Square.cache
-          .canonicalize_by_quadrant
+        nn: Square
+          .canonicalize
             nw: square.nw.ne
             ne: square.ne.nw
             se: square.ne.sw
             sw: square.nw.se
           .result()
-        ee: Square.cache
-          .canonicalize_by_quadrant
+        ee: Square
+          .canonicalize
             nw: square.ne.sw
             ne: square.ne.se
             se: square.se.ne
             sw: square.se.nw
           .result()
-        ss: Square.cache
-          .canonicalize_by_quadrant
+        ss: Square
+          .canonicalize
             nw: square.sw.ne
             ne: square.se.nw
             se: square.se.sw
             sw: square.sw.se
           .result()
-        ww: Square.cache
-          .canonicalize_by_quadrant
+        ww: Square
+          .canonicalize
             nw: square.nw.sw
             ne: square.nw.se
             se: square.sw.ne
@@ -379,8 +379,8 @@ RecursivelyComputableSquare = do ->
         #        ......
         #
         #     sw        se
-        cc: Square.cache
-          .canonicalize_by_quadrant
+        cc: Square
+          .canonicalize
             nw: square.nw.se
             ne: square.ne.sw
             se: square.se.nw
@@ -432,26 +432,26 @@ RecursivelyComputableSquare = do ->
       #
       #     sw        se  sw        se
       overlapping_squares =
-        nw: Square.cache
-          .canonicalize_by_quadrant
+        nw: Square
+          .canonicalize
             nw: @nw
             ne: @nn
             se: @cc
             sw: @ww
-        ne: Square.cache
-          .canonicalize_by_quadrant
+        ne: Square
+          .canonicalize
             nw: @nn
             ne: @ne
             se: @ee
             sw: @cc
-        se: Square.cache
-          .canonicalize_by_quadrant
+        se: Square
+          .canonicalize
             nw: @cc
             ne: @ee
             se: @se
             sw: @ss
-        sw: Square.cache
-          .canonicalize_by_quadrant
+        sw: Square
+          .canonicalize
             nw: @ww
             ne: @cc
             se: @ss
@@ -468,7 +468,7 @@ RecursivelyComputableSquare = do ->
       #        ......
       #
       #     sw        se
-      Square.cache.canonicalize_by_quadrant
+      Square.canonicalize
         nw: overlapping_squares.nw.result()
         ne: overlapping_squares.ne.result()
         se: overlapping_squares.se.result()
