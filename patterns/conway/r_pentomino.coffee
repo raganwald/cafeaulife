@@ -10,8 +10,8 @@ r_pentomino = Life.Square.canonicalize [
 
 ( (start = r_pentomino, time = 8) ->
 
-  board = start.future(time).trim()
+  board = start.fast_forward_to_level(time).trim()
 
-  console?.log "#{board.generations} generations:\n\n#{board.result().crop_by(2)}"
+  console?.log board.result().toString()
 
 )()

@@ -25,16 +25,18 @@ describe 'time and space', ->
 
     it 'should move a block one step into the future', ->
 
-      expect( @still_life.future() ).toEqual( Life.Square.canonicalize [
-        [0, 0, 0, 0]
-        [0, 1, 1, 0]
-        [0, 1, 1, 0]
-        [0, 0, 0, 0]
-      ] )
+      expect( @still_life.fast_forward_to_level(2) ).toEqual(
+        Life.Square.canonicalize [
+          [0, 0, 0, 0]
+          [0, 1, 1, 0]
+          [0, 1, 1, 0]
+          [0, 0, 0, 0]
+        ]
+      )
 
     it 'should move an r-pentomino two steps into the future', ->
 
-      expect( @r_pentomino.future() ).toEqual( Life.Square.canonicalize [
+      expect( @r_pentomino.fast_forward_to_level(3) ).toEqual( Life.Square.canonicalize [
         [ 0, 0, 0, 0, 0, 0, 0, 0 ]
         [ 0, 0, 0, 0, 0, 0, 0, 0 ]
         [ 0, 0, 0, 1, 0, 0, 0, 0 ]

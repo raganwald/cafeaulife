@@ -12,9 +12,9 @@
 # a square depends very much on what surrounds it, and there is an algorithm for computing the future of a surface
 # tiled with squares.
 #
-# However, there is a special case that interests us, the futrue of a square that sits within an otherwise empty
+# However, there is a special case that interests us, the future of a square that sits within an otherwise empty
 # Life "Universe." When we build a Life pattern and run it into the future, we are specifically considering the
-# case where a sqaure is surrounded by empty squares and may grow beyond the boundaries of the initial square.
+# case where a square is surrounded by empty squares and may grow beyond the boundaries of the initial square.
 #
 # This module mixes special case functionality for computing the `future` of a square into `Square` and `Cell`.
 
@@ -161,6 +161,8 @@ exports.mixInto = ({Square, Cell}) ->
   #       ....|....
   #     sw         se
 
+  # ### Creating empty squares
+
   # We're ready to use this diagram to write a function for computing the future of a square. First, here're methods for making empty squares:
   _.extend Square.prototype,
     empty_copy: ->
@@ -175,9 +177,13 @@ exports.mixInto = ({Square, Cell}) ->
     empty_copy: ->
       Cell.Dead
 
-  # Now a function. It takes a square and calculates its future 2^(L-1) generations forward in time and
-  # at level L+1:
-  future = (square) ->
+  # ### Fast forwarding a square such that its maximuum bound expands one level
+
+  # Now a function. It takes a square and calculates its future 2^(L-1) generations forward in time.
+  # At the speed of light, that expands its maximum bound exactly one level. So a 2x2 square expands to
+  # 4x4 fast forwarding two generations, a 4x4 square expands to 8x8 fast forwarding four generations,
+  # and so forth.
+  fast_forward_one_level = (square) ->
 
     # an empty copy of our square
     vacant = square.empty_copy()
@@ -265,13 +271,21 @@ exports.mixInto = ({Square, Cell}) ->
     # Presto! Our four results are the future square we're after!
     Square.canonicalize(four_results)
 
+  # ### Fast forwarding a square such that it expands its maximum bound to any arbitrary level
+
   # Given the function that computes a square's future, we can apply
   # our function repeatedly to the future of our pattern. Given some
   # number `T` where `T >= L`, by applying `future(...)` `(T-L)` times,
-  # we move `2^(T+1) - 2^(L-1)` generations:
+  # we move forward `2^(T+1) - 2^(L-1)` generations.
+  #
+  # In essence, this method grows a pattern forward in time until its
+  # maximum bound is `T`. Not all patterns grow at the speed of light, so
+  # in many cases (all in Conway's Game of Life?) the pattern will not reach
+  # the edges of a square of level `T`, but in some games it could.
   _.extend Square.prototype,
-    future: (t = @level)->
-      _.reduce [@.level..t], future, this
+    fast_forward_to_level: (t = @level + 1) ->
+      throw 'cannot fast forward to a smaller square' unless t >= @level
+      _.reduce [@level..(t - 1)], fast_forward_one_level, this
 
 # ---
 #
