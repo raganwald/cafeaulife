@@ -47,7 +47,7 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
     .after 'initialize', ->
       @hash = @value
 
-  # Initialize a square's hash property to the cache's has function
+  # Initialize a square's hash property to the cache's hash function
   YouAreDaChef(Square)
     .after 'initialize', ->
       @hash = Square.cache.hash(this)

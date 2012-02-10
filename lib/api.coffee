@@ -60,7 +60,7 @@ exports.mixInto = ({Square, Cell}) ->
         ).join('\n')
       )
 
-  # ### Padding and cropping aquares
+  # ### Padding and cropping squares
   #
   # When displaying squares, it is sometimes convenient to crop them to a certain size or pad them with
   # dead cells to increase their size.

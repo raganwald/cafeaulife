@@ -21,7 +21,7 @@ exports ?= window or this
 class Cell
   constructor: (@value) ->
 
-    # A simple point-cut that allows us to apply advice to contructors.
+    # A simple point-cut that allows us to apply advice to constructors.
     @initialize.apply(this, arguments)
 
   # By default, do nothing
@@ -127,7 +127,7 @@ class Square
   # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
 
-    # A simple point-cut that allows us to apply advice to contructors.
+    # A simple point-cut that allows us to apply advice to constructors.
     @initialize.apply(this, arguments)
 
   # By default, do nothing
