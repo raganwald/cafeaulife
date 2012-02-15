@@ -6,32 +6,17 @@
 # HashLife implementation.
 
 # ### Baseline Setup
-
-# Cafe au Life uses [Underscore.js][u] extensively:
-#
-# [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
-
-# Play with Node and some browsers
 exports ?= window or this
 
 # ### Cells
 
-# The smallest unit of Life is the Cell:
+# The smallest unit of Life is the Cell. The constructor is set up to call an `initialize` method to make point-cuts slightly easier.
 class Cell
   constructor: (@value) ->
-
-    # A simple point-cut that allows us to apply advice to constructors.
     @initialize.apply(this, arguments)
-
-  # By default, do nothing
   initialize: ->
-  to_json: ->
-    [@value]
-  toValue: ->
-    @value
 
-# Export `Cell`
 _.defaults exports, {Cell}
 
 # ### Squares
@@ -120,20 +105,14 @@ _.defaults exports, {Cell}
 #
 # ### Representing squares
 
-# HashLife represents each unique square as a structure with four quadrants:
+# HashLife represents each unique square as a structure with four quadrants.
+# Squares are constructed from four quadrant squares or cells and store a hash used
+# to locate the square in the cache. As with `Cell`, the constructor is set up to call an `initialize` method to make point-cuts slightly easier.
 class Square
-
-  # Squares are constructed from four quadrant squares or cells and store a hash used
-  # to locate the square in the cache
   constructor: ({@nw, @ne, @se, @sw}) ->
-
-    # A simple point-cut that allows us to apply advice to constructors.
     @initialize.apply(this, arguments)
-
-  # By default, do nothing
   initialize: ->
 
-# Export `Square`
 _.defaults exports, {Square}
 
 # ### The Speed of Light
@@ -238,13 +217,13 @@ _.defaults exports, {Square}
 # to write out `.find` method to handle looking up squares of size eight and dealing with cache 'misses'
 # by constructing a new square.)
 
-# Our class will be a `RecursivelyComputableSquare`. We'll isolate helpers:
-RecursivelyComputableSquare = do ->
+# Our class will be a `RecursivelyComputableSquare`. We'll isolate helpers as we build our class.
+
 
 # We know how to obtain any square of size four using `cache.find`. So what we need is a way to compute
 # the result for any arbitrary square of size eight or larger from quadrant squares one level smaller.
 #
-
+#
 # Our goal is to compute a result that looks like this (the lines and crosses are part of the result):
 #
 #     nw        ne
@@ -257,15 +236,15 @@ RecursivelyComputableSquare = do ->
 #     sw        se
 #
 # Given that we know the result for each of those four squares, we can start building an intermediate result.
+# The constructor for `IntermediateResult` takes a square and constructs th epieces of an intermediate square,
+# one that is half way between the level of the square and the level of the square's eventual result.
+#
+# We'll step through that process in the constructor piece by piece.
+RecursivelyComputableSquare = do ->
 
-# The class for intermediate results:
   class IntermediateResult
 
-    # We construct an intermediate result from a square of size eight or larger
     constructor: (square) ->
-
-      # For convenience, we'll use Underscore's `extend` rather than a lot of assignments
-      # to @nw, @se, et cetera.
       _.extend this,
 
         # First, Let's look at our square of size eight made up of four component squares of size four (the lines
@@ -474,33 +453,33 @@ RecursivelyComputableSquare = do ->
         se: overlapping_squares.se.result()
         sw: overlapping_squares.sw.result()
 
-  # A `RecursivelyComputableSquare` is a square of size eight or larger
+  # A `RecursivelyComputableSquare` is a square of size eight or larger.
+  #
+  #
+  # When we fit the results of an intermediate square within our original square
+  # of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
+  #
+  #     nw        ne
+  #       ........
+  #       ........
+  #       ..nwne..
+  #       ..nwne..
+  #       ..swse..
+  #       ..swse..
+  #       ........
+  #       ........
+  #     sw        se
+  #
+  # The number of generation is double the number of generations of any of its quadrants.
+  # This can also be derived mathematically from the level: `math.pow(2, @level - 1)`
   class RecursivelyComputableSquare extends Square
     constructor: (quadrants) ->
       super(quadrants)
-
-      # When we fit the results of an intermediate square within our original square
-      # of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
-      #
-      #     nw        ne
-      #       ........
-      #       ........
-      #       ..nwne..
-      #       ..nwne..
-      #       ..swse..
-      #       ..swse..
-      #       ........
-      #       ........
-      #     sw        se
       @result = _.memoize( ->
         new IntermediateResult(this).result()
       )
-
-      # The number of generation is double the number of generations of any of its quadrants.
-      # This can also be derived mathematically from the level: `math.pow(2, @level - 1)`
       @generations = @nw.generations * 2
 
-# Export `RecursivelyComputableSquare`
 _.defaults exports, {RecursivelyComputableSquare}
 
 # ---
