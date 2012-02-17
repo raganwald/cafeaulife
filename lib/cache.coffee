@@ -41,74 +41,31 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
     .after 'initialize', ->
       @id = (counter += 1)
 
-  Square.cache =
+  _.extend Square,
 
-    buckets: {}
+    cache:
 
-    clear: ->
-      @buckets = {}
+      buckets: {}
 
-    find: ({nw, ne, se, sw}) ->
-      @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+      clear: ->
+        @buckets = {}
 
-    canonicalize_by_quadrant: (quadrants) ->
-      found = @find(quadrants)
+      bucketed: ->
+        _.size(@buckets)
+
+      find: ({nw, ne, se, sw}) ->
+        @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+
+      add: (square) ->
+        {nw, ne, se, sw} = square
+        @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
+
+    canonicalize: (quadrants) ->
+      found = @cache.find(quadrants)
       if found
         found
       else
-        @add(new RecursivelyComputableSquare(quadrants))
-
-    canonicalize_by_json: (json) ->
-      unless _.isArray(json[0]) and json[0].length is json.length
-        throw 'must be a square'
-      if json.length is 1
-        if json[0][0] instanceof Cell
-          json[0][0]
-        else if json[0][0] is 0
-          Cell.Dead
-        else if json[0][0] is 1
-          Cell.Alive
-        else
-          throw 'a 1x1 square must contain a zero, one, or Cell'
-      else
-        half_length = json.length / 2
-        @canonicalize_by_quadrant
-          nw: @canonicalize_by_json(
-            json.slice(0, half_length).map (row) ->
-              row.slice(0, half_length)
-          )
-          ne: @canonicalize_by_json(
-            json.slice(0, half_length).map (row) ->
-              row.slice(half_length)
-          )
-          se: @canonicalize_by_json(
-            json.slice(half_length).map (row) ->
-              row.slice(half_length)
-          )
-          sw: @canonicalize_by_json(
-            json.slice(half_length).map (row) ->
-              row.slice(0, half_length)
-          )
-
-    canonicalize: (params) ->
-      if _.isArray(params)
-        @canonicalize_by_json(params)
-      else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Cell) )
-        @canonicalize_by_quadrant params
-      else if _.all( ['nw', 'ne', 'se', 'sw'], ((quadrant) -> params[quadrant] instanceof Square) )
-        @canonicalize_by_quadrant params
-      else
-        throw "Cache can't handle #{JSON.stringify(params)}"
-
-    add: (square) ->
-      {nw, ne, se, sw} = square
-      @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
-
-    bucketed: ->
-      _.size(@buckets)
-
-  Square.canonicalize = (params) ->
-    @cache.canonicalize(params)
+        @cache.add(new RecursivelyComputableSquare(quadrants))
 
 # ---
 #

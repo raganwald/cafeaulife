@@ -41,7 +41,41 @@
         <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">@to_json</span><span class="p">(),</span> <span class="nf">(row) -&gt;</span>
           <span class="p">([</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">][</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">row</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Padding and cropping squares</h3>
+      <span class="p">)</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">,</span>
+    <span class="nv">from_json: </span><span class="nf">(json) -&gt;</span>
+      <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">and</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span> <span class="o">is</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span>
+        <span class="k">throw</span> <span class="s1">&#39;must be a square&#39;</span>
+      <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span>
+          <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">1</span>
+          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span>
+        <span class="k">else</span>
+          <span class="k">throw</span> <span class="s1">&#39;a 1x1 square must contain a zero, one, or Cell&#39;</span>
+      <span class="k">else</span>
+        <span class="nv">half_length = </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="err">/ 2</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+          <span class="nv">ne: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+          <span class="nv">se: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+          <span class="nv">sw: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+        </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Padding and cropping squares</h3>
 
 <p>When displaying squares, it is convenient to crop them to the smallest square that contains
 live cells.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>

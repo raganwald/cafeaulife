@@ -22,7 +22,7 @@ describe 'cafe au life', ->
 
     it 'gratuitously re-result the same thing many times', ->
 
-      sq = Life.Square.canonicalize([
+      sq = Life.Square.from_json([
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]
@@ -109,7 +109,7 @@ describe 'cafe au life', ->
 
       it 'should persist a block', ->
 
-        still_life = Life.Square.canonicalize [
+        still_life = Life.Square.from_json [
           [1, 1]
           [1, 1]
         ]
@@ -122,7 +122,7 @@ describe 'cafe au life', ->
 
       it 'should kill orphans', ->
 
-        orphans = Life.Square.canonicalize [
+        orphans = Life.Square.from_json [
           [0, 0]
           [1, 1]
         ]
@@ -135,12 +135,12 @@ describe 'cafe au life', ->
 
       it 'should birth a square with three neighbours', ->
 
-        parents = Life.Square.canonicalize [
+        parents = Life.Square.from_json [
           [0, 1]
           [1, 1]
         ]
 
-        block = Life.Square.canonicalize [
+        block = Life.Square.from_json [
           [1, 1]
           [1, 1]
         ]
@@ -153,32 +153,32 @@ describe 'cafe au life', ->
 
       beforeEach ->
         @blocks = [
-          Life.Square.canonicalize [
+          Life.Square.from_json [
             [1, 1]
             [1, 1]
           ]
         ]
 
         @boats = [
-          Life.Square.canonicalize [
+          Life.Square.from_json [
             [0, 1, 0, 0]
             [1, 0, 1, 0]
             [0, 1, 1, 0]
             [0, 0, 0, 0]
           ]
-          Life.Square.canonicalize [
+          Life.Square.from_json [
             [0, 0, 1, 0]
             [0, 1, 0, 1]
             [0, 1, 1, 0]
             [0, 0, 0, 0]
           ]
-          Life.Square.canonicalize [
+          Life.Square.from_json [
             [0, 0, 0, 0]
             [0, 1, 1, 0]
             [0, 1, 0, 1]
             [0, 0, 1, 0]
           ]
-          Life.Square.canonicalize [
+          Life.Square.from_json [
             [0, 0, 0, 0]
             [0, 1, 1, 0]
             [1, 0, 1, 0]
@@ -187,10 +187,10 @@ describe 'cafe au life', ->
         ]
 
       it 'should find identical blocks by number', ->
-        expect(Life.Square.canonicalize [
+        expect(Life.Square.from_json [
           [1, 1]
           [1, 1]
-        ]).toEqual(Life.Square.canonicalize [
+        ]).toEqual(Life.Square.from_json [
           [1, 1]
           [1, 1]
         ])
@@ -209,7 +209,7 @@ describe 'cafe au life', ->
           ne: Life.Cell.Alive
           se: Life.Cell.Alive
           sw: Life.Cell.Alive
-        ).toEqual(Life.Square.canonicalize [
+        ).toEqual(Life.Square.from_json [
           [1, 1]
           [1, 1]
         ])

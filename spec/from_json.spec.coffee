@@ -12,13 +12,13 @@ describe 'from_json', ->
 
     it 'should handle ones and zeroes', ->
 
-      expect( Life.Square.canonicalize [[1]] ).toEqual(Life.Cell.Alive)
+      expect( Life.Square.from_json [[1]] ).toEqual(Life.Cell.Alive)
 
-      expect( Life.Square.canonicalize [[0]] ).toEqual(Life.Cell.Dead)
+      expect( Life.Square.from_json [[0]] ).toEqual(Life.Cell.Dead)
 
     it 'should handle size two squares', ->
 
-      expect( Life.Square.canonicalize [[1, 0], [0, 1]] ).toEqual(
+      expect( Life.Square.from_json [[1, 0], [0, 1]] ).toEqual(
         Life.Square.canonicalize
           nw: Life.Cell.Alive
           ne: Life.Cell.Dead
@@ -28,7 +28,7 @@ describe 'from_json', ->
 
     it 'should handle size four squares', ->
 
-      expect( Life.Square.canonicalize [
+      expect( Life.Square.from_json [
         [0, 0, 0, 1]
         [0, 0, 1, 0]
         [0, 1, 0, 0]
@@ -57,7 +57,7 @@ describe 'from_json', ->
             sw: Life.Cell.Alive
       )
 
-      expect( Life.Square.canonicalize [
+      expect( Life.Square.from_json [
         [0, 0, 0, 0]
         [0, 0, 1, 0]
         [0, 1, 0, 0]

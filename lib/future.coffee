@@ -166,29 +166,28 @@ exports.mixInto = ({Square, Cell}) ->
         return this
       else
         empty_quadrant = @nw.empty_copy()
-        Square.cache
-          .canonicalize
-            nw: Square.cache.canonicalize
-              nw: empty_quadrant
-              ne: empty_quadrant
-              se: @nw
-              sw: empty_quadrant
-            ne: Square.cache.canonicalize
-              nw: empty_quadrant
-              ne: empty_quadrant
-              se: empty_quadrant
-              sw: @ne
-            se: Square.cache.canonicalize
-              nw: @se
-              ne: empty_quadrant
-              se: empty_quadrant
-              sw: empty_quadrant
-            sw: Square.cache.canonicalize
-              nw: empty_quadrant
-              ne: @sw
-              se: empty_quadrant
-              sw: empty_quadrant
-          .pad_by(extant - 1)
+        Square.canonicalize
+          nw: Square.canonicalize
+            nw: empty_quadrant
+            ne: empty_quadrant
+            se: @nw
+            sw: empty_quadrant
+          ne: Square.canonicalize
+            nw: empty_quadrant
+            ne: empty_quadrant
+            se: empty_quadrant
+            sw: @ne
+          se: Square.canonicalize
+            nw: @se
+            ne: empty_quadrant
+            se: empty_quadrant
+            sw: empty_quadrant
+          sw: Square.canonicalize
+            nw: empty_quadrant
+            ne: @sw
+            se: empty_quadrant
+            sw: empty_quadrant
+        .pad_by(extant - 1)
 
     future_at_time: (t) ->
       if t < 0

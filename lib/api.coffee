@@ -48,6 +48,39 @@ exports.mixInto = ({Square, Cell}) ->
         ).join('\n')
       )
 
+  _.extend Square,
+    from_json: (json) ->
+      unless _.isArray(json[0]) and json[0].length is json.length
+        throw 'must be a square'
+      if json.length is 1
+        if json[0][0] instanceof Cell
+          json[0][0]
+        else if json[0][0] is 0
+          Cell.Dead
+        else if json[0][0] is 1
+          Cell.Alive
+        else
+          throw 'a 1x1 square must contain a zero, one, or Cell'
+      else
+        half_length = json.length / 2
+        Square.canonicalize
+          nw: @from_json(
+            json.slice(0, half_length).map (row) ->
+              row.slice(0, half_length)
+          )
+          ne: @from_json(
+            json.slice(0, half_length).map (row) ->
+              row.slice(half_length)
+          )
+          se: @from_json(
+            json.slice(half_length).map (row) ->
+              row.slice(half_length)
+          )
+          sw: @from_json(
+            json.slice(half_length).map (row) ->
+              row.slice(0, half_length)
+          )
+        
   # ### Padding and cropping squares
   #
   # When displaying squares, it is convenient to crop them to the smallest square that contains

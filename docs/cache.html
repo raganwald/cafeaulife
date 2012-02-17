@@ -29,74 +29,31 @@ recursively computed terminating in a four-by-four square that has already been 
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
       <span class="vi">@id = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
 
-  <span class="nv">Square.cache =</span>
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">,</span>
 
-    <span class="nv">buckets: </span><span class="p">{}</span>
+    <span class="nv">cache:</span>
 
-    <span class="nv">clear: </span><span class="o">-&gt;</span>
-      <span class="vi">@buckets = </span><span class="p">{}</span>
+      <span class="nv">buckets: </span><span class="p">{}</span>
 
-    <span class="nv">find: </span><span class="nf">({nw, ne, se, sw}) -&gt;</span>
-      <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
+      <span class="nv">clear: </span><span class="o">-&gt;</span>
+        <span class="vi">@buckets = </span><span class="p">{}</span>
 
-    <span class="nv">canonicalize_by_quadrant: </span><span class="nf">(quadrants) -&gt;</span>
-      <span class="nv">found = </span><span class="nx">@find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
+      <span class="nv">bucketed: </span><span class="o">-&gt;</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">@buckets</span><span class="p">)</span>
+
+      <span class="nv">find: </span><span class="nf">({nw, ne, se, sw}) -&gt;</span>
+        <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
+
+      <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
+        <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">square</span>
+        <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+
+    <span class="nv">canonicalize: </span><span class="nf">(quadrants) -&gt;</span>
+      <span class="nv">found = </span><span class="nx">@cache</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
       <span class="k">if</span> <span class="nx">found</span>
         <span class="nx">found</span>
       <span class="k">else</span>
-        <span class="nx">@add</span><span class="p">(</span><span class="k">new</span> <span class="nx">RecursivelyComputableSquare</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span>
-
-    <span class="nv">canonicalize_by_json: </span><span class="nf">(json) -&gt;</span>
-      <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">and</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span> <span class="o">is</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span>
-        <span class="k">throw</span> <span class="s1">&#39;must be a square&#39;</span>
-      <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span>
-          <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">0</span>
-          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">1</span>
-          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span>
-        <span class="k">else</span>
-          <span class="k">throw</span> <span class="s1">&#39;a 1x1 square must contain a zero, one, or Cell&#39;</span>
-      <span class="k">else</span>
-        <span class="nv">half_length = </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="err">/ 2</span>
-        <span class="nx">@canonicalize_by_quadrant</span>
-          <span class="nv">nw: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
-          <span class="p">)</span>
-          <span class="nv">ne: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
-          <span class="p">)</span>
-          <span class="nv">se: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
-          <span class="p">)</span>
-          <span class="nv">sw: </span><span class="nx">@canonicalize_by_json</span><span class="p">(</span>
-            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
-              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
-          <span class="p">)</span>
-
-    <span class="nv">canonicalize: </span><span class="nf">(params) -&gt;</span>
-      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
-        <span class="nx">@canonicalize_by_json</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;nw&#39;</span><span class="p">,</span> <span class="s1">&#39;ne&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;sw&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nf">(quadrant) -&gt;</span> <span class="nx">params</span><span class="p">[</span><span class="nx">quadrant</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span><span class="p">)</span> <span class="p">)</span>
-        <span class="nx">@canonicalize_by_quadrant</span> <span class="nx">params</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="p">[</span><span class="s1">&#39;nw&#39;</span><span class="p">,</span> <span class="s1">&#39;ne&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;sw&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nf">(quadrant) -&gt;</span> <span class="nx">params</span><span class="p">[</span><span class="nx">quadrant</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Square</span><span class="p">)</span> <span class="p">)</span>
-        <span class="nx">@canonicalize_by_quadrant</span> <span class="nx">params</span>
-      <span class="k">else</span>
-        <span class="k">throw</span> <span class="s2">&quot;Cache can&#39;t handle #{JSON.stringify(params)}&quot;</span>
-
-    <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
-      <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">square</span>
-      <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
-
-    <span class="nv">bucketed: </span><span class="o">-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">@buckets</span><span class="p">)</span>
-
-  <span class="nv">Square.canonicalize = </span><span class="nf">(params) -&gt;</span>
-    <span class="nx">@cache</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <hr />
+        <span class="nx">@cache</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">RecursivelyComputableSquare</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 

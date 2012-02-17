@@ -153,29 +153,28 @@ base square's <code>result_at_time(t)</code> which gives us the future of our pa
         <span class="k">return</span> <span class="k">this</span>
       <span class="k">else</span>
         <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-        <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">@nw</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">@ne</span>
-            <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">@se</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">@sw</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-          <span class="p">.</span><span class="nx">pad_by</span><span class="p">(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">se: </span><span class="nx">@nw</span>
+            <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
+          <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">se: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">sw: </span><span class="nx">@ne</span>
+          <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@se</span>
+            <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">se: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
+          <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">ne: </span><span class="nx">@sw</span>
+            <span class="nv">se: </span><span class="nx">empty_quadrant</span>
+            <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
+        <span class="p">.</span><span class="nx">pad_by</span><span class="p">(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="nv">future_at_time: </span><span class="nf">(t) -&gt;</span>
       <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="mi">0</span>

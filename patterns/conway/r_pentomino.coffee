@@ -1,7 +1,7 @@
 Life = require('../../lib/cafeaulife')
 Life.Square.set_universe_rules [2,3],[3]
 
-r_pentomino = Life.Square.canonicalize [
+r_pentomino = Life.Square.from_json [
   [0, 0, 0, 0]
   [0, 1, 0, 0]
   [1, 1, 1, 0]
