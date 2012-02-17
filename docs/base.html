@@ -325,45 +325,45 @@ sw        se
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
   <span class="nv">intermediate_via_subresults: </span><span class="o">-&gt;</span>
     <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Intermediate</span>
-      <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+      <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result</span>
+      <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result</span>
+      <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result</span>
+      <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">result</span>
       <span class="nv">nn: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span>
           <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span>
           <span class="nv">se: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
           <span class="nv">sw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-        <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">result</span>
       <span class="nv">ee: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
           <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span>
           <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span>
           <span class="nv">sw: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-        <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">result</span>
       <span class="nv">ss: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
           <span class="nv">ne: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
           <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span>
           <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span>
-        <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">result</span>
       <span class="nv">ww: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">sw</span>
           <span class="nv">ne: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
           <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
           <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span>
-        <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">result</span>
       <span class="nv">cc: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
           <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
           <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
           <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
+        <span class="p">.</span><span class="nx">result</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
 <code>2^(n-.5). Given an intermediate square, we can make a square of size</code>2^(n-1)<code>that is forward in time of the
 intermediate square by taking the result of four overlapping squares, also of size</code>2^(n-1)`.</p>
 
@@ -441,14 +441,13 @@ forward <code>2^(n-2)</code> again, for a total advance of <code>2^(n-1)</code>)
 do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">RecursivelyComputableSquare</span> <span class="k">extends</span> <span class="nx">Square</span>
   <span class="nv">constructor: </span><span class="nf">(quadrants) -&gt;</span>
     <span class="k">super</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
-    <span class="vi">@result = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+    <span class="vi">@result = </span><span class="nx">do</span> <span class="o">=&gt;</span>
       <span class="nv">sub_squares = </span><span class="nx">@intermediate_via_subresults</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
       <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-        <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ne: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-    <span class="p">)</span>
+        <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span>
+        <span class="nv">ne: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span>
+        <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span>
+        <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span>
 
 <span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">RecursivelyComputableSquare</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <hr />
 

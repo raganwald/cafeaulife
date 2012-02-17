@@ -80,7 +80,7 @@ exports.mixInto = ({Square, Cell}) ->
             json.slice(half_length).map (row) ->
               row.slice(0, half_length)
           )
-        
+
   # ### Padding and cropping squares
   #
   # When displaying squares, it is convenient to crop them to the smallest square that contains
@@ -109,6 +109,15 @@ exports.mixInto = ({Square, Cell}) ->
         .trim()
       else
         this
+
+  # ### Querying squares
+  YouAreDaChef(Cell)
+    .after 'initialize', ->
+      @population = @value
+
+  YouAreDaChef(Square)
+    .after 'initialize', ->
+      @population = @nw.population + @ne.population + @se.population + @sw.population
 
 # ---
 #

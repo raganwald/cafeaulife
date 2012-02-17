@@ -21,8 +21,8 @@ raganwald@Reginald-Braithwaites-iMac[cafeaulife (master)⚡] coffee
 coffee> Life = require('./lib/cafeaulife').set_universe_rules()
 { Cell: 
    { [Function: Cell]
-     Alive: { value: 1, id: 1 },
-     Dead: { value: 0, id: 2 } },
+     Alive: { value: 1, id: 1, population: 1 },
+     Dead: { value: 0, id: 2, population: 0 } },
   Square: 
    { [Function: Square]
      Intermediate: [Function: Intermediate],
@@ -40,15 +40,15 @@ coffee> Life = require('./lib/cafeaulife').set_universe_rules()
      Intermediate: [Function: Intermediate],
      __super__: 
       { initialize: [Function],
-        intermediate_via_subresults: [Function],
-        intermediate_via_crop: [Function],
+        intermediate_via_subresults: [Functio
         result_at_time_zero: [Function],
         result_at_time: [Function],
         empty_copy: [Function],
         pad_by: [Function],
         future_at_time: [Function],
         trim: [Function] } },
-  set_universe_rules: [Function] }
+  set_universe_rules: [Function] }n],
+        intermediate_via_crop: [Function],
 ```
 Now you can try things on the command line:
 
@@ -59,52 +59,81 @@ coffee> r = Life.Square.from_json [ \
                 [1, 1, 1, 0]       \
                 [0, 0, 1, 0] ]
 { nw: 
-   { nw: { value: 0, hash: 0 },
-     ne: { value: 0, hash: 0 },
-     se: { value: 1, hash: 1 },
-     sw: { value: 0, hash: 0 },
-     hash: 79,
+   { nw: { value: 0, id: 2, population: 0 },
+     ne: { value: 0, id: 2, population: 0 },
+     se: { value: 1, id: 1, population: 1 },
+     sw: { value: 0, id: 2, population: 0 },
+     id: 7,
      level: 1,
+     subsquares_via_crop: [Function],
+     subsquares_via_subresults: [Function],
      to_json: [Function],
      toString: [Function],
-     isEmpty: [Function] },
+     isEmpty: [Function],
+     population: 1 },
   ne: 
-   { nw: { value: 0, hash: 0 },
-     ne: { value: 0, hash: 0 },
-     se: { value: 0, hash: 0 },
-     sw: { value: 0, hash: 0 },
-     hash: 0,
+   { nw: { value: 0, id: 2, population: 0 },
+     ne: { value: 0, id: 2, population: 0 },
+     se: { value: 0, id: 2, population: 0 },
+     sw: { value: 0, id: 2, population: 0 },
+     id: 3,
      level: 1,
+     subsquares_via_crop: [Function],
+     subsquares_via_subresults: [Function],
      to_json: [Function],
      toString: [Function],
-     isEmpty: [Function] },
+     isEmpty: [Function],
+     population: 0 },
   se: 
-   { nw: { value: 1, hash: 1 },
-     ne: { value: 0, hash: 0 },
-     se: { value: 0, hash: 0 },
-     sw: { value: 1, hash: 1 },
-     hash: 38,
+   { nw: { value: 1, id: 1, population: 1 },
+     ne: { value: 0, id: 2, population: 0 },
+     se: { value: 0, id: 2, population: 0 },
+     sw: { value: 1, id: 1, population: 1 },
+     id: 12,
      level: 1,
+     subsquares_via_crop: [Function],
+     subsquares_via_subresults: [Function],
      to_json: [Function],
      toString: [Function],
-     isEmpty: [Function] },
+     isEmpty: [Function],
+     population: 2 },
   sw: 
-   { nw: { value: 1, hash: 1 },
-     ne: { value: 1, hash: 1 },
-     se: { value: 0, hash: 0 },
-     sw: { value: 0, hash: 0 },
-     hash: 4,
+   { nw: { value: 1, id: 1, population: 1 },
+     ne: { value: 1, id: 1, population: 1 },
+     se: { value: 0, id: 2, population: 0 },
+     sw: { value: 0, id: 2, population: 0 },
+     id: 6,
      level: 1,
+     subsquares_via_crop: [Function],
+     subsquares_via_subresults: [Function],
      to_json: [Function],
      toString: [Function],
-     isEmpty: [Function] },
-  hash: 3229,
+     isEmpty: [Function],
+     population: 2 },
+  id: 14615,
   level: 2,
+  subsquares_via_crop: [Function],
+  subsquares_via_subresults: [Function],
   to_json: [Function],
   toString: [Function],
   isEmpty: [Function],
-  result: [Function] }
-coffee> console?.log r.future_at_time(100).trim().toString()
+  population: 5,
+  result: 
+   { nw: { value: 1, id: 1, population: 1 },
+     ne: { value: 1, id: 1, population: 1 },
+     se: { value: 1, id: 1, population: 1 },
+     sw: { value: 0, id: 2, population: 0 },
+     id: 10,
+     level: 1,
+     subsquares_via_crop: [Function],
+     subsquares_via_subresults: [Function],
+     to_json: [Function],
+     toString: [Function],
+     isEmpty: [Function],
+     population: 3 } }
+coffee>  r.future_at_time(1073741824).population
+116
+coffee>
 ```
 
 Have fun!

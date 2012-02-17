@@ -348,45 +348,45 @@ class Square.Intermediate
 _.extend Square.prototype,
   intermediate_via_subresults: ->
     new Square.Intermediate
-      nw: @nw.result()
-      ne: @ne.result()
-      se: @se.result()
-      sw: @sw.result()
+      nw: @nw.result
+      ne: @ne.result
+      se: @se.result
+      sw: @sw.result
       nn: Square
         .canonicalize
           nw: @nw.ne
           ne: @ne.nw
           se: @ne.sw
           sw: @nw.se
-        .result()
+        .result
       ee: Square
         .canonicalize
           nw: @ne.sw
           ne: @ne.se
           se: @se.ne
           sw: @se.nw
-        .result()
+        .result
       ss: Square
         .canonicalize
           nw: @sw.ne
           ne: @se.nw
           se: @se.sw
           sw: @sw.se
-        .result()
+        .result
       ww: Square
         .canonicalize
           nw: @nw.sw
           ne: @nw.se
           se: @sw.ne
           sw: @sw.nw
-        .result()
+        .result
       cc: Square
         .canonicalize
           nw: @nw.se
           ne: @ne.sw
           se: @se.nw
           sw: @sw.ne
-        .result()
+        .result
 
 # ### Making a Square from an Intermediate Square
 
@@ -470,14 +470,13 @@ _.extend Square.Intermediate.prototype,
 class RecursivelyComputableSquare extends Square
   constructor: (quadrants) ->
     super(quadrants)
-    @result = _.memoize( ->
+    @result = do =>
       sub_squares = @intermediate_via_subresults().sub_squares()
       Square.canonicalize
-        nw: sub_squares.nw.result()
-        ne: sub_squares.ne.result()
-        se: sub_squares.se.result()
-        sw: sub_squares.sw.result()
-    )
+        nw: sub_squares.nw.result
+        ne: sub_squares.ne.result
+        se: sub_squares.se.result
+        sw: sub_squares.sw.result
 
 _.defaults exports, {RecursivelyComputableSquare}
 

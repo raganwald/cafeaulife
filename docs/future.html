@@ -94,7 +94,16 @@ sw        se
 of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
 we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
 start by generating the intermediate square from results. If it's less than half, we start by generating
-the intermediate squre by cropping.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+the intermediate squre by cropping.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+      <span class="vi">@subsquares_via_crop = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+        <span class="nx">@intermediate_via_crop</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
+      <span class="p">)</span>
+      <span class="vi">@subsquares_via_subresults = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+        <span class="nx">@intermediate_via_subresults</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
+      <span class="p">)</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">result_at_time_zero: </span><span class="o">-&gt;</span>
       <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
         <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
@@ -107,14 +116,14 @@ the intermediate squre by cropping.</p>             </td>             <td class=
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">0</span>
         <span class="nx">@result_at_time_zero</span><span class="p">()</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="nv">sub_squares = </span><span class="nx">@intermediate_via_crop</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
+        <span class="nv">sub_squares = </span><span class="nx">@subsquares_via_crop</span><span class="p">()</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
           <span class="nv">ne: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
           <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
           <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="nv">sub_squares = </span><span class="nx">@intermediate_via_subresults</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
+        <span class="nv">sub_squares = </span><span class="nx">@subsquares_via_subresults</span><span class="p">()</span>
         <span class="nv">t_remaining = </span><span class="nx">t</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
@@ -122,7 +131,7 @@ the intermediate squre by cropping.</p>             </td>             <td class=
           <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
           <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="nx">@result</span><span class="p">()</span>
+        <span class="nx">@result</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">throw</span> <span class="s2">&quot;I can&#39;t go further forward than #{Math.pow(2, @level - 2)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Computing the future of a square</h3>
 

@@ -104,6 +104,16 @@ exports.mixInto = ({Square, Cell}) ->
   # we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
   # start by generating the intermediate square from results. If it's less than half, we start by generating
   # the intermediate squre by cropping.
+
+  YouAreDaChef(Square)
+    .after 'initialize', ->
+      @subsquares_via_crop = _.memoize( ->
+        @intermediate_via_crop().sub_squares()
+      )
+      @subsquares_via_subresults = _.memoize( ->
+        @intermediate_via_subresults().sub_squares()
+      )
+
   _.extend Square.prototype,
     result_at_time_zero: ->
       Square.canonicalize
@@ -117,14 +127,14 @@ exports.mixInto = ({Square, Cell}) ->
       else if t is 0
         @result_at_time_zero()
       else if t <= Math.pow(2, @level - 3)
-        sub_squares = @intermediate_via_crop().sub_squares()
+        sub_squares = @subsquares_via_crop()
         Square.canonicalize
           nw: sub_squares.nw.result_at_time(t)
           ne: sub_squares.ne.result_at_time(t)
           se: sub_squares.se.result_at_time(t)
           sw: sub_squares.sw.result_at_time(t)
       else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
-        sub_squares = @intermediate_via_subresults().sub_squares()
+        sub_squares = @subsquares_via_subresults()
         t_remaining = t - Math.pow(2, @level - 3)
         Square.canonicalize
           nw: sub_squares.nw.result_at_time(t_remaining)
@@ -132,7 +142,7 @@ exports.mixInto = ({Square, Cell}) ->
           se: sub_squares.se.result_at_time(t_remaining)
           sw: sub_squares.sw.result_at_time(t_remaining)
       else if t is Math.pow(2, @level - 2)
-        @result()
+        @result
       else if t > Math.pow(2, @level - 2)
         throw "I can't go further forward than #{Math.pow(2, @level - 2)}"
 
