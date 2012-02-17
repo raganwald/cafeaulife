@@ -7,6 +7,7 @@
 
 # ### Baseline Setup
 _ = require('underscore')
+YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 exports ?= window or this
 
 # ### Cells
@@ -477,7 +478,6 @@ class RecursivelyComputableSquare extends Square
         se: sub_squares.se.result()
         sw: sub_squares.sw.result()
     )
-    @generations = @nw.generations * 2
 
 _.defaults exports, {RecursivelyComputableSquare}
 

@@ -19,29 +19,12 @@
 # This module mixes special case functionality for computing the `future` of a square into `Square` and `Cell`.
 
 # ### Baseline Setup
-
-# Cafe au Life uses [Underscore.js][u] extensively:
-#
-# [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
-
-# YouAreDaChef provides a nice clean set of semantics for AOP
 YouAreDaChef = require('YouAreDaChef').YouAreDaChef
-
-# Play with Node and some browsers
 exports ?= window or this
 
-# ### Mix the functionality into `Square` and `Cell`
 
 exports.mixInto = ({Square, Cell}) ->
-
-  YouAreDaChef(Square)
-    .after 'initialize', ->
-      @level = @nw.level + 1
-
-  _.extend Cell.prototype,
-    level:
-      0
 
   # ### Computing a result for a time less than `T+2^(n-1)`
   #
@@ -59,6 +42,14 @@ exports.mixInto = ({Square, Cell}) ->
   #       .swssse.
   #       ........
   #     sw        se
+  YouAreDaChef(Square)
+    .after 'initialize', ->
+      @level = @nw.level + 1
+
+  _.extend Cell.prototype,
+    level:
+      0
+
   _.extend Square.prototype,
     intermediate_via_crop: ->
       new Square.Intermediate

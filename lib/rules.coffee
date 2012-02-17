@@ -28,17 +28,16 @@
 # [Replicator](http://www.conwaylife.com/wiki/Replicator_(CA))
 
 # ### Baseline Setup
-
-# Cafe au Life uses [Underscore.js][u] extensively:
-#
-# [u]: http://documentcloud.github.com/underscore/
 _ = require('underscore')
-
-# Play with Node and some browsers
+YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 exports ?= window or this
 
 # A handy function for generating quadrants that are the cartesian products of a collection
-# multiplied by itself once for each quadrant.
+# multiplied by itself once for each quadrant, and another function for turning any array or object into a dictionary function.
+#
+# (see also: [Reusable Abstractions in CoffeeScript][reuse])
+#
+# [reuse]: https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme
 cartesian_product = (collection) ->
   _.reduce(
     _.reduce(
@@ -47,36 +46,27 @@ cartesian_product = (collection) ->
     , (x, y) -> x.concat(y))
   , (x, y) -> x.concat(y))
 
-# A function for turning any array or object into a dictionary function
-#
-# (see also: [Reusable Abstractions in CoffeeScript][reuse])
-#
-# [reuse]: https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme
 dfunc = (dictionary) ->
   (indices...) ->
     indices.reduce (a, i) ->
       a[i]
     , dictionary
 
-# ### Mix the functionality into `Square` and `Cell`
 
 exports.mixInto = ({Square, Cell}) ->
+
   Square.set_universe_rules = (survival = [2,3], birth = [3]) ->
 
-    # The two canonical cells.
     Cell.Alive ?= new Cell(1)
     Cell.Dead  ?= new Cell(0)
 
-    # Bail if we are given the same rules and already have generated the expected number of seeds
     return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
 
-    # The rules expressed as a dictionary function
     rule = dfunc [
       (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
       (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
     ]
 
-    # successfor function for any cell
     succ = (cells, row, col) ->
       current_state = cells[row][col]
       neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
@@ -90,13 +80,6 @@ exports.mixInto = ({Square, Cell}) ->
     class SeedSquare extends Square
       constructor: (params) ->
         super(params)
-
-        # Seed squares compute a result one generation into the future. (We will see later that
-        # larger squares results more generations into the future.)
-        @generations = 1
-
-        # `result` calculates the inner result square. The method
-        # is memoized.
         @result = _.memoize(
           ->
             a = @to_json()
@@ -107,7 +90,6 @@ exports.mixInto = ({Square, Cell}) ->
               sw: succ(a, 2,1)
         )
 
-    # Clear the cache out
     Square.cache.clear()
 
     # The canonical 2x2 squares are initialized from the cartesian product
@@ -134,7 +116,6 @@ exports.mixInto = ({Square, Cell}) ->
     cartesian_product(all_2x2_squares).forEach (quadrants) ->
       Square.cache.add new SeedSquare(quadrants)
 
-    # Put the rules in the cache and return them.
     Square.cache.current_rules = {survival, birth}
 
 # ---
