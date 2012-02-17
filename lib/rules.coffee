@@ -53,70 +53,75 @@ dfunc = (dictionary) ->
     , dictionary
 
 
-exports.mixInto = ({Square, Cell}) ->
+exports.mixInto = (exports) ->
 
-  Square.set_universe_rules = (survival = [2,3], birth = [3]) ->
+  {Square, Cell} = exports
 
-    Cell.Alive ?= new Cell(1)
-    Cell.Dead  ?= new Cell(0)
+  _.defaults exports,
+    set_universe_rules: (survival = [2,3], birth = [3]) ->
 
-    return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
+      Cell.Alive ?= new Cell(1)
+      Cell.Dead  ?= new Cell(0)
 
-    rule = dfunc [
-      (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
-      (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
-    ]
+      return Square.cache.current_rules if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
 
-    succ = (cells, row, col) ->
-      current_state = cells[row][col]
-      neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
-        cells[row-1][col+1] + cells[row][col-1] +
-        cells[row][col+1] + cells[row+1][col-1] +
-        cells[row+1][col] + cells[row+1][col+1]
-      rule(current_state, neighbour_count)
+      rule = dfunc [
+        (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+        (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+      ]
 
-    # A SeedSquare knows how to calculate its own result from
-    # the rules
-    class SeedSquare extends Square
-      constructor: (params) ->
-        super(params)
-        @result = _.memoize(
-          ->
-            a = @to_json()
-            Square.cache.find
-              nw: succ(a, 1,1)
-              ne: succ(a, 1,2)
-              se: succ(a, 2,2)
-              sw: succ(a, 2,1)
-        )
+      succ = (cells, row, col) ->
+        current_state = cells[row][col]
+        neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
+          cells[row-1][col+1] + cells[row][col-1] +
+          cells[row][col+1] + cells[row+1][col-1] +
+          cells[row+1][col] + cells[row+1][col+1]
+        rule(current_state, neighbour_count)
 
-    Square.cache.clear()
+      # A SeedSquare knows how to calculate its own result from
+      # the rules
+      class SeedSquare extends Square
+        constructor: (params) ->
+          super(params)
+          @result = _.memoize(
+            ->
+              a = @to_json()
+              Square.cache.find
+                nw: succ(a, 1,1)
+                ne: succ(a, 1,2)
+                se: succ(a, 2,2)
+                sw: succ(a, 2,1)
+          )
 
-    # The canonical 2x2 squares are initialized from the cartesian product
-    # of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
-    # possible 2x2 squares.
-    #
-    # 2x2 squares do not compute results
-    all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
-      Square.cache.add new Square(quadrants)
+      Square.cache.clear()
 
-    # The canonical 4x4 squares are initialized from the cartesian product of
-    # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
-    # gives 65,536 possible 4x4 squares.
-    #
-    # 4x4 squares know how to compute their 2x2 results, and as we saw above, they
-    # memoize those results so that they are only computed once. (A variation of
-    # memoizing the result computation is to compute it when generating the 4x4 square,
-    # thus "compiling" the supplied rules into a table of 65,536 rules taht is looked
-    # up at runtime.)
-    #
-    # We will see below that all larger squares compute their results by recursively
-    # combining the results of smaller squares, so therefore all such computations
-    # will terminate when they reach a square of size 4x4.
-    cartesian_product(all_2x2_squares).forEach (quadrants) ->
-      Square.cache.add new SeedSquare(quadrants)
+      # The canonical 2x2 squares are initialized from the cartesian product
+      # of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
+      # possible 2x2 squares.
+      #
+      # 2x2 squares do not compute results
+      all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
+        Square.cache.add new Square(quadrants)
 
-    Square.cache.current_rules = {survival, birth}
+      # The canonical 4x4 squares are initialized from the cartesian product of
+      # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
+      # gives 65,536 possible 4x4 squares.
+      #
+      # 4x4 squares know how to compute their 2x2 results, and as we saw above, they
+      # memoize those results so that they are only computed once. (A variation of
+      # memoizing the result computation is to compute it when generating the 4x4 square,
+      # thus "compiling" the supplied rules into a table of 65,536 rules taht is looked
+      # up at runtime.)
+      #
+      # We will see below that all larger squares compute their results by recursively
+      # combining the results of smaller squares, so therefore all such computations
+      # will terminate when they reach a square of size 4x4.
+      cartesian_product(all_2x2_squares).forEach (quadrants) ->
+        Square.cache.add new SeedSquare(quadrants)
+
+      Square.cache.current_rules = {survival, birth}
+
+      exports
 
 # ---
 #

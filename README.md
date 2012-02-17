@@ -18,18 +18,21 @@ The easiest way to try Cafe au Life is to clone the repository, then use CoffeeS
 
 ```bash
 raganwald@Reginald-Braithwaites-iMac[cafeaulife (master)⚡] coffee
-coffee> Life = require('./lib/cafeaulife')
-{ Cell: [Function: Cell],
+coffee> Life = require('./lib/cafeaulife').set_universe_rules()
+{ Cell: 
+   { [Function: Cell]
+     Alive: { value: 1, id: 1 },
+     Dead: { value: 0, id: 2 } },
   Square: 
    { [Function: Square]
      Intermediate: [Function: Intermediate],
-     set_universe_rules: [Function],
      cache: 
-      { buckets: {},
+      { buckets: [Object],
         clear: [Function],
         bucketed: [Function],
         find: [Function],
-        add: [Function] },
+        add: [Function],
+        current_rules: [Object] },
      canonicalize: [Function],
      from_json: [Function] },
   RecursivelyComputableSquare: 
@@ -44,21 +47,17 @@ coffee> Life = require('./lib/cafeaulife')
         empty_copy: [Function],
         pad_by: [Function],
         future_at_time: [Function],
-        trim: [Function] } } }
-coffee> Life.Square.set_universe_rules()
-{ survival: [ 2, 3 ],
-  birth: [ 3 ] }
-coffee> 
+        trim: [Function] } },
+  set_universe_rules: [Function] }
 ```
 Now you can try things on the command line:
 
 ```bash
-coffee> r = Life.Square.canonicalize [ \
-......>         [0, 0, 0, 0]       \
-......>         [0, 1, 0, 0]       \
-......>         [1, 1, 1, 0]       \
-......>         [0, 0, 1, 0]       \
-......>       ]
+coffee> r = Life.Square.from_json [ \
+                [0, 0, 0, 0]       \
+                [0, 1, 0, 0]       \
+                [1, 1, 1, 0]       \
+                [0, 0, 1, 0] ]
 { nw: 
    { nw: { value: 0, hash: 0 },
      ne: { value: 0, hash: 0 },
@@ -104,7 +103,6 @@ coffee> r = Life.Square.canonicalize [ \
   to_json: [Function],
   toString: [Function],
   isEmpty: [Function],
-  generations: 1,
   result: [Function] }
 coffee> console?.log r.future_at_time(100).trim().toString()
 ```

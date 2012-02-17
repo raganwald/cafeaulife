@@ -6,7 +6,7 @@ Life = require('../lib/cafeaulife')
 describe 'from_json', ->
   
   beforeEach ->
-    Life.Square.set_universe_rules()
+    Life.set_universe_rules()
 
   describe 'cells', ->
 
