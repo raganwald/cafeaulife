@@ -59,36 +59,30 @@
 
 # ## How
 
-# Cafe au Life is divided into three modules. Each modules' title is a link to its annotated source code.:
-
-# The [Base Module][base] provides the `Cell` and `Square` classes, including `RecursivelyComputableSquare`, the foundation of the
+# Cafe au Life is divided into modules:
+#
+# * The [Base Module][base] provides the `Cell` and `Square` classes, including `RecursivelyComputableSquare`, the foundation of the
 # HashLife implementation.
+# * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
+# * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
+# components.
+# * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
+# the size of its container square.
+# * And the [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
+#
+# [api]: http:api.html
+# [future]: http:future.html
+# [cache]: http:cache.html
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
+# [rules]: http:rules.html
+# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 #
 # [base]: http:base.html
 module.exports = require('./base')
 
-# The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
-#
-# [rules]: http:rules.html
-# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 require('./rules').mixInto(module.exports)
-
-# HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
-# components. The [Cache Module][cache] implementss a very naive hash-table for canoncial representations of squares.
-#
-# [cache]: http:cache.html
-# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 require('./cache').mixInto(module.exports)
-
-# The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
-# the size of its container square.
-#
-# [future]: http:future.html
 require('./future').mixInto(module.exports)
-
-# The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
-#
-# [api]: http:api.html
 require('./api').mixInto(module.exports)
 
 # ## Who
