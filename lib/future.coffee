@@ -199,22 +199,6 @@ exports.mixInto = ({Square, Cell}) ->
         base = @pad_by Math.ceil(Math.log(t) / Math.log(2)) + 1
         base.result_at_time(t)
 
-    # ### Autocrop
-    #
-    # For human consumption, it can be nice to produce a copy of a square with the excess
-    # trimmed.
-    crop: ->
-
-      return this if extant is 0
-      Square.cache.find_or_create_by_quadrant(
-        _.reduce [0..(extant - 1)], (quadrants) ->
-          nw: quadrants.nw.se
-          ne: quadrants.ne.sw
-          se: quadrants.se.nw
-          sw: quadrants.sw.ne
-        , this
-      )
-
 # ---
 #
 # **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))

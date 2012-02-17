@@ -50,7 +50,6 @@ coffee> Life = require('./lib/cafeaulife')
         empty_copy: [Function],
         pad_by: [Function],
         future_at_time: [Function],
-        crop: [Function],
         trim: [Function] } } }
 coffee> Life.Square.set_universe_rules()
 { survival: [ 2, 3 ],
