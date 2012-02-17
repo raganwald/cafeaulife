@@ -83,68 +83,13 @@ exports.mixInto = ({Square, Cell}) ->
       if @nw?.sw?.isEmpty() and @nw.nw.isEmpty() and @nw.ne.isEmpty() and \
          @ne.nw.isEmpty() and @ne.ne.isEmpty() and @ne.se.isEmpty() and \
          @se.ne.isEmpty() and @se.se.isEmpty() and @se.sw.isEmpty() and \
-         @sw.se.isEmpty() and @sw.sw.isEmpty() and @sw.ne.isEmpty()
+         @sw.se.isEmpty() and @sw.sw.isEmpty() and @sw.nw.isEmpty()
         Square.canonicalize
           nw: @nw.se
           ne: @ne.sw
           se: @se.nw
           sw: @sw.ne
         .trim()
-      else
-        this
-
-  _.extend Square.prototype,
-
-    # Find or create a smaller square centered on this square
-    crop_by: (extant) ->
-      return this if extant is 0
-      Square.canonicalize(
-        _.reduce [0..(extant - 1)], (quadrants) ->
-          nw: quadrants.nw.se
-          ne: quadrants.ne.sw
-          se: quadrants.se.nw
-          sw: quadrants.sw.ne
-        , this
-      )
-
-    # Find or create a larger square centered on this square with
-    # the excess composed of empty squares
-    pad_by: (extant) ->
-      if extant is 0
-        return this
-      else
-        empty_quadrant = @nw.empty_copy()
-        Square
-          .canonicalize
-            nw: Square.canonicalize
-              nw: empty_quadrant
-              ne: empty_quadrant
-              se: @nw
-              sw: empty_quadrant
-            ne: Square.canonicalize
-              nw: empty_quadrant
-              ne: empty_quadrant
-              se: empty_quadrant
-              sw: @ne
-            se: Square.canonicalize
-              nw: @se
-              ne: empty_quadrant
-              se: empty_quadrant
-              sw: empty_quadrant
-            sw: Square.canonicalize
-              nw: empty_quadrant
-              ne: @sw
-              se: empty_quadrant
-              sw: empty_quadrant
-          .pad_by(extant - 1)
-
-    # Resize to a given level, cropping or padding as necessary
-    resize_to: (level) ->
-      this_level = @level
-      if level > this_level
-        @pad_by(level - this_level)
-      else if level < this_level
-        @crop_by(this_level - level)
       else
         this
 

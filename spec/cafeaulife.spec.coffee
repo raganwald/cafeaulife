@@ -18,31 +18,20 @@ describe 'cafe au life', ->
   beforeEach ->
     Life.Square.set_universe_rules()
 
-  describe '.empty', ->
-
-    beforeEach ->
-      @foursq = Life.Square.canonicalize([
-        [0, 0, 0, 0]
-        [0, 1, 0, 0]
-        [0, 0, 1, 0]
-        [0, 0, 0, 0]
-      ]).empty_copy()
-
-    it 'should be a resulting square', ->
-
-      expect(@foursq).toRespondTo('result')
-
-    it 'should be a resulting square after inflation', ->
-
-      expect(@foursq.pad_by(1)).toRespondTo('result')
-
-
   describe '_.memoize', ->
 
     it 'gratuitously re-result the same thing many times', ->
 
-      sq = Life.Square.canonicalize([[1, 0], [0, 1]])
-        .pad_by(2)
+      sq = Life.Square.canonicalize([
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 1, 0, 0, 0, 0]
+        [0, 0, 0, 0, 1, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+      ])
       sq.result()
 
       number_bucketed = Life.Square.cache.bucketed()
@@ -115,96 +104,6 @@ describe 'cafe au life', ->
 
         expect(@size_eight_empties.result()).toEqual(@size_four_empties)
 
-
-    describe 'inflation', ->
-
-      beforeEach ->
-        @two_by_two = Life.Square.canonicalize [
-          [1, 0]
-          [0, 1]
-        ]
-
-      it 'should not inflate cells', ->
-
-        expect(Life.Cell.Alive).not.toRespondTo('pad_by')
-
-      it 'should inflate 2x2 at zero level to itself', ->
-
-        expect(@two_by_two.pad_by(0)).toEqual(Life.Square.canonicalize [
-          [1, 0]
-          [0, 1]
-        ])
-
-      it 'should inflate 2x2 at one level to double itself', ->
-
-        expect(@two_by_two.pad_by(1).to_json()).toEqual([
-          [0, 0, 0, 0]
-          [0, 1, 0, 0]
-          [0, 0, 1, 0]
-          [0, 0, 0, 0]
-        ])
-
-      it 'should inflate 2x2 at two levels to quadruple itself', ->
-
-        expect(@two_by_two.pad_by(2).to_json()).toEqual([
-          [0, 0, 0, 0, 0, 0, 0, 0]
-          [0, 0, 0, 0, 0, 0, 0, 0]
-          [0, 0, 0, 0, 0, 0, 0, 0]
-          [0, 0, 0, 1, 0, 0, 0, 0]
-          [0, 0, 0, 0, 1, 0, 0, 0]
-          [0, 0, 0, 0, 0, 0, 0, 0]
-          [0, 0, 0, 0, 0, 0, 0, 0]
-          [0, 0, 0, 0, 0, 0, 0, 0]
-        ])
-
-    describe 'deflation', ->
-
-      beforeEach ->
-        @square = Life.Square.canonicalize [
-          [0, 0, 0, 0, 0, 0, 0, 1]
-          [0, 1, 0, 0, 0, 0, 0, 0]
-          [0, 0, 0, 0, 0, 1, 0, 0]
-          [0, 0, 0, 1, 0, 0, 0, 0]
-          [1, 1, 1, 0, 1, 1, 0, 0]
-          [1, 0, 0, 1, 0, 1, 0, 0]
-          [1, 0, 0, 1, 0, 1, 1, 1]
-          [0, 1, 1, 1, 0, 0, 0, 1]
-        ]
-
-      it 'should have a zero deflation', ->
-
-        expect( @square.crop_by(0) ).toEqual(
-          Life.Square.canonicalize [
-            [0, 0, 0, 0, 0, 0, 0, 1]
-            [0, 1, 0, 0, 0, 0, 0, 0]
-            [0, 0, 0, 0, 0, 1, 0, 0]
-            [0, 0, 0, 1, 0, 0, 0, 0]
-            [1, 1, 1, 0, 1, 1, 0, 0]
-            [1, 0, 0, 1, 0, 1, 0, 0]
-            [1, 0, 0, 1, 0, 1, 1, 1]
-            [0, 1, 1, 1, 0, 0, 0, 1]
-          ]
-        )
-
-      it 'should deflate by one', ->
-
-        expect( @square.crop_by(1) ).toEqual(
-          Life.Square.canonicalize [
-            [0, 0, 0, 1]
-            [0, 1, 0, 0]
-            [1, 0, 1, 1]
-            [0, 1, 0, 1]
-          ]
-        )
-
-      it 'should deflate by two', ->
-
-        expect( @square.crop_by(2) ).toEqual(
-          Life.Square.canonicalize [
-            [1, 0]
-            [0, 1]
-          ]
-        )
 
     describe 'progress', ->
 

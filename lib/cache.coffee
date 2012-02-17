@@ -56,7 +56,7 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
   Square.cache =
 
     # chosen from http://primes.utm.edu/lists/small/10000.txt. Probably should be > 65K
-    num_buckets: 99991
+    num_buckets: 7919
     buckets: []
 
     clear: ->
@@ -67,7 +67,10 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
       if square_like.hash?
         square_like.hash
       else
-        ((3 *@hash(square_like.nw)) + (37 * @hash(square_like.ne))  + (79 * @hash(square_like.se)) + (131 * @hash(square_like.sw)))
+        ((@hash(square_like.nw)) + (3 * @hash(square_like.ne))  + (79 * @hash(square_like.se)) + (37 * @hash(square_like.sw))) % 99991
+
+    hash_string: (square_like) ->
+      @hash(square_like).toString()
 
     # `find` locates a square in the cache if it exists
     find: (quadrants) ->

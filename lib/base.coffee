@@ -218,8 +218,7 @@ _.defaults exports, {Square}
 # by constructing a new square.)
 
 # Our class will be a `RecursivelyComputableSquare`. We'll isolate helpers as we build our class.
-
-
+#
 # We know how to obtain any square of size four using `cache.find`. So what we need is a way to compute
 # the result for any arbitrary square of size eight or larger from quadrant squares one level smaller.
 #
@@ -240,245 +239,245 @@ _.defaults exports, {Square}
 # one that is half way between the level of the square and the level of the square's eventual result.
 #
 # We'll step through that process in the constructor piece by piece.
-RecursivelyComputableSquare = do ->
+#
 
-  class IntermediateResult
+# ### Making an Intermediate Square from a Square
 
-    constructor: (square) ->
-      _.extend this,
+# An intermediate square is half-way in size between a square of size 2^n and 2^(n-1). For a square of size
+# eight, its intermediate square would be size six. Instead of having four quadrants, intermediate squares have
+# nine components.
+#
+# For performace reasons, we don't check, however each component must be a square and not a cell. Thus, you cannot
+# make an intermediate square from a square of size four.
+class Square.Intermediate
+  constructor: ({
+    @nw, @nn, @ne,
+    @ww, @cc, @ee,
+    @sw, @ss, @se
+  }) ->
 
-        # First, Let's look at our square of size eight made up of four component squares of size four (the lines
-        # and crosses are part of the components):
-        #
-        #     nw        ne
-        #       +--++--+
-        #       |..||..|
-        #       |..||..|
-        #       +--++--+
-        #       +--++--+
-        #       |..||..|
-        #       |..||..|
-        #       +--++--+
-        #     sw        se
+# One way to make an intermediate square is to chop a square up into overlapping
+# subsquares, and take the result of each subsquare. If the square is level `n`, and
+# the subsquares are level `n-1`, the intermediate square will be at time `T+2^(n-3)`.
+#
+# For example, a square of size eight (level 3) can be chopped into overlapping squares of size
+# four (level 2). Since the result of a square of size four is `T+2^0` in its future, the
+# intermediate square constructed from the results of squares of size four will be at time `T+1`
+# relative to the square of size eight.
+#
+# First, Let's look at our square of size eight made up of four component squares of size four (the lines
+# and crosses are part of the components):
+#
+#     nw        ne
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#       +--++--+
+#       |..||..|
+#       |..||..|
+#       +--++--+
+#     sw        se
+#
+# We can take the results of those four quadrants and add them to our intermediate square
+#
+#     nw        ne
+#
+#        nw..ne
+#        nw..ne
+#        ......
+#        ......
+#        sw..se
+#        sw..se
+#
+#     sw        se
+#
+# We can also derive four overlapping squares, these representing `nn`, `ee`, `ss`, and `ww`:
+#
+#          nn
+#       ..+--+..        ..+--+..
+#       ..|..|..        ..|..|..
+#       +-|..|-+        +--++--+
+#       |.+--+.|      w |..||..| e
+#       |.+--+.|      w |..||..| e
+#       +-|..|-+        +--++--+
+#       ..|..|..        ..|..|..
+#       ..+--+..        ..+--+..
+#          ss
+#
+# Deriving these from our four component squares is straightforward, and when we take their results,
+# we fill in four of the five missing blanks for our intermediate square:
+#
+#     nw        ne
+#
+#        ..nn..
+#        ..nn..
+#        ww..ee
+#        ww..ee
+#        ..ss..
+#        ..ss..
+#
+#     sw        se
+#
+# We use a similar method to derive a center square:
+#
+#     nw        ne
+#
+#        ......
+#        .+--+.
+#        .|..|.
+#        .|..|.
+#        .+--+.
+#        ......
+#
+#     sw        se
+#
+# And we extract its result square accordingly:
+#
+#     nw        ne
+#
+#        ......
+#        ......
+#        ..cc..
+#        ..cc..
+#        ......
+#        ......
+#
+#     sw        se
+_.extend Square.prototype,
+  intermediate_via_subresults: ->
+    new Square.Intermediate
+      nw: @nw.result()
+      ne: @ne.result()
+      se: @se.result()
+      sw: @sw.result()
+      nn: Square
+        .canonicalize
+          nw: @nw.ne
+          ne: @ne.nw
+          se: @ne.sw
+          sw: @nw.se
+        .result()
+      ee: Square
+        .canonicalize
+          nw: @ne.sw
+          ne: @ne.se
+          se: @se.ne
+          sw: @se.nw
+        .result()
+      ss: Square
+        .canonicalize
+          nw: @sw.ne
+          ne: @se.nw
+          se: @se.sw
+          sw: @sw.se
+        .result()
+      ww: Square
+        .canonicalize
+          nw: @nw.sw
+          ne: @nw.se
+          se: @sw.ne
+          sw: @sw.nw
+        .result()
+      cc: Square
+        .canonicalize
+          nw: @nw.se
+          ne: @ne.sw
+          se: @se.nw
+          sw: @sw.ne
+        .result()
 
-        # We can take the results of those four quadrants and add them to our intermediate square
-        #
-        #     nw        ne
-        #
-        #        nw..ne
-        #        nw..ne
-        #        ......
-        #        ......
-        #        sw..se
-        #        sw..se
-        #
-        #     sw        se
-        nw: square.nw.result()
-        ne: square.ne.result()
-        se: square.se.result()
-        sw: square.sw.result()
+# ### Making a Square from an Intermediate Square
 
-        # We can also derive four overlapping squares, these representing `n`, `e`, `s`, and `w`:
-        #
-        #          nn
-        #       ..+--+..        ..+--+..
-        #       ..|..|..        ..|..|..
-        #       +-|..|-+        +--++--+
-        #       |.+--+.|      w |..||..| e
-        #       |.+--+.|      w |..||..| e
-        #       +-|..|-+        +--++--+
-        #       ..|..|..        ..|..|..
-        #       ..+--+..        ..+--+..
-        #          ss
+# Okay, we started with a square of size `2^n`, and we make an intermediate square of size
+# `2^(n-.5). Given an intermediate square, we can make a square of size `2^(n-1)` that is forward in time of the
+# intermediate square by taking the result of four overlapping squares, also of size `2^(n-1)`.
+#
+#     nw        ne  nw        ne
+#
+#        nwnn..        ..nnne
+#        nwnn..        ..nnne
+#        wwcc..        ..ccee
+#        wwcc..        ..ccee
+#        ......        ......
+#        ......        ......
+#
+#     sw        se  sw        se
+#
+#     nw        ne  nw        ne
+#
+#        ......        ......
+#        ......        ......
+#        wwcc..        ..ccee
+#        wwcc..        ..ccee
+#        swss..        ..ssse
+#        swss..        ..ssse
+#
+#     sw        se  sw        se
+#
+# The results of those could be combined like this to form the final square of size `2^(n-1):
+#
+#     nw        ne
+#
+#        ......
+#        .nwne.
+#        .nwne.
+#        .swse.
+#        .swse.
+#        ......
+#
+#     sw        se
+#
+# We're not going to do that here, we're just responsible for the geometry.
+_.extend Square.Intermediate.prototype,
+  sub_squares: ->
+    nw: Square
+      .canonicalize
+        nw: @nw
+        ne: @nn
+        se: @cc
+        sw: @ww
+    ne: Square
+      .canonicalize
+        nw: @nn
+        ne: @ne
+        se: @ee
+        sw: @cc
+    se: Square
+      .canonicalize
+        nw: @cc
+        ne: @ee
+        se: @se
+        sw: @ss
+    sw: Square
+      .canonicalize
+        nw: @ww
+        ne: @cc
+        se: @ss
+        sw: @sw
 
-        # Deriving these from our four component squares is straightforward, and when we take their results,
-        # we fill in four of the five missing blanks for our intermediate square:
-        #
-        #     nw        ne
-        #
-        #        ..nn..
-        #        ..nn..
-        #        ww..ee
-        #        ww..ee
-        #        ..ss..
-        #        ..ss..
-        #
-        #     sw        se
-        nn: Square
-          .canonicalize
-            nw: square.nw.ne
-            ne: square.ne.nw
-            se: square.ne.sw
-            sw: square.nw.se
-          .result()
-        ee: Square
-          .canonicalize
-            nw: square.ne.sw
-            ne: square.ne.se
-            se: square.se.ne
-            sw: square.se.nw
-          .result()
-        ss: Square
-          .canonicalize
-            nw: square.sw.ne
-            ne: square.se.nw
-            se: square.se.sw
-            sw: square.sw.se
-          .result()
-        ww: Square
-          .canonicalize
-            nw: square.nw.sw
-            ne: square.nw.se
-            se: square.sw.ne
-            sw: square.sw.nw
-          .result()
-
-        # We use a similar method to derive a center square:
-        #
-        #     nw        ne
-        #
-        #        ......
-        #        .+--+.
-        #        .|..|.
-        #        .|..|.
-        #        .+--+.
-        #        ......
-        #
-        #     sw        se
-
-        # And we extract its result square accordingly:
-        #
-        #     nw        ne
-        #
-        #        ......
-        #        ......
-        #        ..cc..
-        #        ..cc..
-        #        ......
-        #        ......
-        #
-        #     sw        se
-        cc: Square
-          .canonicalize
-            nw: square.nw.se
-            ne: square.ne.sw
-            se: square.se.nw
-            sw: square.sw.ne
-          .result()
-
-    # We have now derived nine squares of size `2^(n-1)`: Four component squares and five we have
-    # derived from second-order components. The results we have extracted have all been cached, so
-    # we are performing lookups rather than computations.
-    #
-    # These squares fit together to make a larger intermediate square, one that does not neatly fit
-    # into our world of `2^n` quanta:
-    #
-    #     nw        ne
-    #
-    #        nwnnne
-    #        nwnnne
-    #        wwccee
-    #        wwccee
-    #        swssse
-    #        swssse
-    #
-    #     sw        se
-
-    # ### Obtaining a result from the intermediate square
-    result: ->
-
-      # From our nine squares, we can make four *overlapping* squares of size `2^(n-1)`:
-      #
-      #     nw        ne  nw        ne
-      #
-      #        nwnn..        ..nnne
-      #        nwnn..        ..nnne
-      #        wwcc..        ..ccee
-      #        wwcc..        ..ccee
-      #        ......        ......
-      #        ......        ......
-      #
-      #     sw        se  sw        se
-      #
-      #     nw        ne  nw        ne
-      #
-      #        ......        ......
-      #        ......        ......
-      #        wwcc..        ..ccee
-      #        wwcc..        ..ccee
-      #        swss..        ..ssse
-      #        swss..        ..ssse
-      #
-      #     sw        se  sw        se
-      overlapping_squares =
-        nw: Square
-          .canonicalize
-            nw: @nw
-            ne: @nn
-            se: @cc
-            sw: @ww
-        ne: Square
-          .canonicalize
-            nw: @nn
-            ne: @ne
-            se: @ee
-            sw: @cc
-        se: Square
-          .canonicalize
-            nw: @cc
-            ne: @ee
-            se: @se
-            sw: @ss
-        sw: Square
-          .canonicalize
-            nw: @ww
-            ne: @cc
-            se: @ss
-            sw: @sw
-      # We can now make a square from the results from each of those quadrants:
-      #
-      #     nw        ne
-      #
-      #        ......
-      #        .nwne.
-      #        .nwne.
-      #        .swse.
-      #        .swse.
-      #        ......
-      #
-      #     sw        se
+# Given all the work we just did on `Square.Intermediate`, we now have everything we need to compute the
+# result of any square of size eight or larger, any time in the future from time `T+1` to time `T+2^(n-1)`
+# where `n` is the level of the square.
+#
+# The naïve result is obtained as follows: We construct a Square.Intermediate from subresults (moving
+# forward to `T+2^(n-2)`), and then we obtain its overlapping squares and take *their* results (moving
+# forward `2^(n-2)` again, for a total advance of `2^(n-1)`).
+#
+# The only complication is that we memoize the result for performance... This is HashLife after all, and we
+# do not like to repeat ourselves in either Space or Time.
+class RecursivelyComputableSquare extends Square
+  constructor: (quadrants) ->
+    super(quadrants)
+    @result = _.memoize( ->
+      sub_squares = @intermediate_via_subresults().sub_squares()
       Square.canonicalize
-        nw: overlapping_squares.nw.result()
-        ne: overlapping_squares.ne.result()
-        se: overlapping_squares.se.result()
-        sw: overlapping_squares.sw.result()
-
-  # A `RecursivelyComputableSquare` is a square of size eight or larger.
-  #
-  #
-  # When we fit the results of an intermediate square within our original square
-  # of size eight, we reveal we have a square of size four, `2^(n-1)` as we wanted
-  #
-  #     nw        ne
-  #       ........
-  #       ........
-  #       ..nwne..
-  #       ..nwne..
-  #       ..swse..
-  #       ..swse..
-  #       ........
-  #       ........
-  #     sw        se
-  #
-  # The number of generation is double the number of generations of any of its quadrants.
-  # This can also be derived mathematically from the level: `math.pow(2, @level - 1)`
-  class RecursivelyComputableSquare extends Square
-    constructor: (quadrants) ->
-      super(quadrants)
-      @result = _.memoize( ->
-        new IntermediateResult(this).result()
-      )
-      @generations = @nw.generations * 2
+        nw: sub_squares.nw.result()
+        ne: sub_squares.ne.result()
+        se: sub_squares.se.result()
+        sw: sub_squares.sw.result()
+    )
+    @generations = @nw.generations * 2
 
 _.defaults exports, {RecursivelyComputableSquare}
 

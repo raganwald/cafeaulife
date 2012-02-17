@@ -47,7 +47,7 @@ dead cells to increase their size.</p>             </td>             <td class="
       <span class="k">if</span> <span class="nx">@nw</span><span class="o">?</span><span class="p">.</span><span class="nx">sw</span><span class="o">?</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
          <span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
          <span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
-         <span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
+         <span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
           <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
           <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
@@ -55,53 +55,7 @@ dead cells to increase their size.</p>             </td>             <td class="
           <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
         <span class="p">.</span><span class="nx">trim</span><span class="p">()</span>
       <span class="k">else</span>
-        <span class="k">this</span>
-
-  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Find or create a smaller square centered on this square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">crop_by: </span><span class="nf">(extant) -&gt;</span>
-      <span class="k">return</span> <span class="k">this</span> <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="p">[</span><span class="mi">0</span><span class="p">..(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span> <span class="nf">(quadrants) -&gt;</span>
-          <span class="nv">nw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="p">,</span> <span class="k">this</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Find or create a larger square centered on this square with
-the excess composed of empty squares</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">pad_by: </span><span class="nf">(extant) -&gt;</span>
-      <span class="k">if</span> <span class="nx">extant</span> <span class="o">is</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="k">this</span>
-      <span class="k">else</span>
-        <span class="nv">empty_quadrant = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">empty_copy</span><span class="p">()</span>
-        <span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">@nw</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">@ne</span>
-            <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">@se</span>
-              <span class="nv">ne: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-            <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-              <span class="nv">nw: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">ne: </span><span class="nx">@sw</span>
-              <span class="nv">se: </span><span class="nx">empty_quadrant</span>
-              <span class="nv">sw: </span><span class="nx">empty_quadrant</span>
-          <span class="p">.</span><span class="nx">pad_by</span><span class="p">(</span><span class="nx">extant</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Resize to a given level, cropping or padding as necessary</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">resize_to: </span><span class="nf">(level) -&gt;</span>
-      <span class="nv">this_level = </span><span class="nx">@level</span>
-      <span class="k">if</span> <span class="nx">level</span> <span class="o">&gt;</span> <span class="nx">this_level</span>
-        <span class="nx">@pad_by</span><span class="p">(</span><span class="nx">level</span> <span class="o">-</span> <span class="nx">this_level</span><span class="p">)</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">level</span> <span class="o">&lt;</span> <span class="nx">this_level</span>
-        <span class="nx">@crop_by</span><span class="p">(</span><span class="nx">this_level</span> <span class="o">-</span> <span class="nx">level</span><span class="p">)</span>
-      <span class="k">else</span>
-        <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <hr />
+        <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 

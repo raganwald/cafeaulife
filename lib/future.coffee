@@ -35,135 +35,132 @@ exports ?= window or this
 
 exports.mixInto = ({Square, Cell}) ->
 
-  # The `result` given for squares is handy, but not directly useful for computing the future of a pattern,
-  # because it computes the future of the *center* of a square, not the future of a square. If we imagine
-  # a square sitting in the middle of an infinite, empty Life universe, the future of the pattern within
-  # the square is going to be larger than the square, it will expand one cell in each direction for every
-  # generation into the future.
-  #
-  # For example, if we start with:
-  #
-  #     nw  ne
-  #       ??
-  #       ??
-  #     sw  sw
-  #
-  # After `2^0` generations we double its size:
-  #
-  #     nw    ne
-  #       ????
-  #       ????
-  #       ????
-  #       ????
-  #     sw    se
-  #
-  # After `2^1` more generations we double again:
-  #
-  #     nw        ne
-  #       ????????
-  #       ????????
-  #       ????????
-  #       ????????
-  #       ????????
-  #       ????????
-  #       ????????
-  #       ????????
-  #     sw        se
-  #
-  # After `2^2` additional generations on top of that we double yet again:
-  #
-  #     nw                ne
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #       ????????????????
-  #     sw                se
-  #
-  # And so it goes. The relationship becomes clear if we stop thinking about generations and sizes and
-  # start thinking about the binary logarithm of generations and sizes. For historical reasons, the binary
-  # logarithm of the length of a side of a square is called its **level**.
-
-  # 2x2 squares are level 1. 4x4 squares are level 2. In other words, the level of a square is the level of
-  # its component quadrants plus one. This sets up a recursion which amounts to counting the squares in a
-  # path from our subject square to its component cells.
   YouAreDaChef(Square)
     .after 'initialize', ->
       @level = @nw.level + 1
 
-  # Cells are level zero, which terminates the recursion.
   _.extend Cell.prototype,
     level:
       0
 
-  # In a moment we'll give the method for doubling the size of a square and moving it forward into the future,
-  # very much in the style of obtaining a cell's `result`, and not suprisingly using results to compute its future.
-  # But first, let's determine how far forward in time doubling a square moves it.
+  # ### Computing a result for a time less than `T+2^(n-1)`
   #
-  # A square of size two moves one generation forward. A square of size four moves two generations forward. A
-  # square of size eight moves four generations forward. More simply:
+  # What if we don't want to move so far forward in time? Well, we don't have to. First, let's revist our
+  # intermediate square. Here's another way to make an intermediate square from a square, we crop an existing
+  # square to its size. This produces an intermediate square at time T+0 relative to the square:
   #
-  # **A square of level `L` moves 2^(L-1) generations forward in time and doubles in size**.
-  #
-  # This is exactly the same relationship a square has to its `result`: The result of a square is 2^(L-1)
-  # generations forward in time.
-  #
-  # Results and futures are inverses of each other. The result of a square is a smaller square forward in time that
-  # we can know regardless of what lies outside of the square. The future of a square is a larger square forward
-  # in time that we can know given that only empty space lies outside the square.
-  #
-  # The difference is that a result square has a level of `L-1` and a future has a level of `L+1`.
+  #     nw        ne
+  #       ........
+  #       .nwnnne.
+  #       .nwnnne.
+  #       .wwccee.
+  #       .wwccee.
+  #       .swssse.
+  #       .swssse.
+  #       ........
+  #     sw        se
+  _.extend Square.prototype,
+    intermediate_via_crop: ->
+      new Square.Intermediate
+        nw: Square.canonicalize
+          nw: @nw.nw.se
+          ne: @nw.ne.sw
+          se: @nw.se.nw
+          sw: @nw.sw.ne
+        nn: Square.canonicalize
+          nw: @nw.ne.se
+          ne: @ne.nw.sw
+          se: @ne.sw.nw
+          sw: @nw.se.ne
+        ne: Square.canonicalize
+          nw: @ne.nw.se
+          ne: @ne.ne.se
+          se: @ne.se.nw
+          sw: @ne.sw.ne
+        ww: Square.canonicalize
+          nw: @nw.sw.se
+          ne: @nw.se.sw
+          se: @sw.ne.nw
+          sw: @sw.nw.ne
+        cc: Square.canonicalize
+          nw: @nw.se.se
+          ne: @ne.sw.sw
+          se: @se.nw.nw
+          sw: @sw.ne.ne
+        ee: Square.canonicalize
+          nw: @ne.sw.se
+          ne: @ne.se.sw
+          se: @sw.ne.nw
+          sw: @sw.nw.ne
+        sw: Square.canonicalize
+          nw: @sw.nw.se
+          ne: @sw.ne.sw
+          se: @sw.se.nw
+          sw: @sw.sw.ne
+        ss: Square.canonicalize
+          nw: @sw.ne.se
+          ne: @se.nw.sw
+          se: @se.sw.nw
+          sw: @sw.se.ne
+        se: Square.canonicalize
+          nw: @se.nw.se
+          ne: @se.ne.se
+          se: @se.se.nw
+          sw: @se.sw.ne
 
-  # ### Calculating the immediate future
-  #
-  # Let's start with a diagram for determining the future of a square:
-  #
-  # Given (the `?` stands for a cell or square):
-  #
-  #     nw  ne
-  #       ??
-  #       ??
-  #     sw  se
-  #
-  # We want:
-  #
-  #     nw    ne
-  #       ????
-  #       ????
-  #       ????
-  #       ????
-  #     sw    se
-  #
-  # Borrowing from our technique for computing results, we want to find some squares with results we can stitch together
-  # to make our future square. So let's build our future square. Consider these four squares. In each one, we have duplicated
-  # our square in one of its corners and filled the remainder with empty squares the same size as our square:
-  #
-  #     nw         ne
-  #       ....|....
-  #       ....|....
-  #       ..??|??..
-  #       ..??|??..
-  #       ----+----
-  #       ..??|??..
-  #       ..??|??..
-  #       ....|....
-  #       ....|....
-  #     sw         se
+  # Armed with this one additional function, we can write a general method for determining the result
+  # of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
+  # we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
+  # start by generating the intermediate square from results. If it's less than half, we start by generating
+  # the intermediate squre by cropping.
+  _.extend Square.prototype,
+    result_at_time_zero: ->
+      Square.canonicalize
+        nw: @nw.se
+        ne: @ne.sw
+        se: @se.nw
+        sw: @sw.ne
+    result_at_time: (t) ->
+      if t < 0
+        throw "We do not have a time machine"
+      else if t is 0
+        @result_at_time_zero()
+      else if t <= Math.pow(2, @level - 3)
+        sub_squares = @intermediate_via_crop().sub_squares()
+        Square.canonicalize
+          nw: sub_squares.nw.result_at_time(t)
+          ne: sub_squares.ne.result_at_time(t)
+          se: sub_squares.se.result_at_time(t)
+          sw: sub_squares.sw.result_at_time(t)
+      else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
+        sub_squares = @intermediate_via_subresults().sub_squares()
+        t_remaining = t - Math.pow(2, @level - 3)
+        Square.canonicalize
+          nw: sub_squares.nw.result_at_time(t_remaining)
+          ne: sub_squares.ne.result_at_time(t_remaining)
+          se: sub_squares.se.result_at_time(t_remaining)
+          sw: sub_squares.sw.result_at_time(t_remaining)
+      else if t is Math.pow(2, @level - 2)
+        @result()
+      else if t > Math.pow(2, @level - 2)
+        throw "I can't go further forward than #{Math.pow(2, @level - 2)}"
 
-  # ### Creating empty squares
+  # ### Computing the future of a square
+  #
+  # Let's say we have a square and we wish to determine its future at time `t`.
+  # We calculate the smallest square that could possible contain its future, taking
+  # into account that the pattern in the square could grow once cell in each direction
+  # per generation.
+  #
+  # We then double the size and embed our pattern in the center. This becomes our base
+  # square: It's our square embdedded in a possible vast empty square. We then take the
+  # base square's `result_at_time(t)` which gives us the future of our pattern.
+  #
+  # We start with the ability to make empty copies of things.
+  _.extend Cell.prototype,
+    empty_copy: ->
+      Cell.Dead
 
-  # We're ready to use this diagram to write a function for computing the future of a square. First, here're methods for making empty squares:
   _.extend Square.prototype,
     empty_copy: ->
       empty_quadrant = @nw.empty_copy()
@@ -173,119 +170,59 @@ exports.mixInto = ({Square, Cell}) ->
         se: empty_quadrant
         sw: empty_quadrant
 
-  _.extend Cell.prototype,
-    empty_copy: ->
-      Cell.Dead
+    pad_by: (extant) ->
+      if extant is 0
+        return this
+      else
+        empty_quadrant = @nw.empty_copy()
+        Square.cache
+          .canonicalize
+            nw: Square.cache.canonicalize
+              nw: empty_quadrant
+              ne: empty_quadrant
+              se: @nw
+              sw: empty_quadrant
+            ne: Square.cache.canonicalize
+              nw: empty_quadrant
+              ne: empty_quadrant
+              se: empty_quadrant
+              sw: @ne
+            se: Square.cache.canonicalize
+              nw: @se
+              ne: empty_quadrant
+              se: empty_quadrant
+              sw: empty_quadrant
+            sw: Square.cache.canonicalize
+              nw: empty_quadrant
+              ne: @sw
+              se: empty_quadrant
+              sw: empty_quadrant
+          .pad_by(extant - 1)
 
-  # ### Fast forwarding a square such that its maximuum bound expands one level
+    future_at_time: (t) ->
+      if t < 0
+        throw "We do not have a time machine"
+      else if t is 0
+        this
+      else
+        base = @pad_by Math.ceil(Math.log(t) / Math.log(2)) + 1
+        base.result_at_time(t)
 
-  # Now a function. It takes a square and calculates its future 2^(L-1) generations forward in time.
-  # At the speed of light, that expands its maximum bound exactly one level. So a 2x2 square expands to
-  # 4x4 fast forwarding two generations, a 4x4 square expands to 8x8 fast forwarding four generations,
-  # and so forth.
-  fast_forward_one_level = (square) ->
-
-    # an empty copy of our square
-    vacant = square.empty_copy()
-
-    # Let's make the four squares diagrammed above
-    four_squares =
-      nw: Square
-        .canonicalize
-          nw: vacant
-          ne: vacant
-          se: square
-          sw: vacant
-      ne: Square
-        .canonicalize
-          nw: vacant
-          ne: vacant
-          se: vacant
-          sw: square
-      se: Square
-        .canonicalize
-          nw: square
-          ne: vacant
-          se: vacant
-          sw: vacant
-      sw: Square
-        .canonicalize
-          nw: vacant
-          ne: square
-          se: vacant
-          sw: vacant
-
-    # Let's take their results:
+    # ### Autocrop
     #
-    #     nw         ne
-    #       ....|....
-    #       .++.|.++.
-    #       .++.|.++.
-    #       ....|....
-    #       ----+----
-    #       ....|....
-    #       .++.|.++.
-    #       .++.|.++.
-    #       ....|....
-    #     sw         se
-    four_results =
-      nw: four_squares.nw.result()
-      ne: four_squares.ne.result()
-      se: four_squares.se.result()
-      sw: four_squares.sw.result()
+    # For human consumption, it can be nice to produce a copy of a square with the excess
+    # trimmed.
+    crop: ->
 
-    # Consider those results relative to the original square.
-    # let's redraw the diagram, but this time we'll have everything overlap.
-    #
-    # Here're the four squares again in two diagrams:
-    #
-    #     nw      ne  nw      ne
-    #       ....          ....
-    #       ....          ....
-    #       ..??..      ..??..
-    #       ..??..      ..??..
-    #         ....      ....
-    #         ....      ....
-    #     sw      se  sw      se
-    #
-    # Now we draw the results of those four:
-    #
-    #     nw      ne  nw      ne
-    #       ....          ....
-    #       .nw.          .ne.
-    #       .nw...      ...ne.
-    #       ...se.      .sw...
-    #         .se.      .sw.
-    #         ....      ....
-    #     sw      se  sw      se
-    #
-    # And superimpose those results:
-    #
-    #     nw    ne
-    #       nwne
-    #       nwne
-    #       swse
-    #       swse
-    #     sw    se
-
-    # Presto! Our four results are the future square we're after!
-    Square.canonicalize(four_results)
-
-  # ### Fast forwarding a square such that it expands its maximum bound to any arbitrary level
-
-  # Given the function that computes a square's future, we can apply
-  # our function repeatedly to the future of our pattern. Given some
-  # number `T` where `T >= L`, by applying `future(...)` `(T-L)` times,
-  # we move forward `2^(T+1) - 2^(L-1)` generations.
-  #
-  # In essence, this method grows a pattern forward in time until its
-  # maximum bound is `T`. Not all patterns grow at the speed of light, so
-  # in many cases (all in Conway's Game of Life?) the pattern will not reach
-  # the edges of a square of level `T`, but in some games it could.
-  _.extend Square.prototype,
-    fast_forward_to_level: (t = @level + 1) ->
-      throw 'cannot fast forward to a smaller square' unless t >= @level
-      _.reduce [@level..(t - 1)], fast_forward_one_level, this
+      return this if extant is 0
+      Square.cache.find_or_create_by_quadrant(
+        _.reduce [0..(extant - 1)], (quadrants) ->
+          nw: quadrants.nw.se
+          ne: quadrants.ne.sw
+          se: quadrants.se.nw
+          sw: quadrants.sw.ne
+        , this
+      )
 
 # ---
 #
