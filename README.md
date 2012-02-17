@@ -10,7 +10,7 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 [cs]: http://jashkenas.github.com/coffee-script/
 [node]: http://nodejs.org
 
-Cafe au Life's annotated source code is [here](http://raganwald.github.com/cafeaulife/docs/cafeaulife.html). It contains the full explanation ofteh algorithm, and most of the stuff you'd normall find interesting in a README file.
+Cafe au Life's annotated source code is [here](http://raganwald.github.com/cafeaulife/docs/cafeaulife.html). It contains the full explanation of the algorithm, and most of the stuff you'd normally find interesting in a README file.
 
 ### Playing with Cafe au Life
 
