@@ -49,7 +49,7 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
       @buckets = {}
 
     find: ({nw, ne, se, sw}) ->
-      if (a = @buckets[nw.id]) and (b = a[ne.id]) and (c = b[se.id]) then c[sw.id]
+      @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
 
     canonicalize_by_quadrant: (quadrants) ->
       found = @find(quadrants)
@@ -102,19 +102,10 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
 
     add: (square) ->
       {nw, ne, se, sw} = square
-      a = (@buckets[nw.id] ||= {})
-      b = (a[ne.id] ||= {})
-      c = (b[se.id] ||= {})
-      c[sw.id] = square
+      @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
 
     bucketed: ->
-      _.reduce @buckets, (sum, a) ->
-        _.reduce a, (sum, b) ->
-          _.reduce b, (sum, c) ->
-            _.size(c)
-          , sum
-        , sum
-      , 0
+      _.size(@buckets)
 
   Square.canonicalize = (params) ->
     @cache.canonicalize(params)

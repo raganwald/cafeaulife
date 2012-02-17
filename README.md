@@ -25,18 +25,14 @@ coffee> Life = require('./lib/cafeaulife')
      Intermediate: [Function: Intermediate],
      set_universe_rules: [Function],
      cache: 
-      { num_buckets: 7919,
-        buckets: [],
+      { buckets: {},
         clear: [Function],
-        hash: [Function],
-        hash_string: [Function],
         find: [Function],
         canonicalize_by_quadrant: [Function],
         canonicalize_by_json: [Function],
         canonicalize: [Function],
         add: [Function],
-        bucketed: [Function],
-        histogram: [Function] },
+        bucketed: [Function] },
      canonicalize: [Function] },
   RecursivelyComputableSquare: 
    { [Function: RecursivelyComputableSquare]

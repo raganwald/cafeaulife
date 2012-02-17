@@ -19,39 +19,25 @@ recursively computed terminating in a four-by-four square that has already been 
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
 
 
-<span class="nv">exports.mixInto = </span><span class="nf">({Square, RecursivelyComputableSquare, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Extending Cell and Square</h3>
+<span class="nv">exports.mixInto = </span><span class="nf">({Square, RecursivelyComputableSquare, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Extending Cell and Square</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">counter = </span><span class="mi">0</span>
 
-<p>We add some support for hashing to cells and squares, then use a <em>very</em>
-naïve cache to hold them.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@hash = </span><span class="nx">@value</span>
+      <span class="vi">@id = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@hash = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+      <span class="vi">@id = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
 
   <span class="nv">Square.cache =</span>
 
-    <span class="nv">num_buckets: </span><span class="mi">7919</span>
-    <span class="nv">buckets: </span><span class="p">[]</span>
+    <span class="nv">buckets: </span><span class="p">{}</span>
 
     <span class="nv">clear: </span><span class="o">-&gt;</span>
-      <span class="vi">@buckets = </span><span class="p">[]</span>
+      <span class="vi">@buckets = </span><span class="p">{}</span>
 
-    <span class="nv">hash: </span><span class="nf">(square_like) -&gt;</span>
-      <span class="k">if</span> <span class="nx">square_like</span><span class="p">.</span><span class="nx">hash</span><span class="o">?</span>
-        <span class="nx">square_like</span><span class="p">.</span><span class="nx">hash</span>
-      <span class="k">else</span>
-        <span class="p">((</span><span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">nw</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">ne</span><span class="p">))</span>  <span class="o">+</span> <span class="p">(</span><span class="mi">79</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">se</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">37</span> <span class="o">*</span> <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">.</span><span class="nx">sw</span><span class="p">)))</span> <span class="o">%</span> <span class="mi">99991</span>
-
-    <span class="nv">hash_string: </span><span class="nf">(square_like) -&gt;</span>
-      <span class="nx">@hash</span><span class="p">(</span><span class="nx">square_like</span><span class="p">).</span><span class="nx">toString</span><span class="p">()</span>
-
-    <span class="nv">find: </span><span class="nf">(quadrants) -&gt;</span>
-      <span class="nv">bucket_number = </span><span class="nx">@hash</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span> <span class="o">%</span> <span class="nx">@num_buckets</span>
-      <span class="k">if</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span><span class="o">?</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">find</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">],</span> <span class="nf">(sq) -&gt;</span>
-          <span class="nx">sq</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">quadrants</span><span class="p">.</span><span class="nx">sw</span>
+    <span class="nv">find: </span><span class="nf">({nw, ne, se, sw}) -&gt;</span>
+      <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
 
     <span class="nv">canonicalize_by_quadrant: </span><span class="nf">(quadrants) -&gt;</span>
       <span class="nv">found = </span><span class="nx">@find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
@@ -103,24 +89,11 @@ naïve cache to hold them.</p>             </td>             <td class="code">  
         <span class="k">throw</span> <span class="s2">&quot;Cache can&#39;t handle #{JSON.stringify(params)}&quot;</span>
 
     <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
-      <span class="nv">bucket_number = </span><span class="nx">square</span><span class="p">.</span><span class="nx">hash</span> <span class="o">%</span> <span class="nx">@num_buckets</span>
-      <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span> <span class="o">||=</span> <span class="p">[]</span>
-      <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reject</span> <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">],</span> <span class="nf">(found) -&gt;</span>
-        <span class="nx">found</span><span class="p">.</span><span class="nx">nw</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">nw</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">ne</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">ne</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">se</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">se</span> <span class="o">and</span> <span class="nx">found</span><span class="p">.</span><span class="nx">sw</span> <span class="o">is</span> <span class="nx">square</span><span class="p">.</span><span class="nx">sw</span>
-      <span class="nx">@buckets</span><span class="p">[</span><span class="nx">bucket_number</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">square</span><span class="p">)</span>
-      <span class="nx">square</span>
+      <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">square</span>
+      <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
 
     <span class="nv">bucketed: </span><span class="o">-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(sum, bucket) -&gt;</span>
-        <span class="nx">sum</span> <span class="o">+</span> <span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span>
-      <span class="p">,</span> <span class="mi">0</span>
-
-    <span class="nv">histogram: </span><span class="o">-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(histo, bucket) -&gt;</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">tap</span> <span class="nx">histo</span><span class="p">,</span> <span class="nf">(h) -&gt;</span>
-          <span class="nx">h</span><span class="p">[</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">||=</span> <span class="mi">0</span>
-          <span class="nx">h</span><span class="p">[</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-      <span class="p">,</span> <span class="p">[]</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">@buckets</span><span class="p">)</span>
 
   <span class="nv">Square.canonicalize = </span><span class="nf">(params) -&gt;</span>
     <span class="nx">@cache</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <hr />
