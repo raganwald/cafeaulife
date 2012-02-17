@@ -30,39 +30,26 @@ exports ?= window or this
 exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
 
   # ### Extending Cell and Square
-  #
-  # We add some support for hashing to cells and squares, then use a *very*
-  # naïve cache to hold them.
+
+  counter = 0
+
   YouAreDaChef(Cell)
     .after 'initialize', ->
-      @hash = @value
+      @id = (counter += 1)
 
   YouAreDaChef(Square)
     .after 'initialize', ->
-      @hash = Square.cache.hash(this)
+      @id = (counter += 1)
 
   Square.cache =
 
-    num_buckets: 7919
-    buckets: []
+    buckets: {}
 
     clear: ->
-      @buckets = []
+      @buckets = {}
 
-    hash: (square_like) ->
-      if square_like.hash?
-        square_like.hash
-      else
-        ((@hash(square_like.nw)) + (3 * @hash(square_like.ne))  + (79 * @hash(square_like.se)) + (37 * @hash(square_like.sw))) % 99991
-
-    hash_string: (square_like) ->
-      @hash(square_like).toString()
-
-    find: (quadrants) ->
-      bucket_number = @hash(quadrants) % @num_buckets
-      if @buckets[bucket_number]?
-        _.find @buckets[bucket_number], (sq) ->
-          sq.nw is quadrants.nw and sq.ne is quadrants.ne and sq.se is quadrants.se and sq.sw is quadrants.sw
+    find: ({nw, ne, se, sw}) ->
+      if (a = @buckets[nw.id]) and (b = a[ne.id]) and (c = b[se.id]) then c[sw.id]
 
     canonicalize_by_quadrant: (quadrants) ->
       found = @find(quadrants)
@@ -114,24 +101,20 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
         throw "Cache can't handle #{JSON.stringify(params)}"
 
     add: (square) ->
-      bucket_number = square.hash % @num_buckets
-      @buckets[bucket_number] ||= []
-      @buckets[bucket_number] = _.reject @buckets[bucket_number], (found) ->
-        found.nw is square.nw and found.ne is square.ne and found.se is square.se and found.sw is square.sw
-      @buckets[bucket_number].push(square)
-      square
+      {nw, ne, se, sw} = square
+      a = (@buckets[nw.id] ||= {})
+      b = (a[ne.id] ||= {})
+      c = (b[se.id] ||= {})
+      c[sw.id] = square
 
     bucketed: ->
-      _.reduce @buckets, (sum, bucket) ->
-        sum + bucket.length
+      _.reduce @buckets, (sum, a) ->
+        _.reduce a, (sum, b) ->
+          _.reduce b, (sum, c) ->
+            _.size(c)
+          , sum
+        , sum
       , 0
-
-    histogram: ->
-      _.reduce @buckets, (histo, bucket) ->
-        _.tap histo, (h) ->
-          h[bucket.length] ||= 0
-          h[bucket.length] += 1
-      , []
 
   Square.canonicalize = (params) ->
     @cache.canonicalize(params)
