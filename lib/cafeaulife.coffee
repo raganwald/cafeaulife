@@ -163,10 +163,11 @@ require('./api').mixInto(exports)
 # [YouAreDaChef](https://github.com/raganwald/YouAreDaChef), [andand](http://github.com/raganwald/andand),
 # and more you can find on [Github](https://github.com/raganwald).
 #
-# He has written two books:
+# He has written three books:
 #
 # * [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators): *Raganwald's collected adventures in Combinatory Logic and Ruby Meta-Programming*
 # * [What I've Learned From Failure](http://leanpub.com/shippingsoftware): *A quarter-century of experience shipping software, distilled into fixnum bittersweet essays*
+# * [How to Do What You Love & Earn What You’re Worth as a Programmer](http://leanpub.com/dowhatyoulove)
 #
 # His hands-on coding blog [Homoiconic](https://github.com/raganwald/homoiconic) frequently lights up the Hackerverse,
 # and he also writes about [project management and other subjects](http://raganwald.posterous.com/).
