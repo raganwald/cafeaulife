@@ -83,13 +83,14 @@ exports.mixInto = (exports) ->
       class SeedSquare extends Square
         constructor: (params) ->
           super(params)
-          @result = do =>
+          @result = _.memoize( =>
             a = @to_json()
             Square.cache.find
               nw: succ(a, 1,1)
               ne: succ(a, 1,2)
               se: succ(a, 2,2)
               sw: succ(a, 2,1)
+          )
 
       Square.cache.clear()
 

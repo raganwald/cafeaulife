@@ -68,13 +68,14 @@ multiplied by itself once for each quadrant, and another function for turning an
 the rules</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">class</span> <span class="nx">SeedSquare</span> <span class="k">extends</span> <span class="nx">Square</span>
         <span class="nv">constructor: </span><span class="nf">(params) -&gt;</span>
           <span class="k">super</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
-          <span class="vi">@result = </span><span class="nx">do</span> <span class="o">=&gt;</span>
+          <span class="vi">@result = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">=&gt;</span>
             <span class="nv">a = </span><span class="nx">@to_json</span><span class="p">()</span>
             <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">find</span>
               <span class="nv">nw: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
               <span class="nv">ne: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
               <span class="nv">se: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
               <span class="nv">sw: </span><span class="nx">succ</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+          <span class="p">)</span>
 
       <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">clear</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>The canonical 2x2 squares are initialized from the cartesian product
 of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen

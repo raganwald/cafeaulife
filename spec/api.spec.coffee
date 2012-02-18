@@ -21,6 +21,19 @@ describe 'from_json', ->
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       ]).toBeA(Life.Square)
 
+    it 'should accept strings', ->
+
+      expect( Life.Square.from_string '''
+        ....O...
+        ..O.O...
+        ......O.
+        OO......
+        ......OO
+        .O......
+        ...O.O..
+        ...O....
+      ''' ).toBeA(Life.Square)
+
   describe 'cells', ->
 
     it 'should handle ones and zeroes', ->

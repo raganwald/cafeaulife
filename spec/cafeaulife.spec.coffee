@@ -32,20 +32,20 @@ describe 'cafe au life', ->
         [0, 0, 0, 0, 0, 0, 0, 0]
         [0, 0, 0, 0, 0, 0, 0, 0]
       ])
-      sq.result
+      sq.result()
 
       number_bucketed = Life.Square.cache.bucketed()
 
-      sq.result
-      sq.result
-      sq.result
-      sq.result
-      sq.result
-      sq.result
-      sq.result
-      sq.result
-      sq.result
-      sq.result
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
+      sq.result()
 
       expect( Life.Square.cache.bucketed() ).toEqual(number_bucketed)
 
@@ -94,15 +94,15 @@ describe 'cafe au life', ->
 
       it 'should compute results', ->
 
-        expect(@size_eight_empties.result).toBeTruthy()
+        expect(@size_eight_empties.result()).toBeTruthy()
 
       it 'should compute square results', ->
 
-        expect(@size_eight_empties.result).toBeA(Life.Square)
+        expect(@size_eight_empties.result()).toBeA(Life.Square)
 
       it 'should compute result squares that are full of empty cells', ->
 
-        expect(@size_eight_empties.result).toEqual(@size_four_empties)
+        expect(@size_eight_empties.result()).toEqual(@size_four_empties)
 
 
     describe 'progress', ->
@@ -116,9 +116,9 @@ describe 'cafe au life', ->
 
         inflated = still_life.pad_by(3)
 
-        expect(inflated.result.to_json()).toEqual(still_life.pad_by(2).to_json())
+        expect(inflated.result().to_json()).toEqual(still_life.pad_by(2).to_json())
 
-        expect(inflated.result).toEqual(still_life.pad_by(2))
+        expect(inflated.result()).toEqual(still_life.pad_by(2))
 
       it 'should kill orphans', ->
 
@@ -129,9 +129,9 @@ describe 'cafe au life', ->
 
         inflated = orphans.pad_by(3)
 
-        expect(inflated.result.to_json()).not.toEqual(orphans.pad_by(2).to_json())
+        expect(inflated.result().to_json()).not.toEqual(orphans.pad_by(2).to_json())
 
-        expect(inflated.result.to_json()).toEqual(orphans.pad_by(2).empty_copy().to_json())
+        expect(inflated.result().to_json()).toEqual(orphans.pad_by(2).empty_copy().to_json())
 
       it 'should birth a square with three neighbours', ->
 
@@ -147,7 +147,7 @@ describe 'cafe au life', ->
 
         inflated = parents.pad_by(1)
 
-        expect( inflated.result ).toEqual(block)
+        expect( inflated.result() ).toEqual(block)
 
     describe 'still life forms should persist', ->
 
@@ -220,8 +220,8 @@ describe 'cafe au life', ->
       }, (examples, name) ->
         _.each examples, (square) ->
           it "Should not change a #{name}", ->
-            console?.log square.debug_id, square.pad_by(1).result.debug_id
-            expect( square.pad_by(1).result ).toEqual(square)
+            console?.log square.debug_id, square.pad_by(1).result().debug_id
+            expect( square.pad_by(1).result() ).toEqual(square)
 
     describe 'to_json', ->
 

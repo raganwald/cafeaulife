@@ -331,45 +331,45 @@ exports.mixInto = ({Square, Cell}) ->
     #     sw        se
     intermediate_via_subresults: ->
       new Square.RecursivelyComputable.Intermediate
-        nw: @nw.result
-        ne: @ne.result
-        se: @se.result
-        sw: @sw.result
+        nw: @nw.result()
+        ne: @ne.result()
+        se: @se.result()
+        sw: @sw.result()
         nn: Square
           .canonicalize
             nw: @nw.ne
             ne: @ne.nw
             se: @ne.sw
             sw: @nw.se
-          .result
+          .result()
         ee: Square
           .canonicalize
             nw: @ne.sw
             ne: @ne.se
             se: @se.ne
             sw: @se.nw
-          .result
+          .result()
         ss: Square
           .canonicalize
             nw: @sw.ne
             ne: @se.nw
             se: @se.sw
             sw: @sw.se
-          .result
+          .result()
         ww: Square
           .canonicalize
             nw: @nw.sw
             ne: @nw.se
             se: @sw.ne
             sw: @sw.nw
-          .result
+          .result()
         cc: Square
           .canonicalize
             nw: @nw.se
             ne: @ne.sw
             se: @se.nw
             sw: @sw.ne
-          .result
+          .result()
 
     # ### Making a Square from an Intermediate Square
 
@@ -503,11 +503,12 @@ exports.mixInto = ({Square, Cell}) ->
     initialize: ->
       super()
       @subsquares_via_subresults = @sub_squares_of @intermediate_via_subresults()
-      @result = Square.canonicalize
-        nw: @subsquares_via_subresults.nw.result
-        ne: @subsquares_via_subresults.ne.result
-        se: @subsquares_via_subresults.se.result
-        sw: @subsquares_via_subresults.sw.result
+      @result = _.memoize( -> Square.canonicalize
+        nw: @subsquares_via_subresults.nw.result()
+        ne: @subsquares_via_subresults.ne.result()
+        se: @subsquares_via_subresults.se.result()
+        sw: @subsquares_via_subresults.sw.result()
+      )
       @intermediate_at_time = _.memoize( (t) ->
         @intermediate_via_subresults_at_time(t)
       )
@@ -565,7 +566,7 @@ exports.mixInto = ({Square, Cell}) ->
           se: @subsquares_via_subresults.se.result_at_time(t_remaining)
           sw: @subsquares_via_subresults.sw.result_at_time(t_remaining)
       else if t is Math.pow(2, @level - 2)
-        @result
+        @result()
       else if t > Math.pow(2, @level - 2)
         throw "I can't go further forward than #{Math.pow(2, @level - 2)}"
 

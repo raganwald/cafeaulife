@@ -49,6 +49,11 @@ exports.mixInto = ({Square, Cell}) ->
       )
 
   _.extend Square,
+    from_string: (str) ->
+      strs = str.split('\n')
+      json = _.map strs, (ln) ->
+        {'.': 0, ' ': 0, 'O': 1, '+': 1, '*': 1}[c] for c in ln
+      @from_json(json)
     from_json: (json) ->
       dims = [json.length].concat json.map( (row) -> row.length )
       sz = Math.pow(2, Math.ceil(Math.log(Math.max(dims...)) / Math.log(2)))
