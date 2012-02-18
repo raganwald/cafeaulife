@@ -89,11 +89,13 @@ board is represented as one such large square, although the HashLife algorithm c
 
 <span class="k">class</span> <span class="nx">Cell</span>
   <span class="nv">constructor: </span><span class="nf">(@value) -&gt;</span>
+    <span class="vi">@level = </span><span class="mi">0</span>
     <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
   <span class="nv">initialize: </span><span class="o">-&gt;</span>
 
 <span class="k">class</span> <span class="nx">Square</span>
   <span class="nv">constructor: </span><span class="nf">({@nw, @ne, @se, @sw}) -&gt;</span>
+    <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
   <span class="nv">initialize: </span><span class="o">-&gt;</span>
 

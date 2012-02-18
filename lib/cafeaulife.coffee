@@ -105,11 +105,13 @@ _ = require('underscore')
 
 class Cell
   constructor: (@value) ->
+    @level = 0
     @initialize.apply(this, arguments)
   initialize: ->
 
 class Square
   constructor: ({@nw, @ne, @se, @sw}) ->
+    @level = @nw.level + 1
     @initialize.apply(this, arguments)
   initialize: ->
 

@@ -6,10 +6,12 @@
 the size of its container square.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>The Life "Universe"</h3>
 
 <p>This module mixes special case functionality for computing the <code>future</code> of a square into <code>Square</code> and <code>Cell</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
-<span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
 
-<span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Recap: Squares</h3>
+<span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">level: </span><span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Recap: Squares</h3>
 
 <p><img src="block_laying_seed.png" alt="Block laying seed" title="" /></p>
 
@@ -195,14 +197,12 @@ is calculated from the basic 2-3 rules or looked up from a table with 65K entrie
 
 <p><em>(A small pattern that moves.)</em></p>
 
-<p>Now let's consider a square of size eight. For the moment, we can ignore the question of what happens
+<p>Now let's consider a square of size eight (or larger). For the moment, we can ignore the question of what happens
 when a square is not in the cache, because when dealing with squares of size eight, we only ever need
 to look up squares of size four, and they are all seeded in the cache. (Once we have established how
 to construct the result for a square of size eight, including its result and velocity, we will be able
 to write out <code>.find</code> method to handle looking up squares of size eight and dealing with cache 'misses'
-by constructing a new square.)</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Our class will be a <code>Square.RecursivelyComputable</code>. We'll isolate helpers as we build our class.</p>
-
-<p>We know how to obtain any square of size four using <code>cache.find</code>. So what we need is a way to compute
+by constructing a new square.)</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Here's our class for recursively computible squares. We'll actually use this for all squares we build on the fly.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span> <span class="k">extends</span> <span class="nx">Square</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>We know how to obtain any square of size four using <code>cache.find</code>. So what we need is a way to compute
 the result for any arbitrary square of size eight or larger from quadrant squares one level smaller.</p>
 
 <p>Our goal is to compute a result that looks like this (the lines and crosses are part of the result):</p>
@@ -221,17 +221,17 @@ sw        se
 The constructor for <code>IntermediateResult</code> takes a square and constructs th epieces of an intermediate square,
 one that is half way between the level of the square and the level of the square's eventual result.</p>
 
-<p>We'll step through that process in the constructor piece by piece.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>Making an Intermediate Square from a Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>An intermediate square is half-way in size between a square of size 2^n and 2^(n-1). For a square of size
+<p>We'll step through that process in the constructor piece by piece.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>Making an Intermediate Square from a Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>An intermediate square is half-way in size between a square of size 2^n and 2^(n-1). For a square of size
 eight, its intermediate square would be size six. Instead of having four quadrants, intermediate squares have
 nine components.</p>
 
 <p>For performace reasons, we don't check, however each component must be a square and not a cell. Thus, you cannot
-make an intermediate square from a square of size four.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Intermediate</span>
-    <span class="nv">constructor: </span><span class="nf">({</span>
-<span class="nf">      @nw, @nn, @ne,</span>
-<span class="nf">      @ww, @cc, @ee,</span>
-<span class="nf">      @sw, @ss, @se</span>
-<span class="nf">    }) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>One way to make an intermediate square is to chop a square up into overlapping
+make an intermediate square from a square of size four.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@Intermediate: </span><span class="k">class</span> <span class="nx">Intermediate</span>
+      <span class="nv">constructor: </span><span class="nf">({</span>
+<span class="nf">        @nw, @nn, @ne,</span>
+<span class="nf">        @ww, @cc, @ee,</span>
+<span class="nf">        @sw, @ss, @se</span>
+<span class="nf">      }) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>One way to make an intermediate square is to chop a square up into overlapping
 subsquares, and take the result of each subsquare. If the square is level <code>n</code>, and
 the subsquares are level <code>n-1</code>, the intermediate square will be at time <code>T+2^(n-3)</code>.</p>
 
@@ -324,9 +324,8 @@ sw        se
    ......
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">intermediate_via_subresults: </span><span class="o">-&gt;</span>
-      <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Intermediate</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">intermediate_via_subresults: </span><span class="o">-&gt;</span>
+      <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">Intermediate</span>
         <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result</span>
         <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result</span>
         <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result</span>
@@ -365,7 +364,7 @@ sw        se
             <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
             <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="p">.</span><span class="nx">result</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
+          <span class="p">.</span><span class="nx">result</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
 <code>2^(n-.5). Given an intermediate square, we can make a square of size</code>2^(n-1)<code>that is forward in time of the
 intermediate square by taking the result of four overlapping squares, also of size</code>2^(n-1)`.</p>
 
@@ -406,55 +405,45 @@ sw        se  sw        se
 sw        se
 </code></pre>
 
-<p>We're not going to do that here, we're just responsible for the geometry.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Intermediate</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">sub_squares: </span><span class="o">-&gt;</span>
+<p>We're not going to do that here, we're just responsible for the geometry.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">sub_squares_of: </span><span class="nf">(intermediate_square) -&gt;</span>
       <span class="nv">nw: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@nw</span>
-          <span class="nv">ne: </span><span class="nx">@nn</span>
-          <span class="nv">se: </span><span class="nx">@cc</span>
-          <span class="nv">sw: </span><span class="nx">@ww</span>
+          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nw</span>
+          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
+          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ww</span>
       <span class="nv">ne: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@nn</span>
-          <span class="nv">ne: </span><span class="nx">@ne</span>
-          <span class="nv">se: </span><span class="nx">@ee</span>
-          <span class="nv">sw: </span><span class="nx">@cc</span>
+          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
+          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ne</span>
+          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ee</span>
+          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
       <span class="nv">se: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@cc</span>
-          <span class="nv">ne: </span><span class="nx">@ee</span>
-          <span class="nv">se: </span><span class="nx">@se</span>
-          <span class="nv">sw: </span><span class="nx">@ss</span>
+          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ee</span>
+          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">se</span>
+          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ss</span>
       <span class="nv">sw: </span><span class="nx">Square</span>
         <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@ww</span>
-          <span class="nv">ne: </span><span class="nx">@cc</span>
-          <span class="nv">se: </span><span class="nx">@ss</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Given all the work we just did on <code>Square.Intermediate</code>, we now have everything we need to compute the
+          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ww</span>
+          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ss</span>
+          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">sw</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Given all the work we just did on <code>Square.RecursivelyComputable.Intermediate</code>, we now have everything we need to compute the
 result of any square of size eight or larger, any time in the future from time <code>T+1</code> to time <code>T+2^(n-1)</code>
 where <code>n</code> is the level of the square.</p>
 
-<p>The naïve result is obtained as follows: We construct a Square.Intermediate from subresults (moving
+<p>The naïve result is obtained as follows: We construct a Square.RecursivelyComputable.Intermediate from subresults (moving
 forward to <code>T+2^(n-2)</code>), and then we obtain its overlapping squares and take <em>their</em> results (moving
 forward <code>2^(n-2)</code> again, for a total advance of <code>2^(n-1)</code>).</p>
 
 <p>The only complication is that we memoize the result for performance... This is HashLife after all, and we
-do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">class</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span> <span class="k">extends</span> <span class="nx">Square</span>
-    <span class="nv">constructor: </span><span class="nf">(quadrants) -&gt;</span>
-      <span class="k">super</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
-      <span class="nv">sub_squares = </span><span class="nx">@intermediate_via_subresults</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
-      <span class="vi">@result = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-        <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span>
-        <span class="nv">ne: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span>
-        <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span>
-        <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3>Computing a result for a time less than <code>T+2^(n-1)</code></h3>
+do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>Computing a result for a time less than <code>T+2^(n-1)</code></h3>
 
 <p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
 we have a method called <code>result_at_time</code>. If that's the case, when we generate an intermediate square,
-we can generate one that is less than <code>2^(n-2)</code> generations forward:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">intermediate_via_subresults_at_time: </span><span class="nf">(t) -&gt;</span>
-      <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Intermediate</span>
+we can generate one that is less than <code>2^(n-2)</code> generations forward:</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">intermediate_via_subresults_at_time: </span><span class="nf">(t) -&gt;</span>
+      <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">Intermediate</span>
         <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
         <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
         <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
@@ -493,24 +482,29 @@ we can generate one that is less than <code>2^(n-2)</code> generations forward:<
             <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
             <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
             <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
-of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
-we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
-start by generating the intermediate square from results. If it's less than half, we start by generating
-the intermediate squre by cropping.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">level: </span><span class="mi">0</span>
-
-  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
+          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now define some initialization for a recursively computible square,
+starting with the result nad inlcuding some memoized intermediate results
+that speed things up for us.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">initialize: </span><span class="o">-&gt;</span>
+      <span class="k">super</span><span class="p">()</span>
+      <span class="nv">sub_squares = </span><span class="nx">@sub_squares_of</span> <span class="nx">@intermediate_via_subresults</span><span class="p">()</span>
+      <span class="vi">@result = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+        <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span>
+        <span class="nv">ne: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span>
+        <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span>
+        <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span>
       <span class="vi">@intermediate_at_time = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="nf">(t) -&gt;</span>
         <span class="nx">@intermediate_via_subresults_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
       <span class="p">)</span>
       <span class="vi">@subsquares_via_subresults = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-        <span class="nx">@intermediate_via_subresults</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
-      <span class="p">)</span>
+        <span class="nx">@sub_squares_of</span> <span class="nx">@intermediate_via_subresults</span><span class="p">()</span>
+      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>The big reveal: Calculating the future of a Square</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
+of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
+we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
+start by generating the intermediate square from results. If it's less than half, we start by generating
+the intermediate squre by cropping.</p>
 
-  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+<p>These are methods on squares and not just recursively computible squares, because they need to work on
+squares of level 1 and 2.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">result_at_time_zero: </span><span class="o">-&gt;</span>
       <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
         <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
@@ -556,7 +550,7 @@ the intermediate squre by cropping.</p>             </td>             <td class=
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
         <span class="nx">@result</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">throw</span> <span class="s2">&quot;I can&#39;t go further forward than #{Math.pow(2, @level - 2)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>Computing the future of a square</h3>
+        <span class="k">throw</span> <span class="s2">&quot;I can&#39;t go further forward than #{Math.pow(2, @level - 2)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3>Computing the future of a square</h3>
 
 <p>Let's say we have a square and we wish to determine its future at time <code>t</code>.
 We calculate the smallest square that could possible contain its future, taking
@@ -616,9 +610,9 @@ base square's <code>result_at_time(t)</code> which gives us the future of our pa
         <span class="nv">new_size = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
         <span class="nv">new_level = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">new_size</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
         <span class="nv">base = </span><span class="nx">@pad_by</span> <span class="p">(</span><span class="nx">new_level</span> <span class="o">-</span> <span class="nx">@level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="nx">base</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>The first time through</h2>
+        <span class="nx">base</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h2>The first time through</h2>
 
-<p>If this is your first time through the code, and you've already read the <a href="http:rules.html">Rules Module</a>, you can look at the <a href="http:cache.html">Cache</a> and <a href="http:api.html">API</a> modules.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <hr />
+<p>If this is your first time through the code, and you've already read the <a href="http:rules.html">Rules Module</a>, you can look at the <a href="http:cache.html">Cache</a> and <a href="http:api.html">API</a> modules.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 
