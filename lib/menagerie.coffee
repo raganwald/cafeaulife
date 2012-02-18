@@ -1,8 +1,8 @@
 # This module is part of [cafeaulife.coffee](http:cafeaulife.html).
 #
-# ## Objects Module
+# ## The Menagerie
 #
-# The Objects Module mixes common objects from the Conway's Life Universe. It's not automatically loaded.
+# The Menagerie Module mixes common objects from the Conway's Life Universe. It's not automatically loaded.
 
 _ = require('underscore')
 exports ?= window or this
@@ -39,7 +39,7 @@ _.defaults exports,
     [0, 0, 0, 0, 0, 0, 0, 0]
     [0, 0, 0, 0, 0, 0, 0, 0] ]
 
-  # A [grow_by_one][gb1] is a pattern whose population increases by one cell every generation. The smallest
+  # A [grow-by-one][gb1] is a pattern whose population increases by one cell every generation. The smallest
   # known grow-by-one object is the following 44-cell pattern (David Bell's one-cell improvement of
   # a pattern found by Nicolay Beluchenko, September 2005).
   #
@@ -77,7 +77,7 @@ _.defaults exports,
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ]
-    
+
   gospers_glider_gun: Life.Square.from_json [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
