@@ -121,6 +121,17 @@ exports.mixInto = (exports) ->
 
       exports
 
+# ## The first time through
+#
+# If this is your first time through the code, read the [Future Module][future] next. You can look at the [Cache][cache] and [API][api] modules at your leisure, they arent really core to the algorithm.
+#
+# [menagerie]: http:menagerie.html
+# [api]: http:api.html
+# [future]: http:future.html
+# [cache]: http:cache.html
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
+# [rules]: http:rules.html
+
 # ---
 #
 # **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))

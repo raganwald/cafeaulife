@@ -59,31 +59,99 @@
 
 # ## How
 
+# Cafe au Life is based on two very simple classes:
+#
+# The smallest unit of Life is the `Cell`. The constructor is set up to call an `initialize` method to make point-cuts slightly easier.
+#
+# HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
+# (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Naturally, squares are represented by instances of the class `Square`. The smallest possible square
+# (of size `2^1`) has cells for each of its four quadrants, while all larger squares (of size `2^n`) have squares of one smaller
+# size (`2^(n-1)`) for each of their four quadrants.
+#
+# For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`):
+#
+#     nw         ne
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#       ————#————
+#       ....|....
+#       ....|....
+#       ....|....
+#       ....|....
+#     sw         se
+#
+# The squares of size four are in turn each composed of four squares of size two (`2^1`):
+#
+#     nw           ne
+#       ..|..|..|..
+#       ..|..|..|..
+#       ——+——|——+——
+#       ..|..|..|..
+#       ..|..|..|..
+#       —————#—————
+#       ..|..|..|..
+#       ..|..|..|..
+#       ——+——|——+——
+#       ..|..|..|..
+#       ..|..|..|..
+#     sw           se
+#
+# And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
+# board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)
+exports ?= window or this
+_ = require('underscore')
+
+class Cell
+  constructor: (@value) ->
+    @initialize.apply(this, arguments)
+  initialize: ->
+
+class Square
+  constructor: ({@nw, @ne, @se, @sw}) ->
+    @initialize.apply(this, arguments)
+  initialize: ->
+
+_.defaults exports, {Cell, Square}
+
 # Cafe au Life is divided into modules:
 #
-# * The [Base Module][base] provides the `Cell` and `Square` classes, including `RecursivelyComputableSquare`, the foundation of the
-# HashLife implementation.
 # * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
-# * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
-# components.
 # * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
 # the size of its container square.
-# * And the [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
+# * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
+# components.
+# * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
+# * The [Menagerie Module][menagerie] provides a few well-know life objects predefined for you to play with. It is entirely optional.
 #
+# The modules will build up the functionality of our `Cell` and `Square` classes.
+#
+# [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
 # [cache]: http:cache.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
-#
-# [base]: http:base.html
-module.exports = require('./base')
 
-require('./rules').mixInto(module.exports)
-require('./cache').mixInto(module.exports)
-require('./future').mixInto(module.exports)
-require('./api').mixInto(module.exports)
+require('./rules').mixInto(exports)
+require('./future').mixInto(exports)
+require('./cache').mixInto(exports)
+require('./api').mixInto(exports)
+
+# ## The first time through
+#
+# If this is your first time through the code, start with the [Rules Module][rules], and then read the [Future Module][future]
+# to understand the core algorithm for computing the future of a pattern. You can look at the [Cache][cache] and [API][api] modules
+# at your leisure.
+#
+# [menagerie]: http:menagerie.html
+# [api]: http:api.html
+# [future]: http:future.html
+# [cache]: http:cache.html
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
+# [rules]: http:rules.html
 
 # ## Who
 #

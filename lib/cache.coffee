@@ -26,10 +26,7 @@ _ = require('underscore')
 YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 exports ?= window or this
 
-
-exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
-
-  # ### Extending Cell and Square
+exports.mixInto = ({Square, Cell}) ->
 
   counter = 0
 
@@ -65,7 +62,7 @@ exports.mixInto = ({Square, RecursivelyComputableSquare, Cell}) ->
       if found
         found
       else
-        @cache.add(new RecursivelyComputableSquare(quadrants))
+        @cache.add(new Square.RecursivelyComputable(quadrants))
 
 # ---
 #
