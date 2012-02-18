@@ -50,8 +50,15 @@ exports.mixInto = ({Square, Cell}) ->
 
   _.extend Square,
     from_json: (json) ->
-      unless _.isArray(json[0]) and json[0].length is json.length
-        throw 'must be a square'
+      dims = [json.length].concat json.map( (row) -> row.length )
+      sz = Math.pow(2, Math.ceil(Math.log(Math.max(dims...)) / Math.log(2)))
+      _.each [0..json.length - 1], (i) ->
+        if json[i].length < sz
+          json[i] = json[i].concat _.map( [1..(sz - json[i].length)], -> 0 )
+      if json.length < sz
+        json = json.concat _.map( [1..(sz - json.length)], ->
+          _.map [1..sz], -> 0
+        )
       if json.length is 1
         if json[0][0] instanceof Cell
           json[0][0]
