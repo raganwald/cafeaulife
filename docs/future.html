@@ -1,4 +1,4 @@
-<!DOCTYPE html>  <html> <head>   <title>future.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="base.html">                 base.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               future.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http:cafeaulife.html">cafeaulife.coffee</a>.</p>
+<!DOCTYPE html>  <html> <head>   <title>future.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="base.html">                 base.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="menagerie.html">                 menagerie.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               future.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http:cafeaulife.html">cafeaulife.coffee</a>.</p>
 
 <h2>Future Module</h2>
 
@@ -21,83 +21,61 @@ case where a square is surrounded by empty squares and may grow beyond the bound
 
 <span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Computing a result for a time less than <code>T+2^(n-1)</code></h3>
 
-<p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's revist our
-intermediate square. Here's another way to make an intermediate square from a square, we crop an existing
-square to its size. This produces an intermediate square at time T+0 relative to the square:</p>
-
-<pre><code>nw        ne
-  ........
-  .nwnnne.
-  .nwnnne.
-  .wwccee.
-  .wwccee.
-  .swssse.
-  .swssse.
-  ........
-sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
-
-  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">level:</span>
-      <span class="mi">0</span>
-
-  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">intermediate_via_crop: </span><span class="o">-&gt;</span>
+<p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
+we have a method called <code>result_at_time</code>. If that's the case, when we generate an intermediate square,
+we can generate one that is less than <code>2^(n-2)</code> generations forward:</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">intermediate_via_subresults_at_time: </span><span class="nf">(t) -&gt;</span>
       <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Intermediate</span>
-        <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">nn: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">se: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">ww: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">cc: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">ee: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">ss: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">sw</span>
-          <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">ne</span>
-        <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">ne: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">sw: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
+        <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">nn: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span>
+            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">se: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">sw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
+          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">ee: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span>
+            <span class="nv">sw: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
+          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">ss: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
+            <span class="nv">ne: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span>
+          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">ww: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">ne: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
+            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span>
+          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="nv">cc: </span><span class="nx">Square</span>
+          <span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
+          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
 of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
 we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
 start by generating the intermediate square from results. If it's less than half, we start by generating
-the intermediate squre by cropping.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+the intermediate squre by cropping.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">level: </span><span class="mi">0</span>
+
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@subsquares_via_crop = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-        <span class="nx">@intermediate_via_crop</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
+      <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="vi">@intermediate_at_time = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="nf">(t) -&gt;</span>
+        <span class="nx">@intermediate_via_subresults_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
       <span class="p">)</span>
       <span class="vi">@subsquares_via_subresults = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
         <span class="nx">@intermediate_via_subresults</span><span class="p">().</span><span class="nx">sub_squares</span><span class="p">()</span>
@@ -116,12 +94,28 @@ the intermediate squre by cropping.</p>             </td>             <td class=
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">0</span>
         <span class="nx">@result_at_time_zero</span><span class="p">()</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="nv">sub_squares = </span><span class="nx">@subsquares_via_crop</span><span class="p">()</span>
+        <span class="nv">intermediate = </span><span class="nx">@intermediate_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-          <span class="nv">ne: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-          <span class="nv">se: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-          <span class="nv">sw: </span><span class="nx">sub_squares</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+          <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">nn</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ww</span><span class="p">.</span><span class="nx">ne</span>
+          <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">nn</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ee</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">ne</span>
+          <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ee</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ss</span><span class="p">.</span><span class="nx">ne</span>
+          <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ww</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ss</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
       <span class="k">else</span> <span class="k">if</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
         <span class="nv">sub_squares = </span><span class="nx">@subsquares_via_subresults</span><span class="p">()</span>
         <span class="nv">t_remaining = </span><span class="nx">t</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
@@ -191,7 +185,9 @@ base square's <code>result_at_time(t)</code> which gives us the future of our pa
       <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">0</span>
         <span class="k">this</span>
       <span class="k">else</span>
-        <span class="nv">base = </span><span class="nx">@pad_by</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nv">new_size = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="nv">new_level = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">new_size</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="nv">base = </span><span class="nx">@pad_by</span> <span class="p">(</span><span class="nx">new_level</span> <span class="o">-</span> <span class="nx">@level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="nx">base</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>

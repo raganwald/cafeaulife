@@ -133,7 +133,9 @@ coffee> r = Life.Square.from_json [ \
      population: 3 } }
 coffee>  r.future_at_time(1073741824).population
 116
-coffee>
+coffee> r.future_at_time(17179869184).trim().level
+33
+coffee> 
 ```
 
 Have fun!

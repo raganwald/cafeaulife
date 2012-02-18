@@ -1,31 +1,14 @@
 _ = require('underscore')
 require 'UnderscoreMatchersForJasmine'
 
-Life = require('../lib/cafeaulife')
+Life = require('../lib/cafeaulife').set_universe_rules()
+{acorn, block, r} = require('../lib/menagerie')
 
 describe 'time and space', ->
 
-  beforeEach ->
-    Life.set_universe_rules()
-
-  describe 'time', ->
-
-    beforeEach ->
-      @still_life = Life.Square.from_json [
-        [1, 1]
-        [1, 1]
-      ]
-
-      @r_pentomino = Life.Square.from_json [
-        [0, 0, 0, 0]
-        [0, 1, 0, 0]
-        [1, 1, 1, 0]
-        [0, 0, 1, 0]
-      ]
-
     it 'should move a block one step into the future', ->
 
-      expect( @still_life.future_at_time(1).trim() ).toEqual(
+      expect( block.future_at_time(1).trim() ).toEqual(
         Life.Square.from_json [
           [1, 1]
           [1, 1]
@@ -34,12 +17,24 @@ describe 'time and space', ->
 
     it 'should move an r-pentomino two steps into the future', ->
 
-      expect( @r_pentomino.future_at_time(2).trim() ).toEqual( Life.Square.from_json [
+      expect( r.future_at_time(2).trim() ).toEqual( Life.Square.from_json [
         [0, 1, 0, 0]
         [1, 0, 1, 0]
         [1, 0, 1, 1]
         [0, 1, 0, 0]
       ] )
+
+    it 'should generate square of size 12 (4096) fro an r pentonimo', ->
+
+      expect( r.future_at_time(1103).level ).toEqual( 12 )
+
+    it 'should generate a population of 116 from an r pentomino', ->
+
+      expect( r.future_at_time(1103).population ).toEqual( 116 )
+
+    it 'should generate a population of 633 from an acorn', ->
+
+      expect( acorn.future_at_time(5206).population ).toEqual( 633 )
 
 
   describe 'space', ->

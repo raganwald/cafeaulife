@@ -28,87 +28,65 @@ exports.mixInto = ({Square, Cell}) ->
 
   # ### Computing a result for a time less than `T+2^(n-1)`
   #
-  # What if we don't want to move so far forward in time? Well, we don't have to. First, let's revist our
-  # intermediate square. Here's another way to make an intermediate square from a square, we crop an existing
-  # square to its size. This produces an intermediate square at time T+0 relative to the square:
-  #
-  #     nw        ne
-  #       ........
-  #       .nwnnne.
-  #       .nwnnne.
-  #       .wwccee.
-  #       .wwccee.
-  #       .swssse.
-  #       .swssse.
-  #       ........
-  #     sw        se
-  YouAreDaChef(Square)
-    .after 'initialize', ->
-      @level = @nw.level + 1
-
-  _.extend Cell.prototype,
-    level:
-      0
-
+  # What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
+  # we have a method called `result_at_time`. If that's the case, when we generate an intermediate square,
+  # we can generate one that is less than `2^(n-2)` generations forward:
   _.extend Square.prototype,
-    intermediate_via_crop: ->
+    intermediate_via_subresults_at_time: (t) ->
       new Square.Intermediate
-        nw: Square.canonicalize
-          nw: @nw.nw.se
-          ne: @nw.ne.sw
-          se: @nw.se.nw
-          sw: @nw.sw.ne
-        nn: Square.canonicalize
-          nw: @nw.ne.se
-          ne: @ne.nw.sw
-          se: @ne.sw.nw
-          sw: @nw.se.ne
-        ne: Square.canonicalize
-          nw: @ne.nw.se
-          ne: @ne.ne.se
-          se: @ne.se.nw
-          sw: @ne.sw.ne
-        ww: Square.canonicalize
-          nw: @nw.sw.se
-          ne: @nw.se.sw
-          se: @sw.ne.nw
-          sw: @sw.nw.ne
-        cc: Square.canonicalize
-          nw: @nw.se.se
-          ne: @ne.sw.sw
-          se: @se.nw.nw
-          sw: @sw.ne.ne
-        ee: Square.canonicalize
-          nw: @ne.sw.se
-          ne: @ne.se.sw
-          se: @sw.ne.nw
-          sw: @sw.nw.ne
-        sw: Square.canonicalize
-          nw: @sw.nw.se
-          ne: @sw.ne.sw
-          se: @sw.se.nw
-          sw: @sw.sw.ne
-        ss: Square.canonicalize
-          nw: @sw.ne.se
-          ne: @se.nw.sw
-          se: @se.sw.nw
-          sw: @sw.se.ne
-        se: Square.canonicalize
-          nw: @se.nw.se
-          ne: @se.ne.se
-          se: @se.se.nw
-          sw: @se.sw.ne
+        nw: @nw.result_at_time(t)
+        ne: @ne.result_at_time(t)
+        se: @se.result_at_time(t)
+        sw: @sw.result_at_time(t)
+        nn: Square
+          .canonicalize
+            nw: @nw.ne
+            ne: @ne.nw
+            se: @ne.sw
+            sw: @nw.se
+          .result_at_time(t)
+        ee: Square
+          .canonicalize
+            nw: @ne.sw
+            ne: @ne.se
+            se: @se.ne
+            sw: @se.nw
+          .result_at_time(t)
+        ss: Square
+          .canonicalize
+            nw: @sw.ne
+            ne: @se.nw
+            se: @se.sw
+            sw: @sw.se
+          .result_at_time(t)
+        ww: Square
+          .canonicalize
+            nw: @nw.sw
+            ne: @nw.se
+            se: @sw.ne
+            sw: @sw.nw
+          .result_at_time(t)
+        cc: Square
+          .canonicalize
+            nw: @nw.se
+            ne: @ne.sw
+            se: @se.nw
+            sw: @sw.ne
+          .result_at_time(t)
 
   # Armed with this one additional function, we can write a general method for determining the result
   # of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
   # we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
   # start by generating the intermediate square from results. If it's less than half, we start by generating
   # the intermediate squre by cropping.
+  _.extend Cell.prototype,
+    level: 0
 
   YouAreDaChef(Square)
     .after 'initialize', ->
-      @subsquares_via_crop = _.memoize( ->
-        @intermediate_via_crop().sub_squares()
+      @level = @nw.level + 1
+      @intermediate_at_time = _.memoize( (t) ->
+        @intermediate_via_subresults_at_time(t)
       )
       @subsquares_via_subresults = _.memoize( ->
         @intermediate_via_subresults().sub_squares()
@@ -127,12 +105,28 @@ exports.mixInto = ({Square, Cell}) ->
       else if t is 0
         @result_at_time_zero()
       else if t <= Math.pow(2, @level - 3)
-        sub_squares = @subsquares_via_crop()
+        intermediate = @intermediate_at_time(t)
         Square.canonicalize
-          nw: sub_squares.nw.result_at_time(t)
-          ne: sub_squares.ne.result_at_time(t)
-          se: sub_squares.se.result_at_time(t)
-          sw: sub_squares.sw.result_at_time(t)
+          nw: Square.canonicalize
+            nw: intermediate.nw.se
+            ne: intermediate.nn.sw
+            se: intermediate.cc.nw
+            sw: intermediate.ww.ne
+          ne: Square.canonicalize
+            nw: intermediate.nn.se
+            ne: intermediate.ne.sw
+            se: intermediate.ee.nw
+            sw: intermediate.cc.ne
+          se: Square.canonicalize
+            nw: intermediate.cc.se
+            ne: intermediate.ee.sw
+            se: intermediate.se.nw
+            sw: intermediate.ss.ne
+          sw: Square.canonicalize
+            nw: intermediate.ww.se
+            ne: intermediate.cc.sw
+            se: intermediate.ss.nw
+            sw: intermediate.sw.ne
       else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
         sub_squares = @subsquares_via_subresults()
         t_remaining = t - Math.pow(2, @level - 3)
@@ -205,7 +199,9 @@ exports.mixInto = ({Square, Cell}) ->
       else if t is 0
         this
       else
-        base = @pad_by Math.ceil(Math.log(t) / Math.log(2)) + 1
+        new_size = Math.pow(2, @level) + (t * 2)
+        new_level = Math.ceil(Math.log(new_size) / Math.log(2))
+        base = @pad_by (new_level - @level + 1)
         base.result_at_time(t)
 
 # ---
