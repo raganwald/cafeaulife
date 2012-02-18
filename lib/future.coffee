@@ -7,15 +7,6 @@
 
 # ### The Life "Universe"
 #
-# The `result` given for class `Square` is handy, but not directly useful for computing the future of a pattern,
-# because it computes the future of the *center* of a square, not the future of a square. Of course, the future of
-# a square depends very much on what surrounds it, and there is an algorithm for computing the future of a surface
-# tiled with squares.
-#
-# However, there is a special case that interests us, the future of a square that sits within an otherwise empty
-# Life "Universe." When we build a Life pattern and run it into the future, we are specifically considering the
-# case where a square is surrounded by empty squares and may grow beyond the boundaries of the initial square.
-#
 # This module mixes special case functionality for computing the `future` of a square into `Square` and `Cell`.
 
 # ### Baseline Setup
@@ -591,11 +582,10 @@ exports.mixInto = ({Square, Cell}) ->
   # into account that the pattern in the square could grow once cell in each direction
   # per generation.
   #
-  # We then double the size and embed our pattern in the center. This becomes our base
+  # We take our square and 'pad' it with empty squares until it is large enough to
+  # contain its future. We then double that square and embed our pattern in the center. This becomes our base
   # square: It's our square embdedded in a possible vast empty square. We then take the
   # base square's `result_at_time(t)` which gives us the future of our pattern.
-  #
-  # We start with the ability to make empty copies of things.
   _.extend Cell.prototype,
     empty_copy: ->
       Cell.Dead

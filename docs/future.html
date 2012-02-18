@@ -5,15 +5,6 @@
 <p>The Future Module provides methods for computing the future of a pattern, taking into account its ability to grow beyond
 the size of its container square.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>The Life "Universe"</h3>
 
-<p>The <code>result</code> given for class <code>Square</code> is handy, but not directly useful for computing the future of a pattern,
-because it computes the future of the <em>center</em> of a square, not the future of a square. Of course, the future of
-a square depends very much on what surrounds it, and there is an algorithm for computing the future of a surface
-tiled with squares.</p>
-
-<p>However, there is a special case that interests us, the future of a square that sits within an otherwise empty
-Life "Universe." When we build a Life pattern and run it into the future, we are specifically considering the
-case where a square is surrounded by empty squares and may grow beyond the boundaries of the initial square.</p>
-
 <p>This module mixes special case functionality for computing the <code>future</code> of a square into <code>Square</code> and <code>Cell</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
 <span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
@@ -572,11 +563,10 @@ We calculate the smallest square that could possible contain its future, taking
 into account that the pattern in the square could grow once cell in each direction
 per generation.</p>
 
-<p>We then double the size and embed our pattern in the center. This becomes our base
+<p>We take our square and 'pad' it with empty squares until it is large enough to
+contain its future. We then double that square and embed our pattern in the center. This becomes our base
 square: It's our square embdedded in a possible vast empty square. We then take the
-base square's <code>result_at_time(t)</code> which gives us the future of our pattern.</p>
-
-<p>We start with the ability to make empty copies of things.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+base square's <code>result_at_time(t)</code> which gives us the future of our pattern.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">empty_copy: </span><span class="o">-&gt;</span>
       <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
 
