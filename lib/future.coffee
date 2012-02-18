@@ -15,9 +15,6 @@ exports ?= window or this
 
 exports.mixInto = ({Square, Cell}) ->
 
-  _.extend Cell.prototype,
-    level: 0
-
   # ### Recap: Squares
   #
   # ![Block laying seed](block_laying_seed.png)
@@ -505,17 +502,14 @@ exports.mixInto = ({Square, Cell}) ->
     # that speed things up for us.
     initialize: ->
       super()
-      sub_squares = @sub_squares_of @intermediate_via_subresults()
+      @subsquares_via_subresults = @sub_squares_of @intermediate_via_subresults()
       @result = Square.canonicalize
-        nw: sub_squares.nw.result
-        ne: sub_squares.ne.result
-        se: sub_squares.se.result
-        sw: sub_squares.sw.result
+        nw: @subsquares_via_subresults.nw.result
+        ne: @subsquares_via_subresults.ne.result
+        se: @subsquares_via_subresults.se.result
+        sw: @subsquares_via_subresults.sw.result
       @intermediate_at_time = _.memoize( (t) ->
         @intermediate_via_subresults_at_time(t)
-      )
-      @subsquares_via_subresults = _.memoize( ->
-        @sub_squares_of @intermediate_via_subresults()
       )
 
     # ## The big reveal: Calculating the future of a Square
@@ -564,13 +558,12 @@ exports.mixInto = ({Square, Cell}) ->
             se: intermediate.ss.nw
             sw: intermediate.sw.ne
       else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
-        sub_squares = @subsquares_via_subresults()
         t_remaining = t - Math.pow(2, @level - 3)
         Square.canonicalize
-          nw: sub_squares.nw.result_at_time(t_remaining)
-          ne: sub_squares.ne.result_at_time(t_remaining)
-          se: sub_squares.se.result_at_time(t_remaining)
-          sw: sub_squares.sw.result_at_time(t_remaining)
+          nw: @subsquares_via_subresults.nw.result_at_time(t_remaining)
+          ne: @subsquares_via_subresults.ne.result_at_time(t_remaining)
+          se: @subsquares_via_subresults.se.result_at_time(t_remaining)
+          sw: @subsquares_via_subresults.sw.result_at_time(t_remaining)
       else if t is Math.pow(2, @level - 2)
         @result
       else if t > Math.pow(2, @level - 2)
