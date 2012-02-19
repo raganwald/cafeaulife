@@ -41,7 +41,7 @@
 
   <body class="logged_in   vis-public env-production ">
 
-      <div class="announce instapaper_body md" data-path="/" id="readme"><span class="name"><span class="icon"></span>resursiveuniver.se</span><article class="markdown-body"><h1>Cafe au Life</h1>
+      <div class="announce instapaper_body md" data-path="/" id="readme"><span class="name"><span class="icon"></span>README.md</span><article class="markdown-body"><h1>Cafe au Life</h1>
 
 <p><img src="https://a248.e.akamai.net/assets.github.com/img/e0c670c0f39987ac024d2f5b02e4b722e763fae1/687474703a2f2f726167616e77616c642e6769746875622e636f6d2f6361666561756c6966652f646f63732f676f73706572735f676c696465725f67756e2e676966" alt="Gosper's Glider Gun"></p>
 
@@ -49,11 +49,11 @@
 
 <p>Cafe au Life is an implementation of John Conway's <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Game of Life</a> cellular automata written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>. Cafe au Life runs on <a href="http://nodejs.org">Node.js</a>, it is not designed to run as an interactive program in a browser window.</p>
 
-<h3>If it doesn't produce a an animated display, why should I care about it?</h3>
+<h3>If it doesn't produce an animated display, why should I care about it?</h3>
 
 <p>Cafe au Life implements Bill Gosper's <a href="http://en.wikipedia.org/wiki/Hashlife">HashLife</a> algorithm. HashLife exploits regularity, so for certain life patterns, it runs at super-linear speed. As <a href="http://raganwald.posterous.com/a-beautiful-algorithm">noted elsewhere</a>, if you set up Gosper's Glider Gun when the Earth was first formed 4.5 billion years ago, and ran one generation per second, in the 143.4 <em>quadrillion</em> seconds that have elapsed since then, the pattern would grow to 23,900,000,000,000,036 live cells. Cafe au Life takes just under two seconds to boot up, and another second to calculate the state of the pattern after 143.4 quadrillion generations.</p>
 
-<p>If you haven't seen how the algorithm works, you owe it to yourself to read the <a href="http://recursiveuniver.se/docs/cafeaulife.html">annotated source code</a>.</p>
+<p>If you haven't seen how the algorithm works, you owe it to yourself to read the <a href="http://recursiveuniverse/docs/cafeaulife.html">annotated source code</a>.</p>
 
 <h3>How can I try it?</h3>
 
@@ -80,22 +80,47 @@ coffee&gt;
 
 <p>One of the most important questions we ask ourselves is whether a non-trivial machine can be constructed that reproduces itself. If the answer is "no," then we can reason that for any machine, there must be a factory or creator outside of the machine. That goes for humans and all life. If the answer is "yes," then we can reason that it is not <em>necessary</em> for there to be a factory or creator for every machine, including ourselves.</p>
 
+<p><a href="http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&amp;tag=raganwald001-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0809252023"><img src="https://a248.e.akamai.net/assets.github.com/img/6441663e58d6a97f4ddd6a1af4e5b41a8cc1d625/687474703a2f2f77732e6173736f632d616d617a6f6e2e636f6d2f776964676574732f713f5f656e636f64696e673d5554463826466f726d61743d5f534c3136305f264153494e3d30383039323532303233264d61726b6574506c6163653d55532649443d4173696e496d6167652657533d31267461673d726167616e77616c643030312d3230265365727669636556657273696f6e3d3230303730383232" alt="The Recursive Universe"></a></p>
+
 <p>Cellular automata patterns are a kind of machine, with properties close enough to physical machines that it is very easy to reason by correspondence: If such-and-such is possible for a cellular automaton, it must be possible for a physical machine, therefore research into the capabilities of cellular automata is an important part of research into the capabilities of machines, including our bodies and our brains.</p>
 
 <p>Life theorists have proven all sorts of things about what ought to be possible with Life patterns. Life experimenters have taken it to the next level and have built Universal Turing Machines, self-replicating machines, and all sorts of things that demonstrate the universality of Conway's game of Life. Implementations that can handle very large and/or very long-running Life patterns are an important tool for experimentation.</p>
 
 <p>if you'd like to read more, the most approachable book on the subject is William Poundstone's brilliant <a href="http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&amp;tag=raganwald001-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0809252023">The Recursive Universe</a>. Beg, borrow, or steal a copy, new or used. Get it in hardcover while you still can.</p>
 
-<p><a href="http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&amp;tag=raganwald001-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0809252023"><img src="https://a248.e.akamai.net/assets.github.com/img/6441663e58d6a97f4ddd6a1af4e5b41a8cc1d625/687474703a2f2f77732e6173736f632d616d617a6f6e2e636f6d2f776964676574732f713f5f656e636f64696e673d5554463826466f726d61743d5f534c3136305f264153494e3d30383039323532303233264d61726b6574506c6163653d55532649443d4173696e496d6167652657533d31267461673d726167616e77616c643030312d3230265365727669636556657273696f6e3d3230303730383232" alt="The Recursive Universe"></a></p>
-
 <h3>What should I read next?</h3>
 
-<p>The <a href="http://recursiveuniver.se/docs/cafeaulife.html">annotated source code</a>.</p></article></div>
+<p>The <a href="http://recursiveuniverse/docs/cafeaulife.html">annotated source code</a>.</p>
+
+<h3>Who's responsible for this?</h3>
+
+<p>When he's not shipping Ruby, Javascript and Java applications scaling out to millions of users,
+<a href="http://reginald.braythwayt.com">Reg "Raganwald" Braithwaite</a> has authored libraries for Javascript and Ruby programming
+such as <a href="https://github.com/raganwald/Katy">Katy</a>, <a href="http://github.com/raganwald/JQuery-Combinators">JQuery Combinators</a>,
+<a href="https://github.com/raganwald/YouAreDaChef">YouAreDaChef</a>, <a href="http://github.com/raganwald/andand">andand</a>,
+and more you can find on <a href="https://github.com/raganwald">Github</a>.</p>
+
+<p>He has written three books:</p>
+
+<ul>
+<li>
+<a href="http://leanpub.com/combinators">Kestrels, Quirky Birds, and Hopeless Egocentricity</a>: <em>Raganwald's collected adventures in Combinatory Logic and Ruby Meta-Programming</em>
+</li>
+<li>
+<a href="http://leanpub.com/shippingsoftware">What I've Learned From Failure</a>: <em>A quarter-century of experience shipping software, distilled into fixnum bittersweet essays</em>
+</li>
+<li><a href="http://leanpub.com/dowhatyoulove">How to Do What You Love &amp; Earn What You’re Worth as a Programmer</a></li>
+</ul><p>His hands-on coding blog <a href="https://github.com/raganwald/homoiconic">Homoiconic</a> frequently lights up the Hackerverse,
+and he also writes about <a href="http://raganwald.posterous.com/">project management and other subjects</a>.</p>
+
+<hr><p>**(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a>** (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
+
+<p>Cafe au Life is freely distributable under the terms of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.</p>
+
+<p>The annotated source code was generated directly from the <a href="http://recursiveuniverse/docs/cafeaulife.html">original source</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p></article></div>
     </div>
   </div>
   <br style="clear:both;">
-
-
 
   </body>
 </html>
