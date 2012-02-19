@@ -46,11 +46,9 @@ One of the most important questions we ask ourselves is whether a non-trivial ma
 
 Cellular automata patterns are a kind of machine, with properties close enough to physical machines that it is very easy to reason by correspondence: If such-and-such is possible for a cellular automaton, it must be possible for a physical machine, therefore research into the capabilities of cellular automata is an important part of research into the capabilities of machines, including our bodies and our brains.
 
-Life theorists have proven all sorts of things about what ought to be possible with Life patterns. Life experimenters have taken it to the next level and have built Universal Turing Machines, self-replicating machines, and all sorts of things that demonstrate the universality of Conway's game of Life.
+Life theorists have proven all sorts of things about what ought to be possible with Life patterns. Life experimenters have taken it to the next level and have built Universal Turing Machines, self-replicating machines, and all sorts of things that demonstrate the universality of Conway's game of Life. Implementations that can handle very large and/or very long-running Life patterns are an important tool for experimentation.
 
-Algorithms that can handle very large and/or very long-running Life patterns are an important tool for experimentation.
-
-if you'd like to read more, the most approachable book on the subject is William Poundstone's The Recursive Universe. Beg, borrow, or steal a copy, new or used. Get it in hardcover while you still can.
+if you'd like to read more, the most approachable book on the subject is William Poundstone's brilliant [The Recursive Universe](http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0809252023). Beg, borrow, or steal a copy, new or used. Get it in hardcover while you still can.
 
 [![The Recursive Universe](http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0809252023&MarketPlace=US&ID=AsinImage&WS=1&tag=raganwald001-20&ServiceVersion=20070822)](http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0809252023)
 

@@ -1,4 +1,4 @@
-# This module is part of [cafeaulife.coffee](http:cafeaulife.html).
+# This module is part of [resursiveuniver.se](http://recursiveuniver.se).
 #
 # ## Cache Module
 #
