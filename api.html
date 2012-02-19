@@ -1,0 +1,127 @@
+<!DOCTYPE html>  <html> <head>   <title>api.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="menagerie.html">                 menagerie.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               api.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http:cafeaulife.html">cafeaulife.coffee</a>.</p>
+
+<h2>API Module</h2>
+
+<p>The API Module provides convenience methods for interacting with squares from the outside</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
+<span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
+<span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
+
+<span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Mix functionality in. <code>to_json</code> and <code>toString</code> are simple methods for cells, but</h3>
+
+<p>memoized for squares.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">to_json: </span><span class="o">-&gt;</span>
+      <span class="p">[</span><span class="nx">@value</span><span class="p">]</span>
+    <span class="nv">toString: </span><span class="o">-&gt;</span>
+      <span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="nx">@value</span>
+
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+      <span class="vi">@to_json = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+        <span class="nv">a =</span>
+          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
+          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
+          <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
+          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">to_json</span><span class="p">()</span>
+        <span class="nv">b =</span>
+          <span class="nv">top: </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">zip</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">ne</span><span class="p">),</span> <span class="nf">([left, right]) -&gt;</span>
+            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span>
+              <span class="nx">left</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span>
+            <span class="k">else</span>
+              <span class="p">[</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">]</span>
+          <span class="p">)</span>
+          <span class="nv">bottom: </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">zip</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">sw</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">se</span><span class="p">),</span> <span class="nf">([left, right]) -&gt;</span>
+            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span>
+              <span class="nx">left</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span>
+            <span class="k">else</span>
+              <span class="p">[</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">]</span>
+          <span class="p">)</span>
+        <span class="nx">b</span><span class="p">.</span><span class="nx">top</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">bottom</span><span class="p">)</span>
+      <span class="p">)</span>
+      <span class="vi">@toString = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+        <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">@to_json</span><span class="p">(),</span> <span class="nf">(row) -&gt;</span>
+          <span class="p">([</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">][</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">row</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span>
+      <span class="p">)</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">,</span>
+    <span class="nv">from_string: </span><span class="nf">(str) -&gt;</span>
+      <span class="nv">strs = </span><span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span>
+      <span class="nv">json = </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">strs</span><span class="p">,</span> <span class="nf">(ln) -&gt;</span>
+        <span class="p">{</span><span class="s1">&#39;.&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">}[</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">ln</span>
+      <span class="nx">@from_json</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span>
+    <span class="nv">from_json: </span><span class="nf">(json) -&gt;</span>
+      <span class="nv">dims = </span><span class="p">[</span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">json</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nf">(row) -&gt;</span> <span class="nx">row</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span>
+      <span class="nv">sz = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dims</span><span class="p">...))</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="nf">(i) -&gt;</span>
+        <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">sz</span>
+          <span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="p">[</span><span class="mi">1</span><span class="p">..(</span><span class="nx">sz</span> <span class="o">-</span> <span class="nx">json</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">length</span><span class="p">)],</span> <span class="o">-&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+      <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">sz</span>
+        <span class="nv">json = </span><span class="nx">json</span><span class="p">.</span><span class="nx">concat</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="p">[</span><span class="mi">1</span><span class="p">..(</span><span class="nx">sz</span> <span class="o">-</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span><span class="p">)],</span> <span class="o">-&gt;</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="nx">sz</span><span class="p">],</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+        <span class="p">)</span>
+      <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span>
+          <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">1</span>
+          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span>
+        <span class="k">else</span>
+          <span class="k">throw</span> <span class="s1">&#39;a 1x1 square must contain a zero, one, or Cell&#39;</span>
+      <span class="k">else</span>
+        <span class="nv">half_length = </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="err">/ 2</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+          <span class="nv">ne: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+          <span class="nv">se: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span>
+          <span class="nv">sw: </span><span class="nx">@from_json</span><span class="p">(</span>
+            <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
+              <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
+          <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Padding and cropping squares</h3>
+
+<p>When displaying squares, it is convenient to crop them to the smallest square that contains
+live cells.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">isEmpty: </span><span class="o">-&gt;</span>
+      <span class="nx">@value</span> <span class="o">is</span> <span class="mi">0</span>
+
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+      <span class="vi">@isEmpty = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+        <span class="p">(</span><span class="nx">@nw</span> <span class="o">is</span> <span class="nx">@ne</span> <span class="o">is</span> <span class="nx">@se</span> <span class="o">is</span> <span class="nx">@sw</span><span class="p">)</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
+      <span class="p">)</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">trim: </span><span class="o">-&gt;</span>
+      <span class="k">if</span> <span class="nx">@nw</span><span class="o">?</span><span class="p">.</span><span class="nx">sw</span><span class="o">?</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
+         <span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
+         <span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
+         <span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+          <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
+          <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
+          <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
+          <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="p">.</span><span class="nx">trim</span><span class="p">()</span>
+      <span class="k">else</span>
+        <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Querying squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+      <span class="vi">@population = </span><span class="nx">@value</span>
+
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+      <span class="vi">@population = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">population</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
+
+<p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
+
+<p>Cafe au Life is freely distributable under the terms of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.</p>
+
+<p>The annotated source code was generated directly from the <a href="https://github.com/raganwald/cafeaulife/blob/master/lib">original source</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
