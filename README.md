@@ -72,7 +72,7 @@ He has written three books:
 
 His hands-on coding blog [Homoiconic](https://github.com/raganwald/homoiconic) frequently lights up the Hackerverse,
 and he also writes about [project management and other subjects](http://raganwald.posterous.com/).
-recursi
+
 ---
 
 **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
