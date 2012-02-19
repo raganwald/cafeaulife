@@ -6,8 +6,9 @@
 # written in [CoffeeScript][cs]. Cafe au Life runs on [Node.js][node], it is not designed
 # to run as an interactive program in a browser window.
 #
-# Cafe au Life's Github project is [here](https://github.com/raganwald/cafeaulife/). This file,
-# [cafeaulife.coffee][source] contains the core engine for computing the future of any life universe
+# Cafe au Life's Github project is [here](https://github.com/raganwald/cafeaulife/).
+#
+# This file, [cafeaulife.coffee][source] contains the core engine for computing the future of any life universe
 # of size `2^n | n > 1`. The algorithm is optimized for computing very large numbers of generations
 #  of very large and complex life patterns with a high degree of regularity such as implementing
 # Turing machines.
@@ -15,7 +16,7 @@
 # As such, it is particularly poorly suited for animating displays a generation at a time. But it
 # is still a beautiful algorithm that touches on the soul of life’s “physics."
 #
-# ![Gosper's Glider Gun](http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif)
+# ![Gosper's Glider Gun](http:gospers_glider_gun.gif)
 #
 # *(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefinitely.)*
 #
@@ -31,14 +32,14 @@
 #
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 # [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
-# [source]: https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee
+# [source]: https://github.com/raganwald/cafeaulife/blob/master/lib
 # [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 # [cs]: http://jashkenas.github.com/coffee-script/
 # [node]: http://nodejs.org
 #
 # ## Why
 #
-# ![Period 24 Glider Gun](http://raganwald.github.com/cafeaulife/docs/Trueperiod24gun.png)
+# ![Period 24 Glider Gun](http:Trueperiod24gun.png)
 #
 # *(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
 # Life machines.)*
