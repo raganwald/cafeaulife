@@ -10,7 +10,7 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 [cs]: http://jashkenas.github.com/coffee-script/
 [node]: http://nodejs.org
 
-### If it doesn't produce a an animated display, why should I care about it?
+### If it doesn't produce an animated display, why should I care about it?
 
 Cafe au Life implements Bill Gosper's [HashLife][hashlife] algorithm. HashLife exploits regularity, so for certain life patterns, it runs at super-linear speed. As [noted elsewhere][beautiful], if you set up Gosper's Glider Gun when the Earth was first formed 4.5 billion years ago, and ran one generation per second, in the 143.4 *quadrillion* seconds that have elapsed since then, the pattern would grow to 23,900,000,000,000,036 live cells. Cafe au Life takes just under two seconds to boot up, and another second to calculate the state of the pattern after 143.4 quadrillion generations.
 
@@ -44,14 +44,42 @@ Have fun!
 
 One of the most important questions we ask ourselves is whether a non-trivial machine can be constructed that reproduces itself. If the answer is "no," then we can reason that for any machine, there must be a factory or creator outside of the machine. That goes for humans and all life. If the answer is "yes," then we can reason that it is not *necessary* for there to be a factory or creator for every machine, including ourselves.
 
+[![The Recursive Universe](http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0809252023&MarketPlace=US&ID=AsinImage&WS=1&tag=raganwald001-20&ServiceVersion=20070822)](http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0809252023)
+
 Cellular automata patterns are a kind of machine, with properties close enough to physical machines that it is very easy to reason by correspondence: If such-and-such is possible for a cellular automaton, it must be possible for a physical machine, therefore research into the capabilities of cellular automata is an important part of research into the capabilities of machines, including our bodies and our brains.
 
 Life theorists have proven all sorts of things about what ought to be possible with Life patterns. Life experimenters have taken it to the next level and have built Universal Turing Machines, self-replicating machines, and all sorts of things that demonstrate the universality of Conway's game of Life. Implementations that can handle very large and/or very long-running Life patterns are an important tool for experimentation.
 
 if you'd like to read more, the most approachable book on the subject is William Poundstone's brilliant [The Recursive Universe](http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0809252023). Beg, borrow, or steal a copy, new or used. Get it in hardcover while you still can.
 
-[![The Recursive Universe](http://ws.assoc-amazon.com/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0809252023&MarketPlace=US&ID=AsinImage&WS=1&tag=raganwald001-20&ServiceVersion=20070822)](http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0809252023)
-
 ### What should I read next?
 
 The [annotated source code][source].
+
+### Who's responsible for this?
+
+When he's not shipping Ruby, Javascript and Java applications scaling out to millions of users,
+[Reg "Raganwald" Braithwaite](http://reginald.braythwayt.com) has authored libraries for Javascript and Ruby programming
+such as [Katy](https://github.com/raganwald/Katy), [JQuery Combinators](http://github.com/raganwald/JQuery-Combinators),
+[YouAreDaChef](https://github.com/raganwald/YouAreDaChef), [andand](http://github.com/raganwald/andand),
+and more you can find on [Github](https://github.com/raganwald).
+
+He has written three books:
+
+* [Kestrels, Quirky Birds, and Hopeless Egocentricity](http://leanpub.com/combinators): *Raganwald's collected adventures in Combinatory Logic and Ruby Meta-Programming*
+* [What I've Learned From Failure](http://leanpub.com/shippingsoftware): *A quarter-century of experience shipping software, distilled into fixnum bittersweet essays*
+* [How to Do What You Love & Earn What You’re Worth as a Programmer](http://leanpub.com/dowhatyoulove)
+
+His hands-on coding blog [Homoiconic](https://github.com/raganwald/homoiconic) frequently lights up the Hackerverse,
+and he also writes about [project management and other subjects](http://raganwald.posterous.com/).
+
+---
+
+**(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
+
+Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+
+The annotated source code was generated directly from the [original source][source] using [Docco][docco].
+
+[source]: https://github.com/raganwald/cafeaulife/blob/master/lib
+[docco]: http://jashkenas.github.com/docco/
