@@ -16,7 +16,7 @@ Cafe au Life implements Bill Gosper's [HashLife][hashlife] algorithm. HashLife e
 
 If you haven't seen how the algorithm works, you owe it to yourself to read the [annotated source code][source].
 
-[source]: http://recursiveuniverse/docs/cafeaulife.html
+[source]: http://recursiveuniver.se/docs/cafeaulife.html
 [beautiful]: http://raganwald.posterous.com/a-beautiful-algorithm
 [hashlife]: http://en.wikipedia.org/wiki/Hashlife
 
@@ -72,7 +72,7 @@ He has written three books:
 
 His hands-on coding blog [Homoiconic](https://github.com/raganwald/homoiconic) frequently lights up the Hackerverse,
 and he also writes about [project management and other subjects](http://raganwald.posterous.com/).
-
+recursi
 ---
 
 **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
