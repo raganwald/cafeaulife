@@ -1,144 +1,101 @@
-<!DOCTYPE html>  <html> <head>   <title>cafeaulife.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="menagerie.html">                 menagerie.coffee               </a>                                           <a class="source" href="rules.html">                 rules.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               cafeaulife.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h1>Cafe au Life</h1>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h1>What</h1>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Cafe au Life is an implementation of John Conway's <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Game of Life</a> cellular automata
-written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>. Cafe au Life runs on <a href="http://nodejs.org">Node.js</a>, it is not designed
-to run as an interactive program in a browser window.</p>
 
-<p>Cafe au Life's Github project is <a href="https://github.com/raganwald/cafeaulife/">here</a>. This file,
-<a href="https://github.com/raganwald/cafeaulife/blob/master/lib/cafeaulife.coffee">cafeaulife.coffee</a> contains the core engine for computing the future of any life universe
-of size <code>2^n | n &gt; 1</code>. The algorithm is optimized for computing very large numbers of generations
- of very large and complex life patterns with a high degree of regularity such as implementing
-Turing machines.</p>
 
-<p>As such, it is particularly poorly suited for animating displays a generation at a time. But it
-is still a beautiful algorithm that touches on the soul of life’s “physics."</p>
 
-<p><img src="http://raganwald.github.com/cafeaulife/docs/gospers_glider_gun.gif" alt="Gosper's Glider Gun" title="" /></p>
+<!DOCTYPE html>
+<html>
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# githubog: http://ogp.me/ns/fb/githubog#">
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>resursiveuniver.se</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub" />
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+
+
+
+    <meta content="authenticity_token" name="csrf-param" />
+<meta content="1zbwU7Uc1hxG2Xr+WtFs/HIDJafZgc1AXLY+QnavYd0=" name="csrf-token" />
+
+    <link href="https://a248.e.akamai.net/assets.github.com/stylesheets/bundles/github-b944b131b077c623d63c6d6ce280a626618f5d27.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="https://a248.e.akamai.net/assets.github.com/stylesheets/bundles/github2-3756a326f44418b9ef64402699766b9c03d96540.css" media="screen" rel="stylesheet" type="text/css" />
+
+
+    <script src="https://a248.e.akamai.net/assets.github.com/javascripts/bundles/jquery-1ff4761a0d9866a948321eac8d969db3dc12938e.js" type="text/javascript"></script>
+    <script src="https://a248.e.akamai.net/assets.github.com/javascripts/bundles/github-f18e47f6b8ff4e1edebdac2dc35b1ef0fb0eeae0.js" type="text/javascript"></script>
+
+
+      <link rel='permalink' href='/recursiveuniverse/recursiveuniverse.github.com/tree/e85e69700476608c2a6fa931dff66d9fd524b3f2'>
+    <meta property="og:title" content="recursiveuniverse.github.com"/>
+    <meta property="og:type" content="githubog:gitrepository"/>
+    <meta property="og:url" content="https://github.com/recursiveuniverse/recursiveuniverse.github.com"/>
+    <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/gravatars/gravatar-140.png?1329275881"/>
+    <meta property="og:site_name" content="GitHub"/>
+    <meta property="og:description" content="recursiveuniverse.github.com hosted on GitHub"/>
+
+    <meta name="description" content="recursiveuniverse.github.com hosted on GitHub" />
+  <link href="https://github.com/recursiveuniverse/recursiveuniverse.github.com/commits/master.atom" rel="alternate" title="Recent Commits to recursiveuniverse.github.com:master" type="application/atom+xml" />
+
+  </head>
+
+
+  <body class="logged_in   vis-public env-production ">
+
+      <div class="announce instapaper_body md" data-path="/" id="readme"><span class="name"><span class="icon"></span>resursiveuniver.se</span><article class="markdown-body"><h1>Cafe au Life</h1>
+
+<p><img src="https://a248.e.akamai.net/assets.github.com/img/e0c670c0f39987ac024d2f5b02e4b722e763fae1/687474703a2f2f726167616e77616c642e6769746875622e636f6d2f6361666561756c6966652f646f63732f676f73706572735f676c696465725f67756e2e676966" alt="Gosper's Glider Gun"></p>
 
 <p><em>(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefinitely.)</em></p>
 
-<h3>Conway's Life and other two-dimensional cellular automata</h3>
+<p>Cafe au Life is an implementation of John Conway's <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Game of Life</a> cellular automata written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>. Cafe au Life runs on <a href="http://nodejs.org">Node.js</a>, it is not designed to run as an interactive program in a browser window.</p>
 
-<p>The Life Universe is an infinite two-dimensional matrix of cells. Cells are indivisible and are in either of two states,
-commonly called "alive" and "dead." Time is represented as discrete quanta called either "ticks" or "generations."
-With each generation, a rule is applied to decide the state the cell will assume. The rules are decided simultaneously,
-and there are only two considerations: The current state of the cell, and the states of the cells in its
-<a href="http://en.wikipedia.org/wiki/Moore_neighborhood">Moore Neighbourhood</a>, the eight cells adjacent horizontally, vertically, or diagonally.</p>
+<h3>If it doesn't produce a an animated display, why should I care about it?</h3>
 
-<p>Cafe au Life implements Conway's Game of Life, as well as other "<a href="http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata">life-like</a>" games in the same family.</p>
+<p>Cafe au Life implements Bill Gosper's <a href="http://en.wikipedia.org/wiki/Hashlife">HashLife</a> algorithm. HashLife exploits regularity, so for certain life patterns, it runs at super-linear speed. As <a href="http://raganwald.posterous.com/a-beautiful-algorithm">noted elsewhere</a>, if you set up Gosper's Glider Gun when the Earth was first formed 4.5 billion years ago, and ran one generation per second, in the 143.4 <em>quadrillion</em> seconds that have elapsed since then, the pattern would grow to 23,900,000,000,000,036 live cells. Cafe au Life takes just under two seconds to boot up, and another second to calculate the state of the pattern after 143.4 quadrillion generations.</p>
 
-<h2>Why</h2>
+<p>If you haven't seen how the algorithm works, you owe it to yourself to read the <a href="http://recursiveuniver.se/docs/cafeaulife.html">annotated source code</a>.</p>
 
-<p><img src="http://raganwald.github.com/cafeaulife/docs/Trueperiod24gun.png" alt="Period 24 Glider Gun" title="" /></p>
+<h3>How can I try it?</h3>
 
-<p><em>(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
-Life machines.)</em></p>
+<p>The easiest way to try Cafe au Life is to install CoffeeScript and node.js, clone the repository, then use the REPL from the command line:</p>
 
-<p>Cafe au Life is based on Bill Gosper's brilliant <a href="http://en.wikipedia.org/wiki/Hashlife">HashLife</a> algorithm. HashLife is usually implemented in C and optimized
-to run very long simulations with very large 'boards' stinking fast. The HashLife algorithm is, in a word,
-<strong>a beautiful design</strong>, one that is "in the book." To read its description is to feel the desire to explore it on a computer.</p>
+<div class="highlight">
+<pre>raganwald@Reginald-Braithwaites-iMac<span class="o">[</span>cafeaulife <span class="o">(</span>master<span class="o">)</span>⚡<span class="o">]</span> coffee
+coffee&gt; <span class="nv">Life</span> <span class="o">=</span> require<span class="o">(</span><span class="s1">'./lib/cafeaulife'</span><span class="o">)</span>.set_universe_rules<span class="o">()</span>
+coffee&gt; <span class="nv">gun</span> <span class="o">=</span> require<span class="o">(</span><span class="s1">'./lib/menagerie'</span><span class="o">)</span>.gospers_glider_gun
+coffee&gt; gun.future_at_time<span class="o">(</span>143400000000000000<span class="o">)</span>.population
+23900000000000036
+coffee&gt;
+</pre>
+</div>
 
-<p>Broadly speaking, HashLife has two major components. The first is a high level algorithm that is implementation independent.
-This algorithm exploits repetition and redundancy, aggressively 'caching' previously computed results for regions of the board.
-The second component is the cache itself, which is normally implemented cleverly in C to exploit memory and CPU efficiency
-in looking up precomputed results.</p>
 
-<p>Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the
-performance in a JavaScript application will not be anything to write home about.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>How</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Cafe au Life is based on two very simple classes:</p>
+<p>Have fun!</p>
 
-<p>The smallest unit of Life is the <code>Cell</code>. The constructor is set up to call an <code>initialize</code> method to make point-cuts slightly easier.</p>
+<h3>Is it any good?</h3>
 
-<p>HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
-(<code>2^1 -&gt; 2</code>, <code>2^2 -&gt; 4</code>, <code>2^3 -&gt; 8</code>...). Naturally, squares are represented by instances of the class <code>Square</code>. The smallest possible square
-(of size <code>2^1</code>) has cells for each of its four quadrants, while all larger squares (of size <code>2^n</code>) have squares of one smaller
-size (<code>2^(n-1)</code>) for each of their four quadrants.</p>
+<p><a href="http://news.ycombinator.com/item?id=3067434">Yes</a>.</p>
 
-<p>For example, a square of size eight (<code>2^3</code>) is composed of four squares of size four (<code>2^2</code>):</p>
+<h3>Neat algorithm, but why does Conway's Game of Life matter?</h3>
 
-<pre><code>nw         ne
-  ....|....
-  ....|....
-  ....|....
-  ....|....
-  ————#————
-  ....|....
-  ....|....
-  ....|....
-  ....|....
-sw         se
-</code></pre>
+<p>One of the most important questions we ask ourselves is whether a non-trivial machine can be constructed that reproduces itself. If the answer is "no," then we can reason that for any machine, there must be a factory or creator outside of the machine. That goes for humans and all life. If the answer is "yes," then we can reason that it is not <em>necessary</em> for there to be a factory or creator for every machine, including ourselves.</p>
 
-<p>The squares of size four are in turn each composed of four squares of size two (<code>2^1</code>):</p>
+<p>Cellular automata patterns are a kind of machine, with properties close enough to physical machines that it is very easy to reason by correspondence: If such-and-such is possible for a cellular automaton, it must be possible for a physical machine, therefore research into the capabilities of cellular automata is an important part of research into the capabilities of machines, including our bodies and our brains.</p>
 
-<pre><code>nw           ne
-  ..|..|..|..
-  ..|..|..|..
-  ——+——|——+——
-  ..|..|..|..
-  ..|..|..|..
-  —————#—————
-  ..|..|..|..
-  ..|..|..|..
-  ——+——|——+——
-  ..|..|..|..
-  ..|..|..|..
-sw           se
-</code></pre>
+<p>Life theorists have proven all sorts of things about what ought to be possible with Life patterns. Life experimenters have taken it to the next level and have built Universal Turing Machines, self-replicating machines, and all sorts of things that demonstrate the universality of Conway's game of Life. Implementations that can handle very large and/or very long-running Life patterns are an important tool for experimentation.</p>
 
-<p>And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
-board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
-<span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
+<p>if you'd like to read more, the most approachable book on the subject is William Poundstone's brilliant <a href="http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&amp;tag=raganwald001-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0809252023">The Recursive Universe</a>. Beg, borrow, or steal a copy, new or used. Get it in hardcover while you still can.</p>
 
-<span class="k">class</span> <span class="nx">Cell</span>
-  <span class="nv">constructor: </span><span class="nf">(@value) -&gt;</span>
-    <span class="vi">@level = </span><span class="mi">0</span>
-    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
-  <span class="nv">initialize: </span><span class="o">-&gt;</span>
+<p><a href="http://www.amazon.com/gp/product/0809252023/ref=as_li_ss_il?ie=UTF8&amp;tag=raganwald001-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0809252023"><img src="https://a248.e.akamai.net/assets.github.com/img/6441663e58d6a97f4ddd6a1af4e5b41a8cc1d625/687474703a2f2f77732e6173736f632d616d617a6f6e2e636f6d2f776964676574732f713f5f656e636f64696e673d5554463826466f726d61743d5f534c3136305f264153494e3d30383039323532303233264d61726b6574506c6163653d55532649443d4173696e496d6167652657533d31267461673d726167616e77616c643030312d3230265365727669636556657273696f6e3d3230303730383232" alt="The Recursive Universe"></a></p>
 
-<span class="k">class</span> <span class="nx">Square</span>
-  <span class="nv">constructor: </span><span class="nf">({@nw, @ne, @se, @sw}) -&gt;</span>
-    <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
-  <span class="nv">initialize: </span><span class="o">-&gt;</span>
+<h3>What should I read next?</h3>
 
-<span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Cell</span><span class="p">,</span> <span class="nx">Square</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Cafe au Life is divided into modules:</p>
+<p>The <a href="http://recursiveuniver.se/docs/cafeaulife.html">annotated source code</a>.</p></article></div>
+    </div>
+  </div>
+  <br style="clear:both;">
 
-<ul>
-<li>The <a href="http:rules.html">Rules Module</a> provides a method for setting up the <a href="http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata">rules</a> of the Life universe.</li>
-<li>The <a href="http:future.html">Future Module</a> provides methods for computing the future of a pattern, taking into account its ability to grow beyond
-the size of its container square.</li>
-<li>The <a href="http:cache.html">Cache Module</a> implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive <a href="https://en.wikipedia.org/wiki/Canonicalization">canonicalization</a> to optimize the storage of very large patterns with repetitive
-components.</li>
-<li>The <a href="http:api.html">API Module</a> provides methods for grabbing json or strings of patterns and resizing them to fit expectations.</li>
-<li>The <a href="http:menagerie.html">Menagerie Module</a> provides a few well-know life objects predefined for you to play with. It is entirely optional.</li>
-</ul>
 
-<p>The modules will build up the functionality of our <code>Cell</code> and <code>Square</code> classes.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./rules&#39;</span><span class="p">).</span><span class="nx">mixInto</span><span class="p">(</span><span class="nx">exports</span><span class="p">)</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./future&#39;</span><span class="p">).</span><span class="nx">mixInto</span><span class="p">(</span><span class="nx">exports</span><span class="p">)</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./cache&#39;</span><span class="p">).</span><span class="nx">mixInto</span><span class="p">(</span><span class="nx">exports</span><span class="p">)</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./api&#39;</span><span class="p">).</span><span class="nx">mixInto</span><span class="p">(</span><span class="nx">exports</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>The first time through</h2>
 
-<p>If this is your first time through the code, start with the <a href="http:rules.html">Rules Module</a>, and then read the <a href="http:future.html">Future Module</a>
-to understand the core algorithm for computing the future of a pattern. You can look at the <a href="http:cache.html">Cache</a> and <a href="http:api.html">API</a> modules
-at your leisure.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>Who</h2>
-
-<p>When he's not shipping Ruby, Javascript and Java applications scaling out to millions of users,
-<a href="http://reginald.braythwayt.com">Reg "Raganwald" Braithwaite</a> has authored libraries for Javascript and Ruby programming
-such as <a href="https://github.com/raganwald/Katy">Katy</a>, <a href="http://github.com/raganwald/JQuery-Combinators">JQuery Combinators</a>,
-<a href="https://github.com/raganwald/YouAreDaChef">YouAreDaChef</a>, <a href="http://github.com/raganwald/andand">andand</a>,
-and more you can find on <a href="https://github.com/raganwald">Github</a>.</p>
-
-<p>He has written three books:</p>
-
-<ul>
-<li><a href="http://leanpub.com/combinators">Kestrels, Quirky Birds, and Hopeless Egocentricity</a>: <em>Raganwald's collected adventures in Combinatory Logic and Ruby Meta-Programming</em></li>
-<li><a href="http://leanpub.com/shippingsoftware">What I've Learned From Failure</a>: <em>A quarter-century of experience shipping software, distilled into fixnum bittersweet essays</em></li>
-<li><a href="http://leanpub.com/dowhatyoulove">How to Do What You Love &amp; Earn What You’re Worth as a Programmer</a></li>
-</ul>
-
-<p>His hands-on coding blog <a href="https://github.com/raganwald/homoiconic">Homoiconic</a> frequently lights up the Hackerverse,
-and he also writes about <a href="http://raganwald.posterous.com/">project management and other subjects</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <hr />
-
-<p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
-
-<p>Cafe au Life is freely distributable under the terms of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.</p>
-
-<p>The annotated source code was generated directly from the <a href="https://github.com/raganwald/cafeaulife/blob/master/lib">original source</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+  </body>
+</html>
