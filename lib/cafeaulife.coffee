@@ -16,9 +16,10 @@
 # As such, it is particularly poorly suited for animating displays a generation at a time. But it
 # is still a beautiful algorithm that touches on the soul of life’s “physics."
 #
-# ![Gosper's Glider Gun](http:gospers_glider_gun.gif)
+# ![Period 24 Glider Gun](http:Trueperiod24gun.png)
 #
-# *(Gosper's Glider Gun. This was the first gun discovered, and proved that Life patterns can grow indefinitely.)*
+# *(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
+# Life machines.)*
 #
 # ### Conway's Life and other two-dimensional cellular automata
 #
@@ -38,11 +39,6 @@
 # [node]: http://nodejs.org
 #
 # ## Why
-#
-# ![Period 24 Glider Gun](http:Trueperiod24gun.png)
-#
-# *(A period 24 Glider Gun. Gliders of different periods are useful for synchronizing signals in complex
-# Life machines.)*
 #
 # Cafe au Life is based on Bill Gosper's brilliant [HashLife][hl] algorithm. HashLife is usually implemented in C and optimized
 # to run very long simulations with very large 'boards' stinking fast. The HashLife algorithm is, in a word,
