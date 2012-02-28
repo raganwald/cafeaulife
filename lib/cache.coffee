@@ -26,6 +26,7 @@ _ = require('underscore')
 YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 exports ?= window or this
 
+# ### Implementing the cache
 exports.mixInto = ({Square, Cell}) ->
 
   counter = 0
@@ -63,6 +64,58 @@ exports.mixInto = ({Square, Cell}) ->
         found
       else
         @cache.add(new Square.RecursivelyComputable(quadrants))
+
+# ### Reference Counting
+
+  YouAreDaChef(Square)
+    .after 'initialize', ->
+      @references = 0
+
+  _.extend Square.prototype,
+    incrementReference: ->
+      @references += 1
+    incrementQuadrantReferences: ->
+      if @nw.incrementReference?
+        @nw.incrementReference()
+        @ne.incrementReference()
+        @se.incrementReference()
+        @sw.incrementReference()
+    decrementReference: ->
+      @references += 1
+    decrementQuadrantReferences: ->
+      if @nw.decrementReference?
+        @nw.decrementReference()
+        @ne.decrementReference()
+        @se.decrementReference()
+        @sw.decrementReference()
+    is_referenced: ->
+      @references isnt 0
+    isnt_referenced: ->
+      @references isnt 0
+    removeAll: ->
+      @remove
+      if @nw.removeAll
+        @nw.removeAll()
+        @ne.removeAll()
+        @se.removeAll()
+        @sw.removeAll()
+    remove: ->
+      if @isnt_referenced()
+        Square.cache.remove(this)
+        @decrementQuadrantReferences()
+
+  ((old_add = Square.cache.add) ->
+    _.extend Square.cache,
+      add: (square) ->
+        old_add.call(this, square)
+        square.incrementQuadrantReferences()
+        square
+      remove: (square) ->
+        delete @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+        square
+
+  )()
+
 
 # ---
 #
