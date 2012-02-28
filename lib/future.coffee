@@ -498,20 +498,26 @@ exports.mixInto = ({Square, Cell}) ->
           .result_at_time(t)
 
     # We now define some initialization for a recursively computible square,
-    # starting with the result nad inlcuding some memoized intermediate results
+    # starting with the result and inlcuding some memoized intermediate results
     # that speed things up for us.
     initialize: ->
       super()
-      @subsquares_via_subresults = @sub_squares_of @intermediate_via_subresults()
-      @result = _.memoize( -> Square.canonicalize
-        nw: @subsquares_via_subresults.nw.result()
-        ne: @subsquares_via_subresults.ne.result()
-        se: @subsquares_via_subresults.se.result()
-        sw: @subsquares_via_subresults.sw.result()
-      )
-      @intermediate_at_time = _.memoize( (t) ->
-        @intermediate_via_subresults_at_time(t)
-      )
+      @memoized = {}
+
+    subsquares_via_subresults: ->
+      @memoized.subsquares_via_subresults ||= @sub_squares_of @intermediate_via_subresults()
+
+    result: ->
+      @memoized.result ||=
+        sq: Square.canonicalize
+          nw: @subsquares_via_subresults().nw.result()
+          ne: @subsquares_via_subresults().ne.result()
+          se: @subsquares_via_subresults().se.result()
+          sw: @subsquares_via_subresults().sw.result()
+      @memoized.result.sq
+
+    intermediate_at_time: (t) ->
+      @memoized["intermediate_at_time_#{t}"] ||= @intermediate_via_subresults_at_time(t)
 
     # ## The big reveal: Calculating the future of a Square
 
@@ -561,10 +567,10 @@ exports.mixInto = ({Square, Cell}) ->
       else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
         t_remaining = t - Math.pow(2, @level - 3)
         Square.canonicalize
-          nw: @subsquares_via_subresults.nw.result_at_time(t_remaining)
-          ne: @subsquares_via_subresults.ne.result_at_time(t_remaining)
-          se: @subsquares_via_subresults.se.result_at_time(t_remaining)
-          sw: @subsquares_via_subresults.sw.result_at_time(t_remaining)
+          nw: @subsquares_via_subresults().nw.result_at_time(t_remaining)
+          ne: @subsquares_via_subresults().ne.result_at_time(t_remaining)
+          se: @subsquares_via_subresults().se.result_at_time(t_remaining)
+          sw: @subsquares_via_subresults().sw.result_at_time(t_remaining)
       else if t is Math.pow(2, @level - 2)
         @result()
       else if t > Math.pow(2, @level - 2)
