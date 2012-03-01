@@ -67,54 +67,43 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ### Reference Counting
 
-  YouAreDaChef(Square)
+  _.extend Square.SeedSquare.prototype,
+    incrementReference: ->
+    decrementReference: ->
+    remove: ->
+    removeAll: ->
+
+  YouAreDaChef(Square.RecursivelyComputable)
     .after 'initialize', ->
       @references = 0
+      @nw.incrementReference()
+      @ne.incrementReference()
+      @se.incrementReference()
+      @sw.incrementReference()
+    .after 'set_memo', (index, square) ->
+      square.incrementReference()
 
-  _.extend Square.prototype,
+  _.extend Square.RecursivelyComputable.prototype,
     incrementReference: ->
       @references += 1
-    incrementQuadrantReferences: ->
-      if @nw.incrementReference?
-        @nw.incrementReference()
-        @ne.incrementReference()
-        @se.incrementReference()
-        @sw.incrementReference()
     decrementReference: ->
-      @references += 1
-    decrementQuadrantReferences: ->
-      if @nw.decrementReference?
-        @nw.decrementReference()
-        @ne.decrementReference()
-        @se.decrementReference()
-        @sw.decrementReference()
-    is_referenced: ->
-      @references isnt 0
-    isnt_referenced: ->
-      @references isnt 0
+      @references -= 1
+
+    children: ->
+      [@nw, @ne, @se, @sw].concat @get_all_memos()
+
+    remove: ->
+      if @references is 0
+        Square.cache.remove(this)
+      _.each @children, (c) -> c.decrementReference()
     removeAll: ->
       @remove
-      if @nw.removeAll
-        @nw.removeAll()
-        @ne.removeAll()
-        @se.removeAll()
-        @sw.removeAll()
-    remove: ->
-      if @isnt_referenced()
-        Square.cache.remove(this)
-        @decrementQuadrantReferences()
+      _.each @children, (c) -> c.removeAll()
 
-  ((old_add = Square.cache.add) ->
-    _.extend Square.cache,
-      add: (square) ->
-        old_add.call(this, square)
-        square.incrementQuadrantReferences()
-        square
-      remove: (square) ->
-        delete @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
-        square
-
-  )()
+  _.extend Square.cache,
+    remove: (square) ->
+      delete @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+      square
 
 
 # ---

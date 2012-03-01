@@ -498,26 +498,39 @@ exports.mixInto = ({Square, Cell}) ->
           .result_at_time(t)
 
     # We now define some initialization for a recursively computible square,
-    # starting with the result and inlcuding some memoized intermediate results
+    # starting with the result and including some memoized intermediate results
     # that speed things up for us.
     initialize: ->
       super()
       @memoized = {}
 
     subsquares_via_subresults: ->
-      @memoized.subsquares_via_subresults ||= @sub_squares_of @intermediate_via_subresults()
+      @sub_squares_of @intermediate_via_subresults()
 
-    result: ->
-      @memoized.result ||=
-        sq: Square.canonicalize
+    @memoize: (name, method_body) ->
+      (args...) ->
+        index = name + _.map( args, (arg) -> "_#{arg}" ).join('')
+        @get_memo(index) or @set_memo(index, method_body.call(this, args...))
+
+    get_memo: (index) ->
+      @memoized[index]
+
+    set_memo: (index, square) ->
+      @memoized[index] = square
+
+    get_all_memos: ->
+      _.values(@memoized)
+
+    result:
+      @memoize 'result', ->
+        Square.canonicalize
           nw: @subsquares_via_subresults().nw.result()
           ne: @subsquares_via_subresults().ne.result()
           se: @subsquares_via_subresults().se.result()
           sw: @subsquares_via_subresults().sw.result()
-      @memoized.result.sq
 
     intermediate_at_time: (t) ->
-      @memoized["intermediate_at_time_#{t}"] ||= @intermediate_via_subresults_at_time(t)
+      @intermediate_via_subresults_at_time(t)
 
     # ## The big reveal: Calculating the future of a Square
 
@@ -575,6 +588,9 @@ exports.mixInto = ({Square, Cell}) ->
         @result()
       else if t > Math.pow(2, @level - 2)
         throw "I can't go further forward than #{Math.pow(2, @level - 2)}"
+
+  Square.RecursivelyComputable::result_at_time = Square.RecursivelyComputable.memoize 'result_at_time', (t) ->
+      Square::result_at_time.call(this, t)
 
   # ### Computing the future of a square
   #

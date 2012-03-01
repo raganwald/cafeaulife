@@ -57,6 +57,20 @@ exports.mixInto = (exports) ->
 
   {Square, Cell} = exports
 
+  # A SeedSquare knows how to calculate its own result from
+  # the rules
+  class Square.SeedSquare extends Square
+    constructor: (params) ->
+      super(params)
+      @result = _.memoize( =>
+        a = @to_json()
+        Square.cache.find
+          nw: Square.SeedSquare.succ(a, 1,1)
+          ne: Square.SeedSquare.succ(a, 1,2)
+          se: Square.SeedSquare.succ(a, 2,2)
+          sw: Square.SeedSquare.succ(a, 2,1)
+      )
+
   _.defaults exports,
     set_universe_rules: (survival = [2,3], birth = [3]) ->
 
@@ -70,27 +84,13 @@ exports.mixInto = (exports) ->
         (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
       ]
 
-      succ = (cells, row, col) ->
+      Square.SeedSquare.succ = (cells, row, col) ->
         current_state = cells[row][col]
         neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
           cells[row-1][col+1] + cells[row][col-1] +
           cells[row][col+1] + cells[row+1][col-1] +
           cells[row+1][col] + cells[row+1][col+1]
         rule(current_state, neighbour_count)
-
-      # A SeedSquare knows how to calculate its own result from
-      # the rules
-      class SeedSquare extends Square
-        constructor: (params) ->
-          super(params)
-          @result = _.memoize( =>
-            a = @to_json()
-            Square.cache.find
-              nw: succ(a, 1,1)
-              ne: succ(a, 1,2)
-              se: succ(a, 2,2)
-              sw: succ(a, 2,1)
-          )
 
       Square.cache.clear()
 
@@ -116,7 +116,7 @@ exports.mixInto = (exports) ->
       # combining the results of smaller squares, so therefore all such computations
       # will terminate when they reach a square of size 4x4.
       cartesian_product(all_2x2_squares).forEach (quadrants) ->
-        Square.cache.add new SeedSquare(quadrants)
+        Square.cache.add new Square.SeedSquare(quadrants)
 
       Square.cache.current_rules = {survival, birth}
 
