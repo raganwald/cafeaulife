@@ -67,9 +67,19 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ### Reference Counting
 
-  _.extend Square.SeedSquare.prototype,
+  _.extend Square.Smallest.prototype,
     incrementReference: ->
+      this
     decrementReference: ->
+      this
+    remove: ->
+    removeAll: ->
+
+  _.extend Square.Seed.prototype,
+    incrementReference: ->
+      this
+    decrementReference: ->
+      this
     remove: ->
     removeAll: ->
 
@@ -80,14 +90,19 @@ exports.mixInto = ({Square, Cell}) ->
       @ne.incrementReference()
       @se.incrementReference()
       @sw.incrementReference()
+    .before 'set_memo', (index) ->
+      if (existing = @get_memo(index))
+        existing.decrementReference()
     .after 'set_memo', (index, square) ->
       square.incrementReference()
 
   _.extend Square.RecursivelyComputable.prototype,
     incrementReference: ->
       @references += 1
+      this
     decrementReference: ->
       @references -= 1
+      this
 
     children: ->
       [@nw, @ne, @se, @sw].concat @get_all_memos()
@@ -104,7 +119,6 @@ exports.mixInto = ({Square, Cell}) ->
     remove: (square) ->
       delete @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
       square
-
 
 # ---
 #

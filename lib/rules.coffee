@@ -57,20 +57,22 @@ exports.mixInto = (exports) ->
 
   {Square, Cell} = exports
 
-  # A SeedSquare knows how to calculate its own result from
+  # A Seed knows how to calculate its own result from
   # the rules
-  class Square.SeedSquare extends Square
+  class Square.Seed extends Square
     constructor: (params) ->
       super(params)
       @result = _.memoize( =>
         a = @to_json()
         Square.cache.find
-          nw: Square.SeedSquare.succ(a, 1,1)
-          ne: Square.SeedSquare.succ(a, 1,2)
-          se: Square.SeedSquare.succ(a, 2,2)
-          sw: Square.SeedSquare.succ(a, 2,1)
+          nw: Square.Seed.succ(a, 1,1)
+          ne: Square.Seed.succ(a, 1,2)
+          se: Square.Seed.succ(a, 2,2)
+          sw: Square.Seed.succ(a, 2,1)
       )
-
+  
+  class Square.Smallest extends Square
+    
   _.defaults exports,
     set_universe_rules: (survival = [2,3], birth = [3]) ->
 
@@ -84,7 +86,7 @@ exports.mixInto = (exports) ->
         (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
       ]
 
-      Square.SeedSquare.succ = (cells, row, col) ->
+      Square.Seed.succ = (cells, row, col) ->
         current_state = cells[row][col]
         neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
           cells[row-1][col+1] + cells[row][col-1] +
@@ -100,7 +102,7 @@ exports.mixInto = (exports) ->
       #
       # 2x2 squares do not compute results
       all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
-        Square.cache.add new Square(quadrants)
+        Square.cache.add new Square.Smallest(quadrants)
 
       # The canonical 4x4 squares are initialized from the cartesian product of
       # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
@@ -116,7 +118,7 @@ exports.mixInto = (exports) ->
       # combining the results of smaller squares, so therefore all such computations
       # will terminate when they reach a square of size 4x4.
       cartesian_product(all_2x2_squares).forEach (quadrants) ->
-        Square.cache.add new Square.SeedSquare(quadrants)
+        Square.cache.add new Square.Seed(quadrants)
 
       Square.cache.current_rules = {survival, birth}
 

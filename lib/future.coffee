@@ -371,6 +371,37 @@ exports.mixInto = ({Square, Cell}) ->
             sw: @sw.ne
           .result()
 
+    @square_to_intermediate_map: (square) ->
+      nw: square.nw
+      ne: square.ne
+      se: square.se
+      sw: square.sw
+      nn:
+        nw: square.nw.ne
+        ne: square.ne.nw
+        se: square.ne.sw
+        sw: square.nw.se
+      ee:
+        nw: square.ne.sw
+        ne: square.ne.se
+        se: square.se.ne
+        sw: square.se.nw
+      ss:
+        nw: square.sw.ne
+        ne: square.se.nw
+        se: square.se.sw
+        sw: square.sw.se
+      ww:
+        nw: square.nw.sw
+        ne: square.nw.se
+        se: square.sw.ne
+        sw: square.sw.nw
+      cc:
+        nw: square.nw.se
+        ne: square.ne.sw
+        se: square.se.nw
+        sw: square.sw.ne
+
     # ### Making a Square from an Intermediate Square
 
     # Okay, we started with a square of size `2^n`, and we make an intermediate square of size
@@ -439,6 +470,28 @@ exports.mixInto = ({Square, Cell}) ->
           se: intermediate_square.ss
           sw: intermediate_square.sw
 
+    @intermediate_to_subsquares_map: (intermediate_square) ->
+      nw:
+        nw: intermediate_square.nw
+        ne: intermediate_square.nn
+        se: intermediate_square.cc
+        sw: intermediate_square.ww
+      ne:
+        nw: intermediate_square.nn
+        ne: intermediate_square.ne
+        se: intermediate_square.ee
+        sw: intermediate_square.cc
+      se:
+        nw: intermediate_square.cc
+        ne: intermediate_square.ee
+        se: intermediate_square.se
+        sw: intermediate_square.ss
+      sw:
+        nw: intermediate_square.ww
+        ne: intermediate_square.cc
+        se: intermediate_square.ss
+        sw: intermediate_square.sw
+
     # Given all the work we just did on `Square.RecursivelyComputable.Intermediate`, we now have everything we need to compute the
     # result of any square of size eight or larger, any time in the future from time `T+1` to time `T+2^(n-1)`
     # where `n` is the level of the square.
@@ -450,52 +503,33 @@ exports.mixInto = ({Square, Cell}) ->
     # The only complication is that we memoize the result for performance... This is HashLife after all, and we
     # do not like to repeat ourselves in either Space or Time.
 
+    @map_fn: (fn) ->
+      (m) ->
+        _.reduce m, (acc, value, key) ->
+          acc[key] = fn(value)
+          acc
+        , {}
+
+    @canonicalize: @map_fn( (quadrants) ->
+      _.tap Square.canonicalize(quadrants), (x) ->
+        # console?.log 'returning', x
+    )
+
+    @results: @map_fn( (square) -> square.result() )
+
     # ### Computing a result for a time less than `T+2^(n-1)`
     #
     # What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
     # we have a method called `result_at_time`. If that's the case, when we generate an intermediate square,
     # we can generate one that is less than `2^(n-2)` generations forward:
-    intermediate_via_subresults_at_time: (t) ->
-      new Square.RecursivelyComputable.Intermediate
-        nw: @nw.result_at_time(t)
-        ne: @ne.result_at_time(t)
-        se: @se.result_at_time(t)
-        sw: @sw.result_at_time(t)
-        nn: Square
-          .canonicalize
-            nw: @nw.ne
-            ne: @ne.nw
-            se: @ne.sw
-            sw: @nw.se
-          .result_at_time(t)
-        ee: Square
-          .canonicalize
-            nw: @ne.sw
-            ne: @ne.se
-            se: @se.ne
-            sw: @se.nw
-          .result_at_time(t)
-        ss: Square
-          .canonicalize
-            nw: @sw.ne
-            ne: @se.nw
-            se: @se.sw
-            sw: @sw.se
-          .result_at_time(t)
-        ww: Square
-          .canonicalize
-            nw: @nw.sw
-            ne: @nw.se
-            se: @sw.ne
-            sw: @sw.nw
-          .result_at_time(t)
-        cc: Square
-          .canonicalize
-            nw: @nw.se
-            ne: @ne.sw
-            se: @se.nw
-            sw: @sw.ne
-          .result_at_time(t)
+
+    @results_at_time: (t) ->
+      @map_fn( (square) -> square.result_at_time(t) )
+
+    # ### Chaining the bits and bobs together
+
+    @sequence: (fns...) ->
+      _.compose(fns.reverse()...)
 
     # We now define some initialization for a recursively computible square,
     # starting with the result and including some memoized intermediate results
@@ -503,9 +537,6 @@ exports.mixInto = ({Square, Cell}) ->
     initialize: ->
       super()
       @memoized = {}
-
-    subsquares_via_subresults: ->
-      @sub_squares_of @intermediate_via_subresults()
 
     @memoize: (name, method_body) ->
       (args...) ->
@@ -523,14 +554,20 @@ exports.mixInto = ({Square, Cell}) ->
 
     result:
       @memoize 'result', ->
-        Square.canonicalize
-          nw: @subsquares_via_subresults().nw.result()
-          ne: @subsquares_via_subresults().ne.result()
-          se: @subsquares_via_subresults().se.result()
-          sw: @subsquares_via_subresults().sw.result()
+        Square.canonicalize(
+          Square.RecursivelyComputable.sequence(
+            Square.RecursivelyComputable.square_to_intermediate_map
+            Square.RecursivelyComputable.canonicalize
+            Square.RecursivelyComputable.results
+            Square.RecursivelyComputable.intermediate_to_subsquares_map
+            Square.RecursivelyComputable.canonicalize
+            Square.RecursivelyComputable.results
+          )(this)
+        )
 
-    intermediate_at_time: (t) ->
-      @intermediate_via_subresults_at_time(t)
+    result_at_time:
+      @memoize 'result_at_time', (t) ->
+        Square::result_at_time.call(this, t)
 
     # ## The big reveal: Calculating the future of a Square
 
@@ -543,54 +580,41 @@ exports.mixInto = ({Square, Cell}) ->
     # These are methods on squares and not just recursively computible squares, because they need to work on
     # squares of level 1 and 2.
   _.extend Square.prototype,
-    result_at_time_zero: ->
-      Square.canonicalize
-        nw: @nw.se
-        ne: @ne.sw
-        se: @se.nw
-        sw: @sw.ne
     result_at_time: (t) ->
       if t < 0
         throw "We do not have a time machine"
       else if t is 0
-        @result_at_time_zero()
+        Square.canonicalize
+          nw: @nw.se
+          ne: @ne.sw
+          se: @se.nw
+          sw: @sw.ne
       else if t <= Math.pow(2, @level - 3)
-        intermediate = @intermediate_at_time(t)
-        Square.canonicalize
-          nw: Square.canonicalize
-            nw: intermediate.nw.se
-            ne: intermediate.nn.sw
-            se: intermediate.cc.nw
-            sw: intermediate.ww.ne
-          ne: Square.canonicalize
-            nw: intermediate.nn.se
-            ne: intermediate.ne.sw
-            se: intermediate.ee.nw
-            sw: intermediate.cc.ne
-          se: Square.canonicalize
-            nw: intermediate.cc.se
-            ne: intermediate.ee.sw
-            se: intermediate.se.nw
-            sw: intermediate.ss.ne
-          sw: Square.canonicalize
-            nw: intermediate.ww.se
-            ne: intermediate.cc.sw
-            se: intermediate.ss.nw
-            sw: intermediate.sw.ne
+        Square.canonicalize(
+          Square.RecursivelyComputable.sequence(
+            Square.RecursivelyComputable.square_to_intermediate_map
+            Square.RecursivelyComputable.canonicalize
+            Square.RecursivelyComputable.results_at_time(t)
+            Square.RecursivelyComputable.intermediate_to_subsquares_map
+            Square.RecursivelyComputable.canonicalize
+            Square.RecursivelyComputable.results_at_time(0)
+          )(this)
+        )
       else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
-        t_remaining = t - Math.pow(2, @level - 3)
-        Square.canonicalize
-          nw: @subsquares_via_subresults().nw.result_at_time(t_remaining)
-          ne: @subsquares_via_subresults().ne.result_at_time(t_remaining)
-          se: @subsquares_via_subresults().se.result_at_time(t_remaining)
-          sw: @subsquares_via_subresults().sw.result_at_time(t_remaining)
+        Square.canonicalize(
+          Square.RecursivelyComputable.sequence(
+            Square.RecursivelyComputable.square_to_intermediate_map
+            Square.RecursivelyComputable.canonicalize
+            Square.RecursivelyComputable.results
+            Square.RecursivelyComputable.intermediate_to_subsquares_map
+            Square.RecursivelyComputable.canonicalize
+            Square.RecursivelyComputable.results_at_time(t - Math.pow(2, @level - 3))
+          )(this)
+        )
       else if t is Math.pow(2, @level - 2)
         @result()
       else if t > Math.pow(2, @level - 2)
         throw "I can't go further forward than #{Math.pow(2, @level - 2)}"
-
-  Square.RecursivelyComputable::result_at_time = Square.RecursivelyComputable.memoize 'result_at_time', (t) ->
-      Square::result_at_time.call(this, t)
 
   # ### Computing the future of a square
   #
