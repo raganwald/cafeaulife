@@ -363,7 +363,7 @@ in the future. We'll derive those methods later, for now we hand-wave that they 
     <span class="vi">@sequence: </span><span class="nf">(fns...) -&gt;</span>
       <span class="nx">_</span><span class="p">.</span><span class="nx">compose</span><span class="p">(</span><span class="nx">fns</span><span class="p">.</span><span class="nx">reverse</span><span class="p">()...)</span>
 
-    <span class="vi">@canonicalize_the_values: </span><span class="nx">@map_fn</span><span class="p">(</span>
+    <span class="vi">@take_the_canonicalized_values: </span><span class="nx">@map_fn</span><span class="p">(</span>
       <span class="nf">(quadrants) -&gt;</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
     <span class="p">)</span>
@@ -377,7 +377,10 @@ in the future. We'll derive those methods later, for now we hand-wave that they 
       <span class="nx">@map_fn</span><span class="p">(</span>
         <span class="nf">(square) -&gt;</span>
           <span class="nx">square</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
+      <span class="p">)</span>
+
+    <span class="vi">@canonicalize_the_values_into_a_square: </span><span class="nf">(quadrants) -&gt;</span>
+      <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
 <code>2^(n-.5). Given an intermediate square, we can make a square of size</code>2^(n-1)<code>that is forward in time of the
 intermediate square by taking the result of four overlapping squares, also of size</code>2^(n-1)`.</p>
 
@@ -465,16 +468,15 @@ forward <code>2^(n-2)</code> again, for a total advance of <code>2^(n-1)</code>)
 <p>The only complication is that we memoize the result for performance... This is HashLife after all, and we
 do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">result:</span>
       <span class="nx">@memoize</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
-          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
-          <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
-        <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_canonicalized_values</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_canonicalized_values</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values_into_a_square</span>
+        <span class="p">)(</span><span class="k">this</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
 we have a method called <code>result_at_time</code>. If that's the case, when we generate an intermediate square,
 we can generate one that is less than <code>2^(n-2)</code> generations forward:</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
 of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
@@ -492,27 +494,25 @@ squares of level 1 and 2.</p>             </td>             <td class="code">   
             <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
             <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
         <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
-          <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
-          <span class="p">)</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_canonicalized_values</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_canonicalized_values</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values_into_a_square</span>
+          <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
         <span class="k">else</span> <span class="k">if</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-          <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
-            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
-              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="nx">t</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">))</span>
-            <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
-          <span class="p">)</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_canonicalized_values</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_canonicalized_values</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="nx">t</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values_into_a_square</span>
+          <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
         <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
           <span class="nx">@result</span><span class="p">()</span>
         <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
