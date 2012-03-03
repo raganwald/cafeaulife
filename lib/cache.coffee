@@ -65,9 +65,36 @@ exports.mixInto = ({Square, Cell}) ->
       else
         @cache.add(new Square.RecursivelyComputable(quadrants))
 
-# ### Reference Counting
+  # ### Reference Counting
+  #
+  # The basic principle is that a square's reference count is the number of squares in the cache that
+  # refer to the square.
+
+  _.extend Cell.prototype,
+    has_references: ->
+      true
+    has_no_references: ->
+      false
+    has_one_reference: ->
+      false
+    has_many_references: ->
+      true
+    incrementReference: ->
+      this
+    decrementReference: ->
+      this
+    remove: ->
+    removeAll: ->
 
   _.extend Square.Smallest.prototype,
+    has_references: ->
+      true
+    has_no_references: ->
+      false
+    has_one_reference: ->
+      false
+    has_many_references: ->
+      true
     incrementReference: ->
       this
     decrementReference: ->
@@ -76,6 +103,14 @@ exports.mixInto = ({Square, Cell}) ->
     removeAll: ->
 
   _.extend Square.Seed.prototype,
+    has_references: ->
+      true
+    has_no_references: ->
+      false
+    has_one_reference: ->
+      false
+    has_many_references: ->
+      true
     incrementReference: ->
       this
     decrementReference: ->
@@ -86,10 +121,6 @@ exports.mixInto = ({Square, Cell}) ->
   YouAreDaChef(Square.RecursivelyComputable)
     .after 'initialize', ->
       @references = 0
-      @nw.incrementReference()
-      @ne.incrementReference()
-      @se.incrementReference()
-      @sw.incrementReference()
     .before 'set_memo', (index) ->
       if (existing = @get_memo(index))
         existing.decrementReference()
@@ -97,6 +128,14 @@ exports.mixInto = ({Square, Cell}) ->
       square.incrementReference()
 
   _.extend Square.RecursivelyComputable.prototype,
+    has_references: ->
+      @references > 0
+    has_no_references: ->
+      @references is 0
+    has_one_reference: ->
+      @references is 1
+    has_many_references: ->
+      @references > 1
     incrementReference: ->
       @references += 1
       this
@@ -115,10 +154,18 @@ exports.mixInto = ({Square, Cell}) ->
       @remove
       _.each @children, (c) -> c.removeAll()
 
+  old_add = Square.cache.add
+
   _.extend Square.cache,
     remove: (square) ->
       delete @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
       square
+    add: (square) ->
+      _.tap old_add.call(this, square), ({nw, ne, se, sw}) ->
+        nw.incrementReference()
+        ne.incrementReference()
+        se.incrementReference()
+        sw.incrementReference()
 
 # ---
 #

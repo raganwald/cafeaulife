@@ -389,9 +389,6 @@ exports.mixInto = ({Square, Cell}) ->
           square.result_at_time(t)
       )
 
-    @canonicalize_the_values_into_a_square: (quadrants) ->
-      Square.canonicalize(quadrants)
-
     # Okay, we started with a square of size `2^n`, and we make an intermediate square of size
     # `2^(n-.5). Given an intermediate square, we can make a square of size `2^(n-1)` that is forward in time of the
     # intermediate square by taking the result of four overlapping squares, also of size `2^(n-1)`.
@@ -488,15 +485,16 @@ exports.mixInto = ({Square, Cell}) ->
     # do not like to repeat ourselves in either Space or Time.
     result:
       @memoize 'result', ->
-        Square.RecursivelyComputable.sequence(
-          Square.RecursivelyComputable.square_to_intermediate_map
-          Square.RecursivelyComputable.take_the_canonicalized_values
-          Square.RecursivelyComputable.take_the_results
-          Square.RecursivelyComputable.intermediate_to_subsquares_map
-          Square.RecursivelyComputable.take_the_canonicalized_values
-          Square.RecursivelyComputable.take_the_results
-          Square.RecursivelyComputable.canonicalize_the_values_into_a_square
-        )(this)
+        Square.canonicalize(
+          Square.RecursivelyComputable.sequence(
+            Square.RecursivelyComputable.square_to_intermediate_map
+            Square.RecursivelyComputable.take_the_canonicalized_values
+            Square.RecursivelyComputable.take_the_results
+            Square.RecursivelyComputable.intermediate_to_subsquares_map
+            Square.RecursivelyComputable.take_the_canonicalized_values
+            Square.RecursivelyComputable.take_the_results
+          )(this)
+        )
 
     # What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
     # we have a method called `result_at_time`. If that's the case, when we generate an intermediate square,
@@ -519,25 +517,27 @@ exports.mixInto = ({Square, Cell}) ->
             se: @se.nw
             sw: @sw.ne
         else if t <= Math.pow(2, @level - 3)
-          Square.RecursivelyComputable.sequence(
-            Square.RecursivelyComputable.square_to_intermediate_map
-            Square.RecursivelyComputable.take_the_canonicalized_values
-            Square.RecursivelyComputable.take_the_results_at_time(t)
-            Square.RecursivelyComputable.intermediate_to_subsquares_map
-            Square.RecursivelyComputable.take_the_canonicalized_values
-            Square.RecursivelyComputable.take_the_results_at_time(0)
-            Square.RecursivelyComputable.canonicalize_the_values_into_a_square
-          )(this)
+          Square.canonicalize(
+            Square.RecursivelyComputable.sequence(
+              Square.RecursivelyComputable.square_to_intermediate_map
+              Square.RecursivelyComputable.take_the_canonicalized_values
+              Square.RecursivelyComputable.take_the_results_at_time(t)
+              Square.RecursivelyComputable.intermediate_to_subsquares_map
+              Square.RecursivelyComputable.take_the_canonicalized_values
+              Square.RecursivelyComputable.take_the_results_at_time(0)
+            )(this)
+          )
         else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
-          Square.RecursivelyComputable.sequence(
-            Square.RecursivelyComputable.square_to_intermediate_map
-            Square.RecursivelyComputable.take_the_canonicalized_values
-            Square.RecursivelyComputable.take_the_results
-            Square.RecursivelyComputable.intermediate_to_subsquares_map
-            Square.RecursivelyComputable.take_the_canonicalized_values
-            Square.RecursivelyComputable.take_the_results_at_time(t - Math.pow(2, @level - 3))
-            Square.RecursivelyComputable.canonicalize_the_values_into_a_square
-          )(this)
+          Square.canonicalize(
+            Square.RecursivelyComputable.sequence(
+              Square.RecursivelyComputable.square_to_intermediate_map
+              Square.RecursivelyComputable.take_the_canonicalized_values
+              Square.RecursivelyComputable.take_the_results
+              Square.RecursivelyComputable.intermediate_to_subsquares_map
+              Square.RecursivelyComputable.take_the_canonicalized_values
+              Square.RecursivelyComputable.take_the_results_at_time(t - Math.pow(2, @level - 3))
+            )(this)
+          )
         else if t is Math.pow(2, @level - 2)
           @result()
         else if t > Math.pow(2, @level - 2)
