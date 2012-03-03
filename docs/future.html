@@ -223,12 +223,9 @@ eight, its intermediate square would be size six. Instead of having four quadran
 nine components.</p>
 
 <p>For performace reasons, we don't check, however each component must be a square and not a cell. Thus, you cannot
-make an intermediate square from a square of size four.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@Intermediate: </span><span class="k">class</span> <span class="nx">Intermediate</span>
-      <span class="nv">constructor: </span><span class="nf">({</span>
-<span class="nf">        @nw, @nn, @ne,</span>
-<span class="nf">        @ww, @cc, @ee,</span>
-<span class="nf">        @sw, @ss, @se</span>
-<span class="nf">      }) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>One way to make an intermediate square is to chop a square up into overlapping
+make an intermediate square from a square of size four.</p>
+
+<p>One way to make an intermediate square is to chop a square up into overlapping
 subsquares, and take the result of each subsquare. If the square is level <code>n</code>, and
 the subsquares are level <code>n-1</code>, the intermediate square will be at time <code>T+2^(n-3)</code>.</p>
 
@@ -321,47 +318,66 @@ sw        se
    ......
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">intermediate_via_subresults: </span><span class="o">-&gt;</span>
-      <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">Intermediate</span>
-        <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">nn: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">se: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">sw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ee: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">sw: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ss: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">ne: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ww: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">ne: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">cc: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="p">.</span><span class="nx">result</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>
+
+<p>We start with a function that maps a square to the nine sub-squares of an intermediate square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@square_to_intermediate_map: </span><span class="nf">(square) -&gt;</span>
+      <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span>
+      <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span>
+      <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span>
+      <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span>
+      <span class="nv">nn:</span>
+        <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">nw</span>
+        <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
+        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
+      <span class="nv">ee:</span>
+        <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
+        <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">se</span>
+        <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
+      <span class="nv">ss:</span>
+        <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
+        <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">sw</span>
+        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">se</span>
+      <span class="nv">ww:</span>
+        <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">sw</span>
+        <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
+        <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">nw</span>
+      <span class="nv">cc:</span>
+        <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
+        <span class="nv">ne: </span><span class="nx">square</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
+        <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
+        <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>In order to work on our intermediate square, we want to map functions across all of its keys, such
+as canonicalizing each value, taking the result of each value, or taking the result at a certain time
+in the future. We'll derive those methods later, for now we hand-wave that they exist.</p>
+
+<p>We can chain two or more of thse together with the <code>sequence</code> method.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@map_fn: </span><span class="nf">(fn) -&gt;</span>
+      <span class="nf">(m) -&gt;</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">m</span><span class="p">,</span> <span class="nf">(acc, value, key) -&gt;</span>
+          <span class="nx">acc</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+          <span class="nx">acc</span>
+        <span class="p">,</span> <span class="p">{}</span>
+
+    <span class="vi">@sequence: </span><span class="nf">(fns...) -&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">compose</span><span class="p">(</span><span class="nx">fns</span><span class="p">.</span><span class="nx">reverse</span><span class="p">()...)</span>
+
+    <span class="vi">@canonicalize_the_values: </span><span class="nx">@map_fn</span><span class="p">(</span>
+      <span class="nf">(quadrants) -&gt;</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="vi">@take_the_results: </span><span class="nx">@map_fn</span><span class="p">(</span>
+      <span class="nf">(square) -&gt;</span>
+        <span class="nx">square</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="vi">@take_the_results_at_time: </span><span class="nf">(t) -&gt;</span>
+      <span class="nx">@map_fn</span><span class="p">(</span>
+        <span class="nf">(square) -&gt;</span>
+          <span class="nx">square</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Okay, we started with a square of size <code>2^n</code>, and we make an intermediate square of size
 <code>2^(n-.5). Given an intermediate square, we can make a square of size</code>2^(n-1)<code>that is forward in time of the
 intermediate square by taking the result of four overlapping squares, also of size</code>2^(n-1)`.</p>
 
@@ -386,9 +402,27 @@ nw        ne  nw        ne
    swss..        ..ssse
 
 sw        se  sw        se
-</code></pre>
-
-<p>The results of those could be combined like this to form the final square of size `2^(n-1):</p>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@intermediate_to_subsquares_map: </span><span class="nf">(intermediate_square) -&gt;</span>
+      <span class="nv">nw:</span>
+        <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nw</span>
+        <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
+        <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+        <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ww</span>
+      <span class="nv">ne:</span>
+        <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
+        <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ee</span>
+        <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+      <span class="nv">se:</span>
+        <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+        <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ee</span>
+        <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">se</span>
+        <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ss</span>
+      <span class="nv">sw:</span>
+        <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ww</span>
+        <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
+        <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ss</span>
+        <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">sw</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>The results of those could be combined like this to form the final square of size `2^(n-1):</p>
 
 <pre><code>nw        ne
 
@@ -402,149 +436,99 @@ sw        se  sw        se
 sw        se
 </code></pre>
 
-<p>We're not going to do that here, we're just responsible for the geometry.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">sub_squares_of: </span><span class="nf">(intermediate_square) -&gt;</span>
-      <span class="nv">nw: </span><span class="nx">Square</span>
-        <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
-          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
-          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ww</span>
-      <span class="nv">ne: </span><span class="nx">Square</span>
-        <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
-          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ee</span>
-          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
-      <span class="nv">se: </span><span class="nx">Square</span>
-        <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
-          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ee</span>
-          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">se</span>
-          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ss</span>
-      <span class="nv">sw: </span><span class="nx">Square</span>
-        <span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ww</span>
-          <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">cc</span>
-          <span class="nv">se: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">ss</span>
-          <span class="nv">sw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">sw</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Given all the work we just did on <code>Square.RecursivelyComputable.Intermediate</code>, we now have everything we need to compute the
+<p>We're not going to do that here, we're just responsible for the geometry.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>We now define some initialization for a recursively computible square,
+starting with the result and including some memoized intermediate results
+that speed things up for us.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">initialize: </span><span class="o">-&gt;</span>
+      <span class="k">super</span><span class="p">()</span>
+      <span class="vi">@memoized = </span><span class="p">{}</span>
+
+    <span class="vi">@memoize: </span><span class="nf">(name, method_body) -&gt;</span>
+      <span class="nf">(args...) -&gt;</span>
+        <span class="nv">index = </span><span class="nx">name</span> <span class="o">+</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">args</span><span class="p">,</span> <span class="nf">(arg) -&gt;</span> <span class="s2">&quot;_#{arg}&quot;</span> <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="o">or</span> <span class="nx">@set_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">method_body</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">...))</span>
+
+    <span class="nv">get_memo: </span><span class="nf">(index) -&gt;</span>
+      <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+
+    <span class="nv">set_memo: </span><span class="nf">(index, square) -&gt;</span>
+      <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+
+    <span class="nv">get_all_memos: </span><span class="o">-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">values</span><span class="p">(</span><span class="nx">@memoized</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now have everything we need to compute the
 result of any square of size eight or larger, any time in the future from time <code>T+1</code> to time <code>T+2^(n-1)</code>
 where <code>n</code> is the level of the square.</p>
 
-<p>The naïve result is obtained as follows: We construct a Square.RecursivelyComputable.Intermediate from subresults (moving
+<p>The naïve result is obtained as follows: We construct an intermediate square from subresults (moving
 forward to <code>T+2^(n-2)</code>), and then we obtain its overlapping squares and take <em>their</em> results (moving
 forward <code>2^(n-2)</code> again, for a total advance of <code>2^(n-1)</code>).</p>
 
 <p>The only complication is that we memoize the result for performance... This is HashLife after all, and we
-do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>Computing a result for a time less than <code>T+2^(n-1)</code></h3>
-
-<p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
+do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">result:</span>
+      <span class="nx">@memoize</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
+          <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
+        <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>What if we don't want to move so far forward in time? Well, we don't have to. First, let's assume that
 we have a method called <code>result_at_time</code>. If that's the case, when we generate an intermediate square,
-we can generate one that is less than <code>2^(n-2)</code> generations forward:</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">intermediate_via_subresults_at_time: </span><span class="nf">(t) -&gt;</span>
-      <span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">Intermediate</span>
-        <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">nn: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">se: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">sw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">ee: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">sw: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">ss: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">ne: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">se</span>
-          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">ww: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">ne: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">se: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">nw</span>
-          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nv">cc: </span><span class="nx">Square</span>
-          <span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now define some initialization for a recursively computible square,
-starting with the result nad inlcuding some memoized intermediate results
-that speed things up for us.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">initialize: </span><span class="o">-&gt;</span>
-      <span class="k">super</span><span class="p">()</span>
-      <span class="vi">@subsquares_via_subresults = </span><span class="nx">@sub_squares_of</span> <span class="nx">@intermediate_via_subresults</span><span class="p">()</span>
-      <span class="vi">@result = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-        <span class="nv">nw: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">ne: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">se: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-        <span class="nv">sw: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result</span><span class="p">()</span>
-      <span class="p">)</span>
-      <span class="vi">@intermediate_at_time = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="nf">(t) -&gt;</span>
-        <span class="nx">@intermediate_via_subresults_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-      <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>The big reveal: Calculating the future of a Square</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
+we can generate one that is less than <code>2^(n-2)</code> generations forward:</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Armed with this one additional function, we can write a general method for determining the result
 of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
 we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
 start by generating the intermediate square from results. If it's less than half, we start by generating
 the intermediate squre by cropping.</p>
 
 <p>These are methods on squares and not just recursively computible squares, because they need to work on
-squares of level 1 and 2.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
-    <span class="nv">result_at_time_zero: </span><span class="o">-&gt;</span>
+squares of level 1 and 2.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">result_at_time:</span>
+      <span class="nx">@memoize</span> <span class="s1">&#39;result_at_time&#39;</span><span class="p">,</span> <span class="nf">(t) -&gt;</span>
+        <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
+            <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
+            <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
+            <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
+            <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
+          <span class="p">)</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+          <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
+            <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">square_to_intermediate_map</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">intermediate_to_subsquares_map</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">canonicalize_the_values</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">take_the_results_at_time</span><span class="p">(</span><span class="nx">t</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="p">)(</span><span class="k">this</span><span class="p">)</span>
+          <span class="p">)</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+          <span class="nx">@result</span><span class="p">()</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+          <span class="k">throw</span> <span class="s2">&quot;I can&#39;t go further forward than #{Math.pow(2, @level - 2)}&quot;</span>
+
+  <span class="nv">Square.Seed::result_at_time = </span><span class="nf">(t) -&gt;</span>
+    <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">0</span>
       <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
         <span class="nv">nw: </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">se</span>
         <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">.</span><span class="nx">sw</span>
         <span class="nv">se: </span><span class="nx">@se</span><span class="p">.</span><span class="nx">nw</span>
         <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
-    <span class="nv">result_at_time: </span><span class="nf">(t) -&gt;</span>
-      <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="mi">0</span>
-        <span class="k">throw</span> <span class="s2">&quot;We do not have a time machine&quot;</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">0</span>
-        <span class="nx">@result_at_time_zero</span><span class="p">()</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="nv">intermediate = </span><span class="nx">@intermediate_at_time</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
-        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">nn</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ww</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">nn</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ee</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ee</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ss</span><span class="p">.</span><span class="nx">ne</span>
-          <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-            <span class="nv">nw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ww</span><span class="p">.</span><span class="nx">se</span>
-            <span class="nv">ne: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nx">sw</span>
-            <span class="nv">se: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">ss</span><span class="p">.</span><span class="nx">nw</span>
-            <span class="nv">sw: </span><span class="nx">intermediate</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="nv">t_remaining = </span><span class="nx">t</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span>
-          <span class="nv">nw: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
-          <span class="nv">ne: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
-          <span class="nv">se: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
-          <span class="nv">sw: </span><span class="nx">@subsquares_via_subresults</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">result_at_time</span><span class="p">(</span><span class="nx">t_remaining</span><span class="p">)</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="nx">@result</span><span class="p">()</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">@level</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">throw</span> <span class="s2">&quot;I can&#39;t go further forward than #{Math.pow(2, @level - 2)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3>Computing the future of a square</h3>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">is</span> <span class="mi">1</span>
+      <span class="nx">@result</span><span class="p">()</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">t</span> <span class="o">&gt;</span> <span class="mi">1</span>
+      <span class="k">throw</span> <span class="s2">&quot;I can&#39;t go further forward than #{Math.pow(2, @level - 2)}&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h2>Computing the future of a square</h2>
 
 <p>Let's say we have a square and we wish to determine its future at time <code>t</code>.
 We calculate the smallest square that could possible contain its future, taking

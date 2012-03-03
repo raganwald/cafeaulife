@@ -69,12 +69,12 @@ describe 'Square.RecursivelyComputable', ->
 
     it 'should canonicalize both elements', ->
       expect(
-        Life.Square.RecursivelyComputable.canonicalize(@map_of_squares).foo
+        Life.Square.RecursivelyComputable.canonicalize_the_values(@map_of_squares).foo
       ).toEqual(
         Life.Square.canonicalize(@map_of_squares.foo)
       )
       expect(
-        Life.Square.RecursivelyComputable.canonicalize(@map_of_squares).bar
+        Life.Square.RecursivelyComputable.canonicalize_the_values(@map_of_squares).bar
       ).toEqual(
         Life.Square.canonicalize(@map_of_squares.bar)
       )
