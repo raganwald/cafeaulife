@@ -130,6 +130,30 @@ describe 'reference counting', ->
       expect( Life.Square.cache.find(@y) ).not.toBeTruthy()
       expect( Life.Square.cache.find(@z) ).not.toBeTruthy()
 
+    it 'should pin inputs with sequence', ->
+
+      expect( Life.Square.cache.find(@wxyz) ).toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).toBeTruthy()
+      expect( Life.Square.cache.find(@x) ).toBeTruthy()
+      expect( Life.Square.cache.find(@y) ).toBeTruthy()
+      expect( Life.Square.cache.find(@z) ).toBeTruthy()
+
+      Life.Square.cache.sequence(
+        ({w, x, y, z}) ->
+          Life.Square.cache.full_gc()
+          {w, x, y, z}
+      )
+        w: @w
+        x: @x
+        y: @y
+        z: @z
+
+      expect( Life.Square.cache.find(@wxyz) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).toBeTruthy()
+      expect( Life.Square.cache.find(@x) ).toBeTruthy()
+      expect( Life.Square.cache.find(@y) ).toBeTruthy()
+      expect( Life.Square.cache.find(@z) ).toBeTruthy()
+
     it 'children with multiple parents should not get collected', ->
 
       wwww = Life.Square.canonicalize
@@ -192,18 +216,19 @@ describe 'reference counting', ->
 
     it 'should count results as references', ->
 
-      r = @parent.result()
-      r = @parent.result()
-      r = @parent.result()
-      r = @parent.result()
+      b = Life.Square.cache.bucketed()
+
       r = @parent.result()
 
-      expect(r).not.toEqual(@a)
-      expect(r).not.toEqual(@b)
-      expect(r).not.toEqual(@c)
-      expect(r).not.toEqual(@d)
+      expect( @parent.memoized.result ).toEqual(r)
+
+      @parent.incrementReference()
+
+      Life.Square.cache.full_gc()
 
       expect(r.has_one_reference()).toBeTruthy()
+
+      @parent.decrementReference()
 
     it 'blowing just the parent away should make the children removable', ->
 

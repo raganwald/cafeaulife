@@ -137,9 +137,11 @@ exports.mixInto = ({Square, Cell}) ->
     has_many_references: ->
       @references > 1
     incrementReference: ->
+      throw "incrementReference!? #{@references}" unless @references >= 0
       @references += 1
       this
     decrementReference: ->
+      throw "decrementReference!? #{@references}" unless @references > 0
       @references -= 1
       this
 
@@ -147,12 +149,16 @@ exports.mixInto = ({Square, Cell}) ->
       [@nw, @ne, @se, @sw].concat @get_all_memos()
 
     remove: ->
-      if @has_no_references()
+      if @references is 0
         Square.cache.remove(this)
-      _.each @children(), (c) -> c.decrementReference()
+        _.each @children(), (c) ->
+          c.decrementReference()
     removeRecursively: ->
-      @remove()
-      _.each @children(), (c) -> c.removeRecursively()
+      if @references is 0
+        Square.cache.remove(this)
+        _.each @children(), (c) ->
+          c.decrementReference()
+          c.removeRecursively()
 
   old_add = Square.cache.add
 
@@ -168,14 +174,54 @@ exports.mixInto = ({Square, Cell}) ->
       square
 
     add: (square) ->
-      _.tap old_add.call(this, square), ({nw, ne, se, sw}) ->
-        nw.incrementReference()
-        ne.incrementReference()
-        se.incrementReference()
-        sw.incrementReference()
+      {nw, ne, se, sw} = square
+      nw.incrementReference()
+      ne.incrementReference()
+      se.incrementReference()
+      sw.incrementReference()
+      old_add.call(this, square)
 
     full_gc: ->
       _.each @removeables(), (sq) -> sq.removeRecursively()
+
+    sequence: (fns...) ->
+      _.compose(
+        _(fns)
+          .chain()
+          .map( (fn) ->
+            (h) ->
+              {input_incremented, params} = _.reduce h, (acc, value, key) ->
+                {input_incremented, params} = acc
+                if value instanceof Cell
+                  params[key] = value
+                else if value instanceof Square
+                  unless Square.cache.find(value)
+                    throw "unexpected: square that is not in the cache"
+                  input_incremented.push value
+                  value.incrementReference()
+                  params[key] = value
+                else
+                  {nw, ne, se, sw} = value
+                  params[key] = value
+                  if nw? and ne? and se? and sw?
+                    _.each {nw, ne, se, sw}, (subvalue, subkey) ->
+                      if subvalue instanceof Square
+                        unless Square.cache.find(subvalue)
+                          throw "unexpected: square that is not in the cache"
+                        input_incremented.push subvalue
+                        subvalue.incrementReference()
+                {input_incremented, params}
+              , {input_incremented: [], params: {}}
+              _.tap fn(params), (result_map) ->
+                _.each input_incremented, (sq) ->
+                  if sq.references <= 0 then console?.log "post-decrementing #{sq.references}"
+                  sq.decrementReference()
+          )
+          .value()
+          .reverse()...
+      )
+
+  Square.RecursivelyComputable.sequence = Square.cache.sequence
 
 # ---
 #
