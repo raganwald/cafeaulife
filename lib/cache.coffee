@@ -147,19 +147,26 @@ exports.mixInto = ({Square, Cell}) ->
       [@nw, @ne, @se, @sw].concat @get_all_memos()
 
     remove: ->
-      if @references is 0
+      if @has_no_references()
         Square.cache.remove(this)
-      _.each @children, (c) -> c.decrementReference()
+      _.each @children(), (c) -> c.decrementReference()
     removeAll: ->
-      @remove
-      _.each @children, (c) -> c.removeAll()
+      @remove()
+      _.each @children(), (c) -> c.removeAll()
 
   old_add = Square.cache.add
 
   _.extend Square.cache,
+    removeables: ->
+     _(@buckets).chain()
+      .values()
+      .select( (sq) -> sq.has_no_references() )
+      .value()
+
     remove: (square) ->
-      delete @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+      delete @buckets["#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}"]
       square
+
     add: (square) ->
       _.tap old_add.call(this, square), ({nw, ne, se, sw}) ->
         nw.incrementReference()

@@ -96,3 +96,33 @@ describe 'reference counts', ->
     expect(r).not.toEqual(@d)
 
     expect(r.has_one_reference()).toBeTruthy()
+
+  it 'blowing just the parent away should make the children removable', ->
+
+    expect( @parent.has_references() ).toBeFalsy()
+
+    expect( Life.Square.cache.removeables() ).toInclude(@parent)
+
+    expect( @a.has_references() ).toBeTruthy()
+
+    expect( Life.Square.cache.removeables() ).not.toInclude(@a)
+
+    @parent.remove()
+
+    expect( Life.Square.cache.removeables() ).not.toInclude(@parent)
+
+    expect( @a.has_references() ).toBeFalsy()
+
+    expect( Life.Square.cache.removeables() ).toInclude(@a)
+
+  it 'blowing the parent away recursively should remove the children', ->
+
+    expect( Life.Square.cache.find(@parent) ).toBeTruthy()
+    expect( Life.Square.cache.find(@a) ).toBeTruthy()
+
+    expect( @parent.has_references() ).toBeFalsy()
+
+    @parent.removeAll()
+
+    expect( Life.Square.cache.find(@parent) ).not.toBeTruthy()
+    expect( Life.Square.cache.find(@a) ).not.toBeTruthy()
