@@ -52,29 +52,60 @@ recursively computed terminating in a four-by-four square that has already been 
       <span class="k">if</span> <span class="nx">found</span>
         <span class="nx">found</span>
       <span class="k">else</span>
-        <span class="nx">@cache</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Reference Counting</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Smallest</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+        <span class="nx">@cache</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Reference Counting</h3>
+
+<p>The basic principle is that a square's reference count is the number of squares in the cache that
+refer to the square.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">has_references: </span><span class="o">-&gt;</span>
+      <span class="kc">true</span>
+    <span class="nv">has_no_references: </span><span class="o">-&gt;</span>
+      <span class="kc">false</span>
+    <span class="nv">has_one_reference: </span><span class="o">-&gt;</span>
+      <span class="kc">false</span>
+    <span class="nv">has_many_references: </span><span class="o">-&gt;</span>
+      <span class="kc">true</span>
     <span class="nv">incrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
     <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
     <span class="nv">remove: </span><span class="o">-&gt;</span>
-    <span class="nv">removeAll: </span><span class="o">-&gt;</span>
+    <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Smallest</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">has_references: </span><span class="o">-&gt;</span>
+      <span class="kc">true</span>
+    <span class="nv">has_no_references: </span><span class="o">-&gt;</span>
+      <span class="kc">false</span>
+    <span class="nv">has_one_reference: </span><span class="o">-&gt;</span>
+      <span class="kc">false</span>
+    <span class="nv">has_many_references: </span><span class="o">-&gt;</span>
+      <span class="kc">true</span>
+    <span class="nv">incrementReference: </span><span class="o">-&gt;</span>
+      <span class="k">this</span>
+    <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
+      <span class="k">this</span>
+    <span class="nv">remove: </span><span class="o">-&gt;</span>
+    <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Seed</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">has_references: </span><span class="o">-&gt;</span>
+      <span class="kc">true</span>
+    <span class="nv">has_no_references: </span><span class="o">-&gt;</span>
+      <span class="kc">false</span>
+    <span class="nv">has_one_reference: </span><span class="o">-&gt;</span>
+      <span class="kc">false</span>
+    <span class="nv">has_many_references: </span><span class="o">-&gt;</span>
+      <span class="kc">true</span>
     <span class="nv">incrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
     <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
     <span class="nv">remove: </span><span class="o">-&gt;</span>
-    <span class="nv">removeAll: </span><span class="o">-&gt;</span>
+    <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
       <span class="vi">@references = </span><span class="mi">0</span>
-      <span class="nx">@nw</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
-      <span class="nx">@ne</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
-      <span class="nx">@se</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
-      <span class="nx">@sw</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">before</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span> <span class="nf">(index) -&gt;</span>
       <span class="k">if</span> <span class="p">(</span><span class="nv">existing = </span><span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span>
         <span class="nx">existing</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
@@ -82,6 +113,14 @@ recursively computed terminating in a four-by-four square that has already been 
       <span class="nx">square</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+    <span class="nv">has_references: </span><span class="o">-&gt;</span>
+      <span class="nx">@references</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="nv">has_no_references: </span><span class="o">-&gt;</span>
+      <span class="nx">@references</span> <span class="o">is</span> <span class="mi">0</span>
+    <span class="nv">has_one_reference: </span><span class="o">-&gt;</span>
+      <span class="nx">@references</span> <span class="o">is</span> <span class="mi">1</span>
+    <span class="nv">has_many_references: </span><span class="o">-&gt;</span>
+      <span class="nx">@references</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="nv">incrementReference: </span><span class="o">-&gt;</span>
       <span class="nx">@references</span> <span class="o">+=</span> <span class="mi">1</span>
       <span class="k">this</span>
@@ -93,17 +132,35 @@ recursively computed terminating in a four-by-four square that has already been 
       <span class="p">[</span><span class="nx">@nw</span><span class="p">,</span> <span class="nx">@ne</span><span class="p">,</span> <span class="nx">@se</span><span class="p">,</span> <span class="nx">@sw</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">@get_all_memos</span><span class="p">()</span>
 
     <span class="nv">remove: </span><span class="o">-&gt;</span>
-      <span class="k">if</span> <span class="nx">@references</span> <span class="o">is</span> <span class="mi">0</span>
+      <span class="k">if</span> <span class="nx">@has_no_references</span><span class="p">()</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">,</span> <span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
-    <span class="nv">removeAll: </span><span class="o">-&gt;</span>
-      <span class="nx">@remove</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">,</span> <span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">removeAll</span><span class="p">()</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
+    <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
+      <span class="nx">@remove</span><span class="p">()</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span>
+
+  <span class="nv">old_add = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span>
+    <span class="nv">removeables: </span><span class="o">-&gt;</span>
+     <span class="nx">_</span><span class="p">(</span><span class="nx">@buckets</span><span class="p">).</span><span class="nx">chain</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">values</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">has_no_references</span><span class="p">()</span> <span class="p">)</span>
+      <span class="p">.</span><span class="nx">value</span><span class="p">()</span>
+
     <span class="nv">remove: </span><span class="nf">(square) -&gt;</span>
-      <span class="k">delete</span> <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
-      <span class="nx">square</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
+      <span class="k">delete</span> <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}&quot;</span><span class="p">]</span>
+      <span class="nx">square</span>
+
+    <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">tap</span> <span class="nx">old_add</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">square</span><span class="p">),</span> <span class="nf">({nw, ne, se, sw}) -&gt;</span>
+        <span class="nx">nw</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+        <span class="nx">ne</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+        <span class="nx">se</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+        <span class="nx">sw</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+
+    <span class="nv">full_gc: </span><span class="o">-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@removeables</span><span class="p">(),</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 

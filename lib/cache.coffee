@@ -84,7 +84,7 @@ exports.mixInto = ({Square, Cell}) ->
     decrementReference: ->
       this
     remove: ->
-    removeAll: ->
+    removeRecursively: ->
 
   _.extend Square.Smallest.prototype,
     has_references: ->
@@ -100,7 +100,7 @@ exports.mixInto = ({Square, Cell}) ->
     decrementReference: ->
       this
     remove: ->
-    removeAll: ->
+    removeRecursively: ->
 
   _.extend Square.Seed.prototype,
     has_references: ->
@@ -116,7 +116,7 @@ exports.mixInto = ({Square, Cell}) ->
     decrementReference: ->
       this
     remove: ->
-    removeAll: ->
+    removeRecursively: ->
 
   YouAreDaChef(Square.RecursivelyComputable)
     .after 'initialize', ->
@@ -150,9 +150,9 @@ exports.mixInto = ({Square, Cell}) ->
       if @has_no_references()
         Square.cache.remove(this)
       _.each @children(), (c) -> c.decrementReference()
-    removeAll: ->
+    removeRecursively: ->
       @remove()
-      _.each @children(), (c) -> c.removeAll()
+      _.each @children(), (c) -> c.removeRecursively()
 
   old_add = Square.cache.add
 
@@ -173,6 +173,9 @@ exports.mixInto = ({Square, Cell}) ->
         ne.incrementReference()
         se.incrementReference()
         sw.incrementReference()
+
+    full_gc: ->
+      _.each @removeables(), (sq) -> sq.removeRecursively()
 
 # ---
 #

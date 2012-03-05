@@ -3,9 +3,10 @@ require 'UnderscoreMatchersForJasmine'
 
 Life = require('../../lib/cafeaulife').set_universe_rules()
 
-describe 'reference counts', ->
+describe 'reference counting', ->
 
   beforeEach ->
+    Life.Square.cache.full_gc()
     @orphan = Life.Square.from_json([
       [0, 0, 0, 0, 0, 0, 0, 0]
       [0, 0, 0, 0, 0, 0, 0, 0]
@@ -62,67 +63,174 @@ describe 'reference counts', ->
       se: @c
       sw: @d
 
-  it 'should be consider an orphan square removable', ->
+  describe 'gc', ->
 
-    expect( @orphan.has_references() ).toBeFalsy()
+    beforeEach ->
+      @w = Life.Square.from_json([
+        [1, 0, 0, 0, 0, 0, 0, 1]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [1, 0, 0, 0, 0, 0, 0, 0]
+      ])
+      @x = Life.Square.from_json([
+        [1, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 1]
+      ])
+      @y = Life.Square.from_json([
+        [0, 0, 0, 0, 0, 0, 0, 1]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [1, 0, 0, 0, 0, 0, 0, 0]
+      ])
+      @z = Life.Square.from_json([
+        [0, 0, 0, 0, 0, 0, 0, 1]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0]
+        [1, 0, 0, 0, 0, 0, 0, 1]
+      ])
+      @wxyz = Life.Square.canonicalize
+        nw: @w
+        ne: @x
+        se: @y
+        sw: @z
 
-  it 'should consider a parent square removable', ->
+    it 'should be possible to do a full gc', ->
 
-    expect( @parent.has_references() ).toBeFalsy()
+      expect( @wxyz.has_references() ).toBeFalsy()
 
-  it 'should only give a child one reference no matter how many times you canonicalize it', ->
+      expect( Life.Square.cache.find(@wxyz) ).toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).toBeTruthy()
+      expect( Life.Square.cache.find(@x) ).toBeTruthy()
+      expect( Life.Square.cache.find(@y) ).toBeTruthy()
+      expect( Life.Square.cache.find(@z) ).toBeTruthy()
 
-    expect( @a.has_one_reference() ).toBeTruthy()
-    {nw, ne, se, sw} = @parent
-    Life.Square.canonicalize {nw, ne, se, sw}
-    Life.Square.canonicalize {nw, ne, se, sw}
-    Life.Square.canonicalize {nw, ne, se, sw}
-    pp = Life.Square.canonicalize {nw, ne, se, sw}
-    expect(pp).toEqual(@parent) # referencing the same thing
-    expect(nw).toEqual(@a)
-    expect( @a.has_one_reference() ).toBeTruthy()
+      Life.Square.cache.full_gc()
 
-  it 'should count results as references', ->
+      expect( Life.Square.cache.find(@wxyz) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@x) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@y) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@z) ).not.toBeTruthy()
 
-    r = @parent.result()
-    r = @parent.result()
-    r = @parent.result()
-    r = @parent.result()
-    r = @parent.result()
+    it 'children with multiple parents should not get collected', ->
 
-    expect(r).not.toEqual(@a)
-    expect(r).not.toEqual(@b)
-    expect(r).not.toEqual(@c)
-    expect(r).not.toEqual(@d)
+      wwww = Life.Square.canonicalize
+        nw: @w
+        ne: @w
+        se: @w
+        sw: @w
 
-    expect(r.has_one_reference()).toBeTruthy()
+      expect( @w.has_one_reference() ).toBeFalsy()
+      expect( @w.has_many_references() ).toBeTruthy()
 
-  it 'blowing just the parent away should make the children removable', ->
+      wwww.incrementReference()
 
-    expect( @parent.has_references() ).toBeFalsy()
+      expect( Life.Square.cache.find(@wxyz) ).toBeTruthy()
+      expect( Life.Square.cache.find(wwww) ).toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).toBeTruthy()
+      expect( Life.Square.cache.find(@x) ).toBeTruthy()
+      expect( Life.Square.cache.find(@y) ).toBeTruthy()
+      expect( Life.Square.cache.find(@z) ).toBeTruthy()
 
-    expect( Life.Square.cache.removeables() ).toInclude(@parent)
+      Life.Square.cache.full_gc()
 
-    expect( @a.has_references() ).toBeTruthy()
+      expect( Life.Square.cache.find(@wxyz) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(wwww) ).toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).toBeTruthy()
+      expect( Life.Square.cache.find(@x) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@y) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@z) ).not.toBeTruthy()
 
-    expect( Life.Square.cache.removeables() ).not.toInclude(@a)
+      wwww.decrementReference()
 
-    @parent.remove()
+      expect( wwww.has_references() ).toBeFalsy()
 
-    expect( Life.Square.cache.removeables() ).not.toInclude(@parent)
+      Life.Square.cache.full_gc()
 
-    expect( @a.has_references() ).toBeFalsy()
+      expect( Life.Square.cache.find(wwww) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@w) ).not.toBeTruthy()
 
-    expect( Life.Square.cache.removeables() ).toInclude(@a)
+  describe 'basic reference counts', ->
 
-  it 'blowing the parent away recursively should remove the children', ->
+    it 'should be consider an orphan square removable', ->
 
-    expect( Life.Square.cache.find(@parent) ).toBeTruthy()
-    expect( Life.Square.cache.find(@a) ).toBeTruthy()
+      expect( @orphan.has_references() ).toBeFalsy()
 
-    expect( @parent.has_references() ).toBeFalsy()
+    it 'should consider a parent square removable', ->
 
-    @parent.removeAll()
+      expect( @parent.has_references() ).toBeFalsy()
 
-    expect( Life.Square.cache.find(@parent) ).not.toBeTruthy()
-    expect( Life.Square.cache.find(@a) ).not.toBeTruthy()
+    it 'should only give a child one reference no matter how many times you canonicalize it', ->
+
+      expect( @a.has_one_reference() ).toBeTruthy()
+      {nw, ne, se, sw} = @parent
+      Life.Square.canonicalize {nw, ne, se, sw}
+      Life.Square.canonicalize {nw, ne, se, sw}
+      Life.Square.canonicalize {nw, ne, se, sw}
+      pp = Life.Square.canonicalize {nw, ne, se, sw}
+      expect(pp).toEqual(@parent) # referencing the same thing
+      expect(nw).toEqual(@a)
+      expect( @a.has_one_reference() ).toBeTruthy()
+
+    it 'should count results as references', ->
+
+      r = @parent.result()
+      r = @parent.result()
+      r = @parent.result()
+      r = @parent.result()
+      r = @parent.result()
+
+      expect(r).not.toEqual(@a)
+      expect(r).not.toEqual(@b)
+      expect(r).not.toEqual(@c)
+      expect(r).not.toEqual(@d)
+
+      expect(r.has_one_reference()).toBeTruthy()
+
+    it 'blowing just the parent away should make the children removable', ->
+
+      expect( @parent.has_references() ).toBeFalsy()
+
+      expect( Life.Square.cache.removeables() ).toInclude(@parent)
+
+      expect( @a.has_references() ).toBeTruthy()
+
+      expect( Life.Square.cache.removeables() ).not.toInclude(@a)
+
+      @parent.remove()
+
+      expect( Life.Square.cache.removeables() ).not.toInclude(@parent)
+
+      expect( @a.has_references() ).toBeFalsy()
+
+      expect( Life.Square.cache.removeables() ).toInclude(@a)
+
+    it 'blowing the parent away recursively should remove the children', ->
+
+      expect( Life.Square.cache.find(@parent) ).toBeTruthy()
+      expect( Life.Square.cache.find(@a) ).toBeTruthy()
+
+      expect( @parent.has_references() ).toBeFalsy()
+
+      @parent.removeRecursively()
+
+      expect( Life.Square.cache.find(@parent) ).not.toBeTruthy()
+      expect( Life.Square.cache.find(@a) ).not.toBeTruthy()
