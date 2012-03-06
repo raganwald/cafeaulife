@@ -34,7 +34,7 @@ describe 'cafe au life', ->
       ])
       sq.result()
 
-      number_bucketed = Life.Square.cache.bucketed()
+      number_bucketed = Life.Square.cache.length
 
       sq.result()
       sq.result()
@@ -47,7 +47,7 @@ describe 'cafe au life', ->
       sq.result()
       sq.result()
 
-      expect( Life.Square.cache.bucketed() ).toEqual(number_bucketed)
+      expect( Life.Square.cache.length ).toEqual(number_bucketed)
 
   describe 'squares', ->
 

@@ -79,7 +79,7 @@ exports.mixInto = (exports) ->
       Cell.Alive ?= new Cell(1)
       Cell.Dead  ?= new Cell(0)
 
-      return exports if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.bucketed() >= 65552
+      return exports if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.length >= 65552
 
       rule = dfunc [
         (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]

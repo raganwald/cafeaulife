@@ -216,7 +216,7 @@
 #
 #     it 'should count results as references', ->
 #
-#       b = Life.Square.cache.bucketed()
+#       b = Life.Square.cache.length
 #
 #       r = @parent.result()
 #
