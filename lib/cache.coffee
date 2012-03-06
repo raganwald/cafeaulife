@@ -43,20 +43,20 @@ exports.mixInto = ({Square, Cell}) ->
 
     cache:
 
-      buckets: {}
+      buckets: []
 
       clear: ->
-        @buckets = {}
+        @buckets = []
 
-      bucketed: ->
-        _.size(@buckets)
+      length: 0
 
       find: ({nw, ne, se, sw}) ->
-        @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+        (@buckets[nw.level + 1] ||= {})["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
 
       add: (square) ->
+        @length += 1
         {nw, ne, se, sw} = square
-        @buckets["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
+        (@buckets[nw.level + 1] ||= {})["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
 
     canonicalize: (quadrants) ->
       found = @cache.find(quadrants)
@@ -170,7 +170,8 @@ exports.mixInto = ({Square, Cell}) ->
       .value()
 
     remove: (square) ->
-      delete @buckets["#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}"]
+      @length -= 1
+      delete (@buckets[square.nw.level + 1] ||= {})["#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}"]
       square
 
     add: (square) ->
@@ -184,41 +185,24 @@ exports.mixInto = ({Square, Cell}) ->
     full_gc: ->
       _.each @removeables(), (sq) -> sq.removeRecursively()
 
+    each_leaf = (h, fn) ->
+      _.each h, (value) ->
+        if value instanceof Square
+          fn(value)
+        else if value.nw instanceof Square
+          fn(value.nw)
+          fn(value.ne)
+          fn(value.se)
+          fn(value.sw)
+
     sequence: (fns...) ->
       _.compose(
-        _(fns)
-          .chain()
-          .map( (fn) ->
+        _(fns).map( (fn) ->
             (h) ->
-              {input_incremented, params} = _.reduce h, (acc, value, key) ->
-                {input_incremented, params} = acc
-                if value instanceof Cell
-                  params[key] = value
-                else if value instanceof Square
-                  unless Square.cache.find(value)
-                    throw "unexpected: square that is not in the cache"
-                  input_incremented.push value
-                  value.incrementReference()
-                  params[key] = value
-                else
-                  {nw, ne, se, sw} = value
-                  params[key] = value
-                  if nw? and ne? and se? and sw?
-                    _.each {nw, ne, se, sw}, (subvalue, subkey) ->
-                      if subvalue instanceof Square
-                        unless Square.cache.find(subvalue)
-                          throw "unexpected: square that is not in the cache"
-                        input_incremented.push subvalue
-                        subvalue.incrementReference()
-                {input_incremented, params}
-              , {input_incremented: [], params: {}}
-              _.tap fn(params), (result_map) ->
-                _.each input_incremented, (sq) ->
-                  if sq.references <= 0 then console?.log "post-decrementing #{sq.references}"
-                  sq.decrementReference()
-          )
-          .value()
-          .reverse()...
+              each_leaf(h, (value) -> value.incrementReference())
+              _.tap fn(h), ->
+                each_leaf(h, (value) -> value.decrementReference())
+          ).reverse()...
       )
 
   Square.RecursivelyComputable.sequence = Square.cache.sequence
