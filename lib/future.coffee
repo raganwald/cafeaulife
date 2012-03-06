@@ -271,6 +271,9 @@ exports.mixInto = ({Square, Cell}) ->
     #
     #     sw        se
     #
+    # We will see below the exact mechanism for extracting the results, the important thing for the moment is
+    # the idea that we have four squares 'built in' that we're going to use to get those results.
+    #
     # We can also derive four overlapping squares, these representing `nn`, `ee`, `ss`, and `ww`:
     #
     #          nn
@@ -323,6 +326,8 @@ exports.mixInto = ({Square, Cell}) ->
     #        ......
     #
     #     sw        se
+    #
+    # Given this basic pattern, let's see how we actually do it.
 
     # ### Making a Square from an Intermediate Square
     #
@@ -361,17 +366,12 @@ exports.mixInto = ({Square, Cell}) ->
     # In order to work on our intermediate square, we want to map functions across all of its keys, such
     # as canonicalizing each value, taking the result of each value, or taking the result at a certain time
     # in the future. We'll derive those methods later, for now we hand-wave that they exist.
-    #
-    # We can chain two or more of thse together with the `sequence` method.
     @map_fn: (fn) ->
-      (m) ->
-        _.reduce m, (acc, value, key) ->
+      (parameter_hash) ->
+        _.reduce parameter_hash, (acc, value, key) ->
           acc[key] = fn(value)
           acc
         , {}
-
-    @sequence: (fns...) ->
-      _.compose(fns.reverse()...)
 
     @take_the_canonicalized_values: @map_fn(
       (quadrants) ->
@@ -414,7 +414,8 @@ exports.mixInto = ({Square, Cell}) ->
     #        swss..        ..ssse
     #
     #     sw        se  sw        se
-
+    #
+    # As you'll see below, we use `take_the_results` or `take_the_results_at_time(t)`
     @intermediate_to_subsquares_map: (intermediate_square) ->
       nw:
         nw: intermediate_square.nw
@@ -455,6 +456,17 @@ exports.mixInto = ({Square, Cell}) ->
     # We now define some initialization for a recursively computible square,
     # starting with the result and including some memoized intermediate results
     # that speed things up for us.
+    #
+    # The memoizing is a little more bespoke than you would usually see. Normally,
+    # you would use something like;
+    #
+    #   @some_memoized_method = _.memoize( ->
+    #     "method_body_goes_here"
+    #   )
+    #
+    # However, rolling our own memoize infrastructure allows us to construct
+    # the `children` method that shows us which squares are logically related to any given
+    # square, by dint of being its quadrants or result at any time in the future
     initialize: ->
       super()
       @memoized = {}
@@ -470,8 +482,8 @@ exports.mixInto = ({Square, Cell}) ->
     set_memo: (index, square) ->
       @memoized[index] = square
 
-    get_all_memos: ->
-      _.values(@memoized)
+    children: ->
+      _.extend {nw: @nw, ne: @ne, se: @se, sw: @sw}, @memoized
 
     # We now have everything we need to compute the
     # result of any square of size eight or larger, any time in the future from time `T+1` to time `T+2^(n-1)`
@@ -483,6 +495,24 @@ exports.mixInto = ({Square, Cell}) ->
     #
     # The only complication is that we memoize the result for performance... This is HashLife after all, and we
     # do not like to repeat ourselves in either Space or Time.
+    #
+    # Of course, there's another refinement: Instead of naïvely writinga method, we take our mapping functions
+    # from above and chain them together with the `sequence` method. `_.compose(f, g, h)(x)` -> `f(g(h(x)))`,
+    # whereas `sequence(f, g, h)(x)` -> `h(g(f(x)))`. That doesn't look like much, but a better way to put it is:
+    #
+    #   (x) ->
+    #     _temp = f(x)
+    #     _temp = g(_temp)
+    #     _temp = h(_temp)
+    #     _temp
+    #
+    # In other words, `sequence` is a poor man's monad. It behaves like just writing a function line by line, but it does
+    # allow us to refactor the way we glue these algorithms together later if we want. For example (hint, hint) if we
+    # wanted to do a little garbage collection of the cache, we could patch the way `sequence` works without having to rewrite
+    # any of the functions `sequence` glues together.
+    @sequence: (fns...) ->
+      _.compose(fns.reverse()...)
+
     result:
       @memoize 'result', ->
         Square.canonicalize(

@@ -263,6 +263,9 @@ sw        se
 sw        se
 </code></pre>
 
+<p>We will see below the exact mechanism for extracting the results, the important thing for the moment is
+the idea that we have four squares 'built in' that we're going to use to get those results.</p>
+
 <p>We can also derive four overlapping squares, these representing <code>nn</code>, <code>ee</code>, <code>ss</code>, and <code>ww</code>:</p>
 
 <pre><code>     nn
@@ -318,7 +321,9 @@ sw        se
    ......
 
 sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>
+</code></pre>
+
+<p>Given this basic pattern, let's see how we actually do it.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Making a Square from an Intermediate Square</h3>
 
 <p>We start with a function that maps a square to the nine sub-squares of an intermediate square</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@square_to_intermediate_map: </span><span class="nf">(square) -&gt;</span>
       <span class="nv">nw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span>
@@ -351,17 +356,12 @@ sw        se
         <span class="nv">se: </span><span class="nx">square</span><span class="p">.</span><span class="nx">se</span><span class="p">.</span><span class="nx">nw</span>
         <span class="nv">sw: </span><span class="nx">square</span><span class="p">.</span><span class="nx">sw</span><span class="p">.</span><span class="nx">ne</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>In order to work on our intermediate square, we want to map functions across all of its keys, such
 as canonicalizing each value, taking the result of each value, or taking the result at a certain time
-in the future. We'll derive those methods later, for now we hand-wave that they exist.</p>
-
-<p>We can chain two or more of thse together with the <code>sequence</code> method.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@map_fn: </span><span class="nf">(fn) -&gt;</span>
-      <span class="nf">(m) -&gt;</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">m</span><span class="p">,</span> <span class="nf">(acc, value, key) -&gt;</span>
+in the future. We'll derive those methods later, for now we hand-wave that they exist.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@map_fn: </span><span class="nf">(fn) -&gt;</span>
+      <span class="nf">(parameter_hash) -&gt;</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">parameter_hash</span><span class="p">,</span> <span class="nf">(acc, value, key) -&gt;</span>
           <span class="nx">acc</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
           <span class="nx">acc</span>
         <span class="p">,</span> <span class="p">{}</span>
-
-    <span class="vi">@sequence: </span><span class="nf">(fns...) -&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">compose</span><span class="p">(</span><span class="nx">fns</span><span class="p">.</span><span class="nx">reverse</span><span class="p">()...)</span>
 
     <span class="vi">@take_the_canonicalized_values: </span><span class="nx">@map_fn</span><span class="p">(</span>
       <span class="nf">(quadrants) -&gt;</span>
@@ -402,7 +402,9 @@ nw        ne  nw        ne
    swss..        ..ssse
 
 sw        se  sw        se
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@intermediate_to_subsquares_map: </span><span class="nf">(intermediate_square) -&gt;</span>
+</code></pre>
+
+<p>As you'll see below, we use <code>take_the_results</code> or <code>take_the_results_at_time(t)</code></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@intermediate_to_subsquares_map: </span><span class="nf">(intermediate_square) -&gt;</span>
       <span class="nv">nw:</span>
         <span class="nv">nw: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nw</span>
         <span class="nv">ne: </span><span class="nx">intermediate_square</span><span class="p">.</span><span class="nx">nn</span>
@@ -438,7 +440,18 @@ sw        se
 
 <p>We're not going to do that here, we're just responsible for the geometry.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>We now define some initialization for a recursively computible square,
 starting with the result and including some memoized intermediate results
-that speed things up for us.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">initialize: </span><span class="o">-&gt;</span>
+that speed things up for us.</p>
+
+<p>The memoizing is a little more bespoke than you would usually see. Normally,
+you would use something like;</p>
+
+<p>@some<em>memoized</em>method = <em>.memoize( ->
+    "method</em>body<em>goes</em>here"
+  )</p>
+
+<p>However, rolling our own memoize infrastructure allows us to construct
+the <code>children</code> method that shows us which squares are logically related to any given
+square, by dint of being its quadrants or result at any time in the future</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">initialize: </span><span class="o">-&gt;</span>
       <span class="k">super</span><span class="p">()</span>
       <span class="vi">@memoized = </span><span class="p">{}</span>
 
@@ -453,8 +466,8 @@ that speed things up for us.</p>             </td>             <td class="code">
     <span class="nv">set_memo: </span><span class="nf">(index, square) -&gt;</span>
       <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
 
-    <span class="nv">get_all_memos: </span><span class="o">-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">values</span><span class="p">(</span><span class="nx">@memoized</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now have everything we need to compute the
+    <span class="nv">children: </span><span class="o">-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span><span class="nv">nw: </span><span class="nx">@nw</span><span class="p">,</span> <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">,</span> <span class="nv">se: </span><span class="nx">@se</span><span class="p">,</span> <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">},</span> <span class="nx">@memoized</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now have everything we need to compute the
 result of any square of size eight or larger, any time in the future from time <code>T+1</code> to time <code>T+2^(n-1)</code>
 where <code>n</code> is the level of the square.</p>
 
@@ -463,7 +476,25 @@ forward to <code>T+2^(n-2)</code>), and then we obtain its overlapping squares a
 forward <code>2^(n-2)</code> again, for a total advance of <code>2^(n-1)</code>).</p>
 
 <p>The only complication is that we memoize the result for performance... This is HashLife after all, and we
-do not like to repeat ourselves in either Space or Time.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">result:</span>
+do not like to repeat ourselves in either Space or Time.</p>
+
+<p>Of course, there's another refinement: Instead of naïvely writinga method, we take our mapping functions
+from above and chain them together with the <code>sequence</code> method. <code>_.compose(f, g, h)(x)</code> -> <code>f(g(h(x)))</code>,
+whereas <code>sequence(f, g, h)(x)</code> -> <code>h(g(f(x)))</code>. That doesn't look like much, but a better way to put it is:</p>
+
+<p>(x) ->
+    <em>temp = f(x)
+    _temp = g(</em>temp)
+    <em>temp = h(</em>temp)
+    _temp</p>
+
+<p>In other words, <code>sequence</code> is a poor man's monad. It behaves like just writing a function line by line, but it does
+allow us to refactor the way we glue these algorithms together later if we want. For example (hint, hint) if we
+wanted to do a little garbage collection of the cache, we could patch the way <code>sequence</code> works without having to rewrite
+any of the functions <code>sequence</code> glues together.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@sequence: </span><span class="nf">(fns...) -&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">compose</span><span class="p">(</span><span class="nx">fns</span><span class="p">.</span><span class="nx">reverse</span><span class="p">()...)</span>
+
+    <span class="nv">result:</span>
       <span class="nx">@memoize</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">canonicalize</span><span class="p">(</span>
           <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">sequence</span><span class="p">(</span>

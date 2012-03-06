@@ -16,7 +16,12 @@ recursively computed terminating in a four-by-four square that has already been 
 
 <p>This module provides a <code>mixInto</code> function so that it retroactively modify existing classes.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
 <span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
-<span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Implementing the cache</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
+<span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Implementing the cache</h3>
+
+<p>The cache is organized into an array of 'buckets', each of which is a hash from a simple key
+to a cached square. The buckets are organized by level of the square. This allows some simple
+ordering later when we start fooling around with garbage collection: It's easy to find the
+largest squares that aren't in use.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
 
   <span class="nv">counter = </span><span class="mi">0</span>
 
@@ -32,30 +37,62 @@ recursively computed terminating in a four-by-four square that has already been 
 
     <span class="nv">cache:</span>
 
-      <span class="nv">buckets: </span><span class="p">{}</span>
+      <span class="nv">buckets: </span><span class="p">[]</span>
 
       <span class="nv">clear: </span><span class="o">-&gt;</span>
-        <span class="vi">@buckets = </span><span class="p">{}</span>
+        <span class="vi">@buckets = </span><span class="p">[]</span>
 
-      <span class="nv">bucketed: </span><span class="o">-&gt;</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="nx">@buckets</span><span class="p">)</span>
+      <span class="nv">length: </span><span class="mi">0</span>
 
       <span class="nv">find: </span><span class="nf">({nw, ne, se, sw}) -&gt;</span>
-        <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">trace</span><span class="p">()</span> <span class="nx">unless</span> <span class="nx">nw</span><span class="o">?</span><span class="p">.</span><span class="nx">level</span><span class="o">?</span>
+        <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
 
       <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
+        <span class="nx">@length</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">square</span>
-        <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+        <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
 
     <span class="nv">canonicalize: </span><span class="nf">(quadrants) -&gt;</span>
       <span class="nv">found = </span><span class="nx">@cache</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
       <span class="k">if</span> <span class="nx">found</span>
         <span class="nx">found</span>
       <span class="k">else</span>
-        <span class="nx">@cache</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Reference Counting</h3>
+        <span class="nx">@cache</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Garbage Collection</h2>
+
+<p>Cafe au Life can calculate the future of many highly repetitive patterns without garbage collection, it simply
+caches all of its results as it goes along. That's blisteringly fast. However, patterns with a lot of entropy
+can quickly fill up the cache. On my development machine, Node blows up some time after the cache hits 700,000
+squares.</p>
+
+<p>By way of comparison, Cafe au Life can calulate the future of a glider gun out to <a href="http://raganwald.posterous.com/a-beautiful-algorithm">quadrillions of generations</a>
+with a population of 23,900,000,000,000,036 live cells,
+but the rabbits <a href="http://www.conwaylife.com/wiki/index.php?title=List_of_long-lived_methuselahs">methuselah</a> blows the cache up before it can stabilize with a population of 1,744 live cells
+at 17,331 generations.</p>
+
+<p>The size of the pattern and the length of the simulation are not the limiting factor, it's the entropy that counts.
+Or if you prefer, the time complexity. To handle patterns like 'rabbits,' we need to garbage collect the cache when
+it gets too big.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Reference Counting</h3>
 
 <p>The basic principle is that a square's reference count is the number of squares in the cache that
-refer to the square.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+refer to the square. So when we add a square to the cache, we increment the reference count for its children.
+When we remove a square from the cache, we decrement the reference count for its children.</p>
+
+<p>There is a little bookkeeping involved with squares that memoize results, because we must increment their new children
+on the fly. And we never garbage collect cells, level 1, or level 2 squares (the smallest and seed squares respectively).</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span>
+    <span class="nv">old_add = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span>
+
+    <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">square</span><span class="p">.</span><span class="nx">children</span><span class="p">(),</span> <span class="nf">(v) -&gt;</span>
+        <span class="nx">v</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+      <span class="nx">old_add</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">square</span><span class="p">)</span>
+
+    <span class="nv">remove: </span><span class="nf">(square) -&gt;</span>
+      <span class="nx">@length</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="k">delete</span> <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="s2">&quot;#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}&quot;</span><span class="p">]</span>
+      <span class="nx">square</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">has_references: </span><span class="o">-&gt;</span>
       <span class="kc">true</span>
     <span class="nv">has_no_references: </span><span class="o">-&gt;</span>
@@ -68,8 +105,10 @@ refer to the square.</p>             </td>             <td class="code">        
       <span class="k">this</span>
     <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
+    <span class="nv">children: </span><span class="o">-&gt;</span> <span class="p">{}</span>
     <span class="nv">remove: </span><span class="o">-&gt;</span>
     <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
+
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Smallest</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">has_references: </span><span class="o">-&gt;</span>
@@ -84,6 +123,7 @@ refer to the square.</p>             </td>             <td class="code">        
       <span class="k">this</span>
     <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
+    <span class="nv">children: </span><span class="o">-&gt;</span> <span class="p">{}</span>
     <span class="nv">remove: </span><span class="o">-&gt;</span>
     <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
 
@@ -100,10 +140,12 @@ refer to the square.</p>             </td>             <td class="code">        
       <span class="k">this</span>
     <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
       <span class="k">this</span>
+    <span class="nv">children: </span><span class="o">-&gt;</span> <span class="p">{}</span>
     <span class="nv">remove: </span><span class="o">-&gt;</span>
-    <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
+    <span class="nv">removeRecursively: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>Modifying <code>Square.RecursivelyComputable</code></h3>
 
-  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">)</span>
+<p>We take advantage of the way <code>Square.RecursivelyComputable</code> is factored to introduce reference
+counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
       <span class="vi">@references = </span><span class="mi">0</span>
     <span class="p">.</span><span class="nx">before</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span> <span class="nf">(index) -&gt;</span>
@@ -122,45 +164,90 @@ refer to the square.</p>             </td>             <td class="code">        
     <span class="nv">has_many_references: </span><span class="o">-&gt;</span>
       <span class="nx">@references</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="nv">incrementReference: </span><span class="o">-&gt;</span>
+      <span class="k">throw</span> <span class="s2">&quot;incrementReference!? #{@references}&quot;</span> <span class="nx">unless</span> <span class="nx">@references</span> <span class="o">&gt;=</span> <span class="mi">0</span>
       <span class="nx">@references</span> <span class="o">+=</span> <span class="mi">1</span>
       <span class="k">this</span>
-    <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
+    <span class="nv">decrementReference: </span><span class="nf">() -&gt;</span>
+      <span class="k">throw</span> <span class="s2">&quot;decrementReference!?&quot;</span> <span class="nx">unless</span> <span class="nx">@references</span> <span class="o">&gt;</span> <span class="mi">0</span>
       <span class="nx">@references</span> <span class="o">-=</span> <span class="mi">1</span>
       <span class="k">this</span>
 
-    <span class="nv">children: </span><span class="o">-&gt;</span>
-      <span class="p">[</span><span class="nx">@nw</span><span class="p">,</span> <span class="nx">@ne</span><span class="p">,</span> <span class="nx">@se</span><span class="p">,</span> <span class="nx">@sw</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">@get_all_memos</span><span class="p">()</span>
-
     <span class="nv">remove: </span><span class="o">-&gt;</span>
-      <span class="k">if</span> <span class="nx">@has_no_references</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nx">@references</span> <span class="o">is</span> <span class="mi">0</span>
         <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(v) -&gt;</span>
+          <span class="nx">v</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
+
     <span class="nv">removeRecursively: </span><span class="o">-&gt;</span>
-      <span class="nx">@remove</span><span class="p">()</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nx">@references</span> <span class="o">is</span> <span class="mi">0</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(v) -&gt;</span>
+          <span class="nx">v</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
+          <span class="nx">v</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>Naïve Garbage Collection</h3>
 
-  <span class="nv">old_add = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span>
+<p>Our GC is pretty bone-headed, it uses brute force to get a list of
+removeable squares, then marches through them from highest to lowest
+level, recursively removing them and any children freed up by removing them.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span>
+    <span class="nv">removeablesByLevel: </span><span class="o">-&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="nf">(bucket) -&gt;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">bucket</span><span class="p">)</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">values</span><span class="p">(</span><span class="nx">bucket</span><span class="p">),</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">has_no_references</span><span class="p">()</span> <span class="p">)</span>
+        <span class="k">else</span>
+          <span class="p">[]</span>
 
-  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span>
     <span class="nv">removeables: </span><span class="o">-&gt;</span>
-     <span class="nx">_</span><span class="p">(</span><span class="nx">@buckets</span><span class="p">).</span><span class="nx">chain</span><span class="p">()</span>
-      <span class="p">.</span><span class="nx">values</span><span class="p">()</span>
-      <span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">has_no_references</span><span class="p">()</span> <span class="p">)</span>
-      <span class="p">.</span><span class="nx">value</span><span class="p">()</span>
-
-    <span class="nv">remove: </span><span class="nf">(square) -&gt;</span>
-      <span class="k">delete</span> <span class="nx">@buckets</span><span class="p">[</span><span class="s2">&quot;#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}&quot;</span><span class="p">]</span>
-      <span class="nx">square</span>
-
-    <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">tap</span> <span class="nx">old_add</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">square</span><span class="p">),</span> <span class="nf">({nw, ne, se, sw}) -&gt;</span>
-        <span class="nx">nw</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
-        <span class="nx">ne</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
-        <span class="nx">se</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
-        <span class="nx">sw</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@removeablesByLevel</span><span class="p">().</span><span class="nx">reverse</span><span class="p">(),</span> <span class="nf">(re, level) -&gt;</span>
+        <span class="nv">re = </span><span class="nx">re</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span> <span class="nx">level</span> <span class="p">)</span>
+      <span class="p">,</span> <span class="p">[]</span>
 
     <span class="nv">full_gc: </span><span class="o">-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@removeables</span><span class="p">(),</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@removeables</span><span class="p">(),</span> <span class="nf">(sq) -&gt;</span>
+        <span class="nx">sq</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span>
+
+    <span class="nv">resize: </span><span class="nf">(from, to) -&gt;</span>
+      <span class="k">if</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">from</span>
+        <span class="nv">old = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">length</span>
+        <span class="nv">r = </span><span class="nx">@removeables</span><span class="p">()</span>
+        <span class="nv">i = </span><span class="mi">0</span>
+        <span class="k">while</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">length</span> <span class="o">and</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">to</span>
+          <span class="nx">r</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">removeRecursively</span><span class="p">()</span>
+          <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;GC: #{old}-&gt;#{Square.cache.length}&quot;</span> <span class="k">if</span> <span class="nx">to</span> <span class="o">&gt;</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>Pinning squares</h3>
+
+<p>So far, so good. But there is a flaw of sorts. When do we garbage collect?
+And when we do garbage collect, what happens to intermediate results we're
+using in the middle of calculating the future of a pattern?</p>
+
+<p>What we do is rewrite <code>Square.RecursivelyComputable.sequence</code> such that it
+increments the references of squares passed in as a <code>parameter_hash</code>, and
+decrements them when it's finished. This works recursively, so if at any time in
+the middle of a computation we need to garbage collect, we can do it with
+the confidence that we won't remove anything we're using.</p>
+
+<p>This means some care must be taken in the way <code>result</code> and <code>result_at_time(t)</code>
+are written, such as always using <code>sequence</code> and a <code>parameter_hash</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">each_leaf = </span><span class="nf">(h, fn) -&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">h</span><span class="p">,</span> <span class="nf">(value) -&gt;</span>
+        <span class="k">if</span> <span class="nx">value</span> <span class="k">instanceof</span> <span class="nx">Square</span>
+          <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">nw</span> <span class="k">instanceof</span> <span class="nx">Square</span>
+          <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">nw</span><span class="p">)</span>
+          <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">ne</span><span class="p">)</span>
+          <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">se</span><span class="p">)</span>
+          <span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">sw</span><span class="p">)</span>
+
+    <span class="nv">sequence: </span><span class="nf">(fns...) -&gt;</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">compose</span><span class="p">(</span>
+        <span class="nx">_</span><span class="p">(</span><span class="nx">fns</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span> <span class="nf">(fn) -&gt;</span>
+            <span class="nf">(parameter_hash) -&gt;</span>
+              <span class="nx">each_leaf</span><span class="p">(</span><span class="nx">parameter_hash</span><span class="p">,</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">())</span>
+              <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">resize</span><span class="p">(</span><span class="mi">700000</span><span class="p">,</span> <span class="mi">350000</span><span class="p">)</span>
+              <span class="nx">_</span><span class="p">.</span><span class="nx">tap</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">parameter_hash</span><span class="p">),</span> <span class="o">-&gt;</span>
+                <span class="nx">each_leaf</span><span class="p">(</span><span class="nx">parameter_hash</span><span class="p">,</span> <span class="nf">(sq) -&gt;</span> <span class="nx">sq</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">())</span>
+          <span class="p">).</span><span class="nx">reverse</span><span class="p">()...</span>
+      <span class="p">)</span>
+
+  <span class="s2">&quot;garbage collection can be disabled by commenting this line out&quot;</span>
+  <span class="nv">Square.RecursivelyComputable.sequence = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">sequence</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://reginald.braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 
