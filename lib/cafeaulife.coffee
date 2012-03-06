@@ -118,9 +118,11 @@ _.defaults exports, {Cell, Square}
 #
 # * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
 # * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
-# the size of its container square.
-# * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
-# components.
+# the size of its container square. **New**: Its methods have been refactored to make it easy to add garbage collection. (see the Cache
+# Module below).
+# * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
+# [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. **New**: Garbage collection
+# allows Cafe au Life to compute the futur eof patterns with high entropy.
 # * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
 # * The [Menagerie Module][menagerie] provides a few well-know life objects predefined for you to play with. It is entirely optional.
 #
