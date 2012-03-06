@@ -24,17 +24,17 @@ describe 'time and space', ->
         [0, 1, 0, 0]
       ] )
 
-    # it 'should generate square of size 12 (4096) fro ', ->
-    #
-    #   expect( r.future_at_time(1103).level ).toEqual( 12 )
-    #
-    # it 'should generate a population of 116 from an r pentomino', ->
-    #
-    #   expect( r.future_at_time(1103).population ).toEqual( 116 )
+    it 'should generate square of size 12 (4096) fro ', ->
 
-    # it 'should generate a population of 633 from an acorn', ->
-    #
-    #   expect( acorn.future_at_time(5206).population ).toEqual( 633 )
+      expect( r.future_at_time(1103).level ).toEqual( 12 )
+
+    it 'should generate a population of 116 from an r pentomino', ->
+
+      expect( r.future_at_time(1103).population ).toEqual( 116 )
+
+    it 'should generate a population of 633 from an acorn', ->
+
+      expect( acorn.future_at_time(5206).population ).toEqual( 633 )
 
 
   describe 'space', ->
