@@ -118,11 +118,11 @@ _.defaults exports, {Cell, Square}
 #
 # * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
 # * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
-# the size of its container square. **New**: Its methods have been refactored to make it easy to add garbage collection. (see the Cache
-# Module below).
+# the size of its container square.
 # * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 # [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. **New**: Garbage collection
 # allows Cafe au Life to compute the futur eof patterns with high entropy.
+# * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache.
 # * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
 # * The [Menagerie Module][menagerie] provides a few well-know life objects predefined for you to play with. It is entirely optional.
 #
@@ -134,11 +134,13 @@ _.defaults exports, {Cell, Square}
 # [cache]: http:cache.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
+# [gc]: http:gc.html
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 
 require('./rules').mixInto(exports)
 require('./future').mixInto(exports)
 require('./cache').mixInto(exports)
+require('./gc').mixInto(exports)
 require('./api').mixInto(exports)
 
 # ## The first time through
