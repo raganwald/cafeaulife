@@ -464,10 +464,7 @@ square, by dint of being its quadrants or result at any time in the future</p>  
       <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
 
     <span class="nv">set_memo: </span><span class="nf">(index, square) -&gt;</span>
-      <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
-
-    <span class="nv">children: </span><span class="o">-&gt;</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span><span class="nv">nw: </span><span class="nx">@nw</span><span class="p">,</span> <span class="nv">ne: </span><span class="nx">@ne</span><span class="p">,</span> <span class="nv">se: </span><span class="nx">@se</span><span class="p">,</span> <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">},</span> <span class="nx">@memoized</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now have everything we need to compute the
+      <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>We now have everything we need to compute the
 result of any square of size eight or larger, any time in the future from time <code>T+1</code> to time <code>T+2^(n-1)</code>
 where <code>n</code> is the level of the square.</p>
 

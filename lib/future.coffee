@@ -482,9 +482,6 @@ exports.mixInto = ({Square, Cell}) ->
     set_memo: (index, square) ->
       @memoized[index] = square
 
-    children: ->
-      _.extend {nw: @nw, ne: @ne, se: @se, sw: @sw}, @memoized
-
     # We now have everything we need to compute the
     # result of any square of size eight or larger, any time in the future from time `T+1` to time `T+2^(n-1)`
     # where `n` is the level of the square.
