@@ -159,7 +159,7 @@ require('./api').mixInto(exports)
 # ## Who
 #
 # When he's not shipping Ruby, Javascript and Java applications scaling out to millions of users,
-# [Reg "Raganwald" Braithwaite](http://reginald.braythwayt.com) has authored libraries for Javascript and Ruby programming
+# [Reg "Raganwald" Braithwaite](http://raganwald.com) has authored libraries for Javascript and Ruby programming
 # such as [Katy](https://github.com/raganwald/Katy), [JQuery Combinators](http://github.com/raganwald/JQuery-Combinators),
 # [YouAreDaChef](https://github.com/raganwald/YouAreDaChef), [andand](http://github.com/raganwald/andand),
 # and more you can find on [Github](https://github.com/raganwald).
@@ -175,7 +175,7 @@ require('./api').mixInto(exports)
 
 # ---
 #
-# **(c) 2012 [Reg Braithwaite](http://reginald.braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
+# **(c) 2012 [Reg Braithwaite](http://raganwald.com)** ([@raganwald](http://twitter.com/raganwald))
 #
 # Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 #
