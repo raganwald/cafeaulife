@@ -121,7 +121,7 @@ _.defaults exports, {Cell, Square}
 # the size of its container square.
 # * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 # [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. **New**: Garbage collection
-# allows Cafe au Life to compute the futur eof patterns with high entropy.
+# allows Cafe au Life to compute the future of patterns with high entropy.
 # * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache. For more information,
 # read [Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming][igc]
 # * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
