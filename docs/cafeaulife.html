@@ -105,7 +105,8 @@ the size of its container square.</li>
 <li>The <a href="http:cache.html">Cache Module</a> implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 <a href="https://en.wikipedia.org/wiki/Canonicalization">canonicalization</a> to optimize the storage of very large patterns with repetitive components. <strong>New</strong>: Garbage collection
 allows Cafe au Life to compute the futur eof patterns with high entropy.</li>
-<li>The <a href="http:gc.html">Garbage Collection Module</a> implements a simple reference-counting garbage collector for the cache.</li>
+<li>The <a href="http:gc.html">Garbage Collection Module</a> implements a simple reference-counting garbage collector for the cache. For more information,
+read <a href="https://github.com/raganwald/homoiconic/blob/master/2012/03/garbage_collection_in_coffeescript.md">Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming</a></li>
 <li>The <a href="http:api.html">API Module</a> provides methods for grabbing json or strings of patterns and resizing them to fit expectations.</li>
 <li>The <a href="http:menagerie.html">Menagerie Module</a> provides a few well-know life objects predefined for you to play with. It is entirely optional.</li>
 </ul>
@@ -117,8 +118,8 @@ allows Cafe au Life to compute the futur eof patterns with high entropy.</li>
 <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./api&#39;</span><span class="p">).</span><span class="nx">mixInto</span><span class="p">(</span><span class="nx">exports</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>The first time through</h2>
 
 <p>If this is your first time through the code, start with the <a href="http:rules.html">Rules Module</a>, and then read the <a href="http:future.html">Future Module</a>
-to understand the core algorithm for computing the future of a pattern. You can look at the <a href="http:cache.html">Cache</a> and <a href="http:api.html">API</a> modules
-at your leisure.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>Who</h2>
+to understand the core algorithm for computing the future of a pattern. You can look at the <a href="http:cache.html">Cache</a>, <a href="http:gc.html">Garbage Collection</a>,
+and <a href="http:api.html">API</a> modules at your leisure.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>Who</h2>
 
 <p>When he's not shipping Ruby, Javascript and Java applications scaling out to millions of users,
 <a href="http://raganwald.com">Reg "Raganwald" Braithwaite</a> has authored libraries for Javascript and Ruby programming

@@ -647,7 +647,8 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ## The first time through
 #
-# If this is your first time through the code, and you've already read the [Rules Module][rules], you can look at the [Cache][cache] and [API][api] modules.
+# If this is your first time through the code, and you've already read the [Rules Module][rules], you can look at the [Cache][cache],
+# [Garbage Collection][gc], and [API][api] modules.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
@@ -655,6 +656,7 @@ exports.mixInto = ({Square, Cell}) ->
 # [cache]: http:cache.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
+# [gc]: http:gc.html
 
 # ---
 #

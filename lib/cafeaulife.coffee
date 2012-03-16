@@ -122,7 +122,8 @@ _.defaults exports, {Cell, Square}
 # * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 # [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. **New**: Garbage collection
 # allows Cafe au Life to compute the futur eof patterns with high entropy.
-# * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache.
+# * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache. For more information,
+# read [Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming][igc]
 # * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
 # * The [Menagerie Module][menagerie] provides a few well-know life objects predefined for you to play with. It is entirely optional.
 #
@@ -136,6 +137,7 @@ _.defaults exports, {Cell, Square}
 # [rules]: http:rules.html
 # [gc]: http:gc.html
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
+# [igc]: https://github.com/raganwald/homoiconic/blob/master/2012/03/garbage_collection_in_coffeescript.md
 
 require('./rules').mixInto(exports)
 require('./future').mixInto(exports)
@@ -146,8 +148,8 @@ require('./api').mixInto(exports)
 # ## The first time through
 #
 # If this is your first time through the code, start with the [Rules Module][rules], and then read the [Future Module][future]
-# to understand the core algorithm for computing the future of a pattern. You can look at the [Cache][cache] and [API][api] modules
-# at your leisure.
+# to understand the core algorithm for computing the future of a pattern. You can look at the [Cache][cache], [Garbage Collection][gc],
+# and [API][api] modules at your leisure.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
@@ -155,6 +157,7 @@ require('./api').mixInto(exports)
 # [cache]: http:cache.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
+# [gc]: http:gc.html
 
 # ## Who
 #

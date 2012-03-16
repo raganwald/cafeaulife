@@ -70,9 +70,9 @@ exports.mixInto = (exports) ->
           se: Square.Seed.succ(a, 2,2)
           sw: Square.Seed.succ(a, 2,1)
       )
-  
+
   class Square.Smallest extends Square
-    
+
   _.defaults exports,
     set_universe_rules: (survival = [2,3], birth = [3]) ->
 
@@ -126,7 +126,7 @@ exports.mixInto = (exports) ->
 
 # ## The first time through
 #
-# If this is your first time through the code, read the [Future Module][future] next. You can look at the [Cache][cache] and [API][api] modules at your leisure, they arent really core to the algorithm.
+# If this is your first time through the code, read the [Future Module][future] next. You can look at the [Cache][cache], [Garbage Collection][gc], and [API][api] modules at your leisure, they arent really core to the algorithm.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
@@ -134,6 +134,7 @@ exports.mixInto = (exports) ->
 # [cache]: http:cache.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
+# [gc]: http:gc.html
 
 # ---
 #

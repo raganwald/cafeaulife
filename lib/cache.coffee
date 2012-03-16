@@ -71,6 +71,19 @@ exports.mixInto = ({Square, Cell}) ->
       else
         @cache.add(new Square.RecursivelyComputable(quadrants))
 
+# ## The first time through
+#
+# If this is your first time through the code, and you've already read the [Rules][rules] and [Future][future] modules, you can look at the
+# [Garbage Collection][gc] and [API][api] modules next.
+#
+# [menagerie]: http:menagerie.html
+# [api]: http:api.html
+# [future]: http:future.html
+# [cache]: http:cache.html
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
+# [rules]: http:rules.html
+# [gc]: http:gc.html
+
 # ---
 #
 # **(c) 2012 [Reg Braithwaite](http://raganwald.com)** ([@raganwald](http://twitter.com/raganwald))
