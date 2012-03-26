@@ -1,4 +1,4 @@
-# This module is part of [resursiveuniver.se](http://recursiveuniver.se).
+# This module is part of [recursiveuniver.se](http://recursiveuniver.se).
 #
 # ## Future Module
 #
@@ -660,7 +660,7 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ---
 #
-# **(c) 2012 [Reg Braithwaite](http://raganwald.com)** ([@raganwald](http://twitter.com/raganwald))
+# **(c) 2012 [Reg Braithwaite](http://braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
 #
 # Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 #

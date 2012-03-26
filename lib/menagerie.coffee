@@ -1,4 +1,4 @@
-# This module is part of [resursiveuniver.se](http://recursiveuniver.se).
+# This module is part of [recursiveuniver.se](http://recursiveuniver.se).
 #
 # ## The Menagerie
 #

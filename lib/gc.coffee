@@ -1,4 +1,4 @@
-# This module is part of [resursiveuniver.se](http://recursiveuniver.se).
+# This module is part of [recursiveuniver.se](http://recursiveuniver.se).
 #
 # ## Garbage Collection Module
 #
@@ -230,7 +230,7 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ## The first time through
 #
-# If this is your first time through the code, and you've already read the [Rules][rules], [Future][future], and [Cahce][cahce]
+# If this is your first time through the code, and you've already read the [Rules][rules], [Future][future], and [Cache][cache]
 # modules, you can look at the [API][api] module next.
 #
 # [menagerie]: http:menagerie.html
@@ -243,7 +243,7 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ---
 #
-# **(c) 2012 [Reg Braithwaite](http://raganwald.com)** ([@raganwald](http://twitter.com/raganwald))
+# **(c) 2012 [Reg Braithwaite](http://braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
 #
 # Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 #
